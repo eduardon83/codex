@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="600" height="700">
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9">
+
+    <path class="branch" data-branch-id="trunk-1" d="M300,700 L300,500" stroke-width="7"/>
+    <path class="branch" data-branch-id="trunk-2" d="M300,540 L300,400" stroke-width="5.5"/>
+
+    <path class="branch" data-branch-id="l1-l" d="M300,400 L170,280" stroke-width="4.5"/>
+    <path class="branch" data-branch-id="l1-c" d="M300,400 L300,200" stroke-width="4.5"/>
+    <path class="branch" data-branch-id="l1-r" d="M300,400 L430,280" stroke-width="4.5"/>
+
+    <path class="branch" data-branch-id="l2-ll" d="M170,280 L90,200" stroke-width="2.8"/>
+    <path class="branch" data-branch-id="l2-lr" d="M170,280 L200,180" stroke-width="2.8"/>
+    <path class="branch" data-branch-id="l2-cl" d="M300,260 L230,180" stroke-width="2.6"/>
+    <path class="branch" data-branch-id="l2-cr" d="M300,260 L370,180" stroke-width="2.6"/>
+    <path class="branch" data-branch-id="l2-rl" d="M430,280 L400,180" stroke-width="2.8"/>
+    <path class="branch" data-branch-id="l2-rr" d="M430,280 L510,200" stroke-width="2.8"/>
+
+    <path class="branch" data-branch-id="l3-1" d="M90,200 L50,140" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l3-2" d="M200,180 L180,110" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l3-3" d="M200,180 L230,115" stroke-width="1.4"/>
+    <path class="branch" data-branch-id="l3-4" d="M230,180 L220,100" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l3-5" d="M300,200 L280,110" stroke-width="1.8"/>
+    <path class="branch" data-branch-id="l3-6" d="M300,200 L320,110" stroke-width="1.8"/>
+    <path class="branch" data-branch-id="l3-7" d="M370,180 L380,100" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l3-8" d="M400,180 L370,115" stroke-width="1.4"/>
+    <path class="branch" data-branch-id="l3-9" d="M400,180 L420,110" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l3-10" d="M510,200 L550,140" stroke-width="1.6"/>
+
+    <path class="branch" data-branch-id="twig-1" d="M50,140 L30,110" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-2" d="M180,110 L170,75" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-3" d="M220,100 L210,65" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-4" d="M280,110 L270,70" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-5" d="M320,110 L330,70" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-6" d="M380,100 L390,65" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-7" d="M420,110 L430,75" stroke-width="0.9"/>
+    <path class="branch" data-branch-id="twig-8" d="M550,140 L570,110" stroke-width="0.9"/>
+
+  </g>
+</svg>
