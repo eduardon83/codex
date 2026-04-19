@@ -1,0 +1,75 @@
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { BookOpen, Plus, User, Search, Heart } from 'lucide-react';
+
+type Tab = 'library' | 'add' | 'profile' | 'find' | 'wishlist';
+
+interface BottomNavProps {
+  active: Tab;
+  onChange: (tab: Tab) => void;
+}
+
+const tabConfig: { id: Tab; labelKey: string; icon: React.ElementType }[] = [
+  { id: 'library', labelKey: 'nav.library', icon: BookOpen },
+  { id: 'add', labelKey: 'nav.addBook', icon: Plus },
+  { id: 'profile', labelKey: 'nav.profile', icon: User },
+  { id: 'find', labelKey: 'nav.find', icon: Search },
+  { id: 'wishlist', labelKey: 'nav.wishlist', icon: Heart },
+];
+
+export default function BottomNav({ active, onChange }: BottomNavProps) {
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const [requestCount, setRequestCount] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    const loadCount = async () => {
+      const { count } = await supabase
+        .from('loan_requests' as any)
+        .select('id', { count: 'exact', head: true })
+        .eq('owner_user_id', user.id)
+        .eq('status', 'pending');
+      setRequestCount(count || 0);
+    };
+    loadCount();
+
+    // Subscribe to changes
+    const channel = supabase
+      .channel('loan_requests_badge')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${user.id}` },
+        () => loadCount()
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]);
+
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
+      <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
+        {tabConfig.map(({ id, labelKey, icon: Icon }) => (
+          <button
+            key={id}
+            onClick={() => onChange(id)}
+            className={`relative flex flex-col items-center gap-0.5 py-2 px-3 transition-colors ${
+              active === id ? 'text-foreground' : 'text-muted-foreground'
+            }`}
+          >
+            <Icon size={20} strokeWidth={active === id ? 2 : 1.5} />
+            {id === 'wishlist' && requestCount > 0 && (
+              <span className="absolute -top-0.5 right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[9px] font-medium flex items-center justify-center">
+                {requestCount}
+              </span>
+            )}
+            <span className="text-[10px] font-sans">{t(labelKey)}</span>
+          </button>
+        ))}
+      </div>
+    </nav>
+  );
+}
