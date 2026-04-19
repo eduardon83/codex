@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, Globe, Lock, BookOpen, Pencil, Check, Copy, Share2, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -188,13 +188,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     loadLibraries();
   };
 
-  const togglePublic = async () => {
-    const lib = libraries.find(l => l.id === activeLibrary);
-    if (!lib) return;
-    await supabase.from('libraries').update({ is_public: !lib.is_public }).eq('id', lib.id);
-    loadLibraries();
-  };
-
   const startEditName = () => {
     const lib = libraries.find(l => l.id === activeLibrary);
     if (!lib) return;
@@ -207,48 +200,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     await supabase.from('libraries').update({ name: editName.trim() }).eq('id', activeLibrary);
     setEditingName(false);
     loadLibraries();
-  };
-
-  const ensurePublicAndGetUrl = async (): Promise<string | null> => {
-    const lib = libraries.find(l => l.id === activeLibrary);
-    if (!lib) return null;
-    if (!lib.is_public) {
-      await supabase.from('libraries').update({ is_public: true }).eq('id', lib.id);
-      await loadLibraries();
-    }
-    return `${window.location.origin}/lista/${lib.id}`;
-  };
-
-  const copyListLink = async () => {
-    const url = await ensurePublicAndGetUrl();
-    if (!url) return;
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t('library.linkCopiedList'));
-    } catch {
-      showToast(t('library.linkCopiedList'));
-    }
-  };
-
-  const shareList = async () => {
-    const url = await ensurePublicAndGetUrl();
-    if (!url) return;
-    const lib = libraries.find(l => l.id === activeLibrary);
-    const title = lib?.name || 'Bibliotheca';
-    if (typeof navigator !== 'undefined' && (navigator as any).share) {
-      try {
-        await (navigator as any).share({ title, text: title, url });
-        return;
-      } catch {
-        // user cancelled or failed — fall through to clipboard
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t('library.linkCopiedList'));
-    } catch {
-      showToast(t('library.linkCopiedList'));
-    }
   };
 
   const hasActiveFilters = filterGenres.length > 0 || filterFormats.length > 0 || filterStatuses.length > 0 || sortBy !== 'date_newest';
@@ -438,44 +389,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 </button>
               )}
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={togglePublic}
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {currentLib.is_public ? <Globe size={12} /> : <Lock size={12} />}
-                  {currentLib.is_public ? t('library.public') : t('library.private')}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('library.togglePublic')}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={copyListLink}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Copy size={12} />
-                  {t('library.copyListLink')}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('library.copyListLinkHint')}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={shareList}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Share2 size={12} />
-                  {t('library.share')}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('library.shareHint')}</TooltipContent>
-            </Tooltip>
           </div>
         </div>
       )}

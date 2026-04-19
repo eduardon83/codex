@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="600" height="700">
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9">
+
+    <path class="branch" data-branch-id="trunk-1" d="M295,700 Q310,620 290,550 Q270,490 300,430" stroke-width="9"/>
+    <path class="branch" data-branch-id="trunk-2" d="M300,460 Q320,420 295,370 Q280,340 310,310" stroke-width="6"/>
+
+    <path class="branch" data-branch-id="l1-l1" d="M300,400 Q220,370 150,360" stroke-width="4"/>
+    <path class="branch" data-branch-id="l1-l2" d="M310,350 Q240,310 170,280" stroke-width="3.5"/>
+    <path class="branch" data-branch-id="l1-l3" d="M305,330 Q260,270 220,220" stroke-width="3"/>
+    <path class="branch" data-branch-id="l1-c" d="M310,310 Q305,240 310,180" stroke-width="3"/>
+    <path class="branch" data-branch-id="l1-r1" d="M310,400 Q390,365 460,350" stroke-width="4"/>
+    <path class="branch" data-branch-id="l1-r2" d="M310,350 Q380,305 440,270" stroke-width="3.5"/>
+    <path class="branch" data-branch-id="l1-r3" d="M315,325 Q360,265 400,210" stroke-width="3"/>
+
+    <path class="branch" data-branch-id="l2-l1" d="M150,360 L90,370" stroke-width="2"/>
+    <path class="branch" data-branch-id="l2-l2" d="M150,360 L110,320" stroke-width="2"/>
+    <path class="branch" data-branch-id="l2-l3" d="M170,280 L100,250" stroke-width="2"/>
+    <path class="branch" data-branch-id="l2-l4" d="M170,280 L140,220" stroke-width="1.8"/>
+    <path class="branch" data-branch-id="l2-l5" d="M220,220 L180,170" stroke-width="1.8"/>
+    <path class="branch" data-branch-id="l2-l6" d="M220,220 L240,160" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l2-c1" d="M310,180 L280,130" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l2-c2" d="M310,180 L340,130" stroke-width="1.6"/>
+    <path class="branch" data-branch-id="l2-r1" d="M460,350 L520,360" stroke-width="2"/>
+    <path class="branch" data-branch-id="l2-r2" d="M460,350 L490,310" stroke-width="2"/>
+    <path class="branch" data-branch-id="l2-r3" d="M440,270 L500,240" stroke-width="2"/>
+    <path class="branch" data-branch-id="l2-r4" d="M440,270 L460,210" stroke-width="1.8"/>
+    <path class="branch" data-branch-id="l2-r5" d="M400,210 L430,160" stroke-width="1.8"/>
+    <path class="branch" data-branch-id="l2-r6" d="M400,210 L370,160" stroke-width="1.6"/>
+
+    <ellipse class="leaf" data-branch-id="leaf-1" cx="80" cy="372" rx="7" ry="3" transform="rotate(-15 80 372)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-2" cx="100" cy="310" rx="6" ry="2.8" transform="rotate(-50 100 310)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-3" cx="88" cy="240" rx="7" ry="3" transform="rotate(-20 88 240)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-4" cx="130" cy="205" rx="6" ry="2.8" transform="rotate(-60 130 205)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-5" cx="172" cy="158" rx="6" ry="2.8" transform="rotate(-55 172 158)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-6" cx="245" cy="150" rx="6" ry="2.8" transform="rotate(-70 245 150)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-7" cx="275" cy="120" rx="6" ry="2.8" transform="rotate(-65 275 120)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-8" cx="345" cy="120" rx="6" ry="2.8" transform="rotate(65 345 120)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-9" cx="365" cy="150" rx="6" ry="2.8" transform="rotate(70 365 150)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-10" cx="435" cy="155" rx="6" ry="2.8" transform="rotate(55 435 155)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-11" cx="465" cy="205" rx="6" ry="2.8" transform="rotate(60 465 205)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-12" cx="510" cy="235" rx="7" ry="3" transform="rotate(20 510 235)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-13" cx="495" cy="305" rx="6" ry="2.8" transform="rotate(50 495 305)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-14" cx="528" cy="362" rx="7" ry="3" transform="rotate(15 528 362)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-15" cx="60" cy="355" rx="5" ry="2.2" transform="rotate(-10 60 355)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-16" cx="545" cy="348" rx="5" ry="2.2" transform="rotate(10 545 348)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-17" cx="110" cy="295" rx="5" ry="2.2" transform="rotate(-45 110 295)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-18" cx="488" cy="292" rx="5" ry="2.2" transform="rotate(45 488 292)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-19" cx="310" cy="90" rx="5" ry="2.2" transform="rotate(90 310 90)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-20" cx="290" cy="100" rx="5" ry="2.2" transform="rotate(-70 290 100)" stroke-width="0.8"/>
+    <ellipse class="leaf" data-branch-id="leaf-21" cx="330" cy="100" rx="5" ry="2.2" transform="rotate(70 330 100)" stroke-width="0.8"/>
+
+  </g>
+</svg>

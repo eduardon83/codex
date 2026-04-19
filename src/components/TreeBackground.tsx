@@ -1,40 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme, THEMES } from '@/hooks/useTheme';
 
-const TREE_THEMES: Record<string, string> = {
-  deep_ocean: '/src/assets/tree-elm.svg',
-  cosmic: '/src/assets/tree-oak.svg',
-  mauve_night: '/src/assets/tree-birch.svg',
-};
-
-// We load SVG inline for stroke-dashoffset animation
-const TREE_URLS: Record<string, () => Promise<string>> = {
-  deep_ocean: () => import('@/assets/tree-elm.svg?raw').then(m => m.default),
-  cosmic: () => import('@/assets/tree-oak.svg?raw').then(m => m.default),
-  mauve_night: () => import('@/assets/tree-birch.svg?raw').then(m => m.default),
+// Inline SVG raw imports (one per tree species)
+const TREE_LOADERS: Record<string, () => Promise<string>> = {
+  olmo: () => import('@/assets/tree-olmo.svg?raw').then(m => m.default),
+  carvalho: () => import('@/assets/tree-carvalho.svg?raw').then(m => m.default),
+  betula: () => import('@/assets/tree-betula.svg?raw').then(m => m.default),
+  oliveira: () => import('@/assets/tree-oliveira.svg?raw').then(m => m.default),
 };
 
 export default function TreeBackground() {
-  const { theme, currentTheme } = useTheme();
+  const { theme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const [svgContent, setSvgContent] = useState<string | null>(null);
   const animatedRef = useRef(false);
 
-  const isTreeTheme = theme in TREE_URLS;
+  const themeDef = THEMES.find(t => t.id === theme);
+  const treeKey = themeDef?.tree && themeDef.tree !== 'claro' ? themeDef.tree : null;
 
   useEffect(() => {
-    if (!isTreeTheme) {
+    if (!treeKey) {
       setSvgContent(null);
       return;
     }
     animatedRef.current = false;
-    TREE_URLS[theme]().then(raw => {
-      // Replace stroke color with current accent
-      setSvgContent(raw);
-    });
-  }, [theme, isTreeTheme]);
+    TREE_LOADERS[treeKey]().then(raw => setSvgContent(raw));
+  }, [treeKey]);
 
-  // Animate paths on mount
   useEffect(() => {
     if (!svgContent || !containerRef.current || animatedRef.current) return;
     animatedRef.current = true;
@@ -45,20 +37,19 @@ export default function TreeBackground() {
       const length = p.getTotalLength();
       p.style.strokeDasharray = `${length}`;
       p.style.strokeDashoffset = `${length}`;
-      p.style.transition = `stroke-dashoffset 1.2s ease-out ${i * 0.08}s`;
-      // Force reflow
+      p.style.transition = `stroke-dashoffset 1.2s ease-out ${i * 0.06}s`;
       p.getBoundingClientRect();
       p.style.strokeDashoffset = '0';
     });
   }, [svgContent]);
 
-  if (!isTreeTheme || !svgContent) return null;
+  if (!treeKey || !svgContent) return null;
 
   return (
     <div
       ref={containerRef}
       className="fixed inset-0 z-0 pointer-events-none flex items-end justify-center overflow-hidden"
-      style={{ opacity: 0.18 }}
+      style={{ opacity: 0.18, color: 'hsl(var(--accent))' }}
       dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );

@@ -5,13 +5,18 @@ import { useAppToast } from '@/components/ToastNotification';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { lovable } from '@/integrations/lovable/index';
-import logo from '@/assets/logo-full.png';
+import foliumLogo from '@/assets/folium-logo.svg';
 import AboutScreen from '@/components/AboutScreen';
+import { useTheme } from '@/hooks/useTheme';
+
+const OLD_GOLD_DARK = '#C9A24A';
+const OLD_GOLD_LIGHT = '#A8832A';
 
 export default function AuthScreen() {
   const { t } = useTranslation();
   const { signIn, signUp } = useAuth();
   const { showToast } = useAppToast();
+  const { currentTheme } = useTheme();
   const [isSignUp, setIsSignUp] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [email, setEmail] = useState('');
@@ -20,6 +25,9 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  const isClaro = currentTheme.id === 'claro';
+  const goldColor = isClaro ? OLD_GOLD_LIGHT : OLD_GOLD_DARK;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,8 +54,19 @@ export default function AuthScreen() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
-        <div className="flex justify-center mb-8">
-          <img src={logo} alt="Bibliotheca" className="w-60 min-w-[240px]" />
+        <div className="flex flex-col items-center mb-8">
+          <img
+            src={foliumLogo}
+            alt="Folium"
+            className="w-60 min-w-[240px]"
+            style={{ color: goldColor }}
+          />
+          <p
+            className="mt-4 text-center font-serif italic text-base leading-snug px-2"
+            style={{ color: goldColor }}
+          >
+            Faz das folhas uma biblioteca só tua e descobre o mundo da leitura!
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

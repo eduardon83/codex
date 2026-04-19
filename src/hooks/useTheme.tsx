@@ -5,16 +5,39 @@ import { supabase } from '@/integrations/supabase/client';
 export interface ThemeOption {
   id: string;
   name: string;
-  colors: [string, string, string, string]; // bg-primary, bg-secondary, accent, text-primary
+  tree: 'claro' | 'olmo' | 'carvalho' | 'betula' | 'oliveira';
+  // [deepest, deep, accent, highlight]
+  colors: [string, string, string, string];
 }
 
+/* ==========================================================
+   FOLIUM PALETTE LIBRARY — from folium_12_palettes.html
+   Organised by "tree" mood. Each palette is 4 tones:
+   deepest → deep → accent → highlight
+   ========================================================== */
 export const THEMES: ThemeOption[] = [
-  { id: 'claro', name: 'Claro', colors: ['#FAFAF8', '#F0EDE8', '#6B8E7F', '#2C2A26'] },
-  { id: 'mauve_night', name: 'Mauve Night', colors: ['#331D2C', '#3F2E3E', '#A78295', '#EFE1D1'] },
-  { id: 'deep_ocean', name: 'Deep Ocean', colors: ['#000B58', '#003161', '#006A67', '#FFF4B7'] },
-  { id: 'cosmic', name: 'Cosmic', colors: ['#090040', '#471396', '#B13BFF', '#FFCC00'] },
-  { id: 'forest_lodge', name: 'Forest Lodge', colors: ['#2C3930', '#3F4F44', '#A27B5C', '#DCD7C9'] },
-  { id: 'charcoal_linen', name: 'Charcoal Linen', colors: ['#222831', '#393E46', '#948979', '#DFD0B8'] },
+  // Light default
+  { id: 'claro', name: 'Claro', tree: 'claro', colors: ['#FAFAF8', '#F0EDE8', '#6B8E7F', '#2C2A26'] },
+
+  // Olmo · scholarly, tall — ink skies + warm gold
+  { id: 'idanha',         name: 'Idanha',          tree: 'olmo',     colors: ['#0B2545', '#1B3A6B', '#4A90C7', '#FFD166'] },
+  { id: 'marialva',       name: 'Marialva',        tree: 'olmo',     colors: ['#1A2E2A', '#2A4742', '#6B8E7F', '#F5E6C0'] },
+  { id: 'piodao',         name: 'Piódão',          tree: 'olmo',     colors: ['#1A1F28', '#1F3347', '#D4A556', '#EDDAAE'] },
+
+  // Carvalho · warm, grand
+  { id: 'almeida',        name: 'Almeida',         tree: 'carvalho', colors: ['#1E1A2E', '#2D2445', '#7A5B9A', '#F0B27A'] },
+  { id: 'trancoso',       name: 'Trancoso',        tree: 'carvalho', colors: ['#1A0B2E', '#3B1552', '#9B4DCA', '#FFB627'] },
+  { id: 'castelo-rod',    name: 'Castelo Rodrigo', tree: 'carvalho', colors: ['#231708', '#402811', '#D19C45', '#F5D789'] },
+
+  // Bétula · delicate, light
+  { id: 'belmonte',       name: 'Belmonte',        tree: 'betula',   colors: ['#2B1D24', '#4A2F38', '#C98A82', '#F4DFC5'] },
+  { id: 'monsanto',       name: 'Monsanto',        tree: 'betula',   colors: ['#2A1F3D', '#3E2D52', '#D66F93', '#FFC9B5'] },
+  { id: 'sortelha',       name: 'Sortelha',        tree: 'betula',   colors: ['#1E2A22', '#2F3E33', '#B5704A', '#F0B860'] },
+
+  // Oliveira · poetry, elevation
+  { id: 'castelo-mendo',  name: 'Castelo Mendo',   tree: 'oliveira', colors: ['#1A2320', '#2C3830', '#8BA18B', '#E8DCC4'] },
+  { id: 'castelo-novo',   name: 'Castelo Novo',    tree: 'oliveira', colors: ['#1F1A15', '#3A2D20', '#BA8554', '#F1E2BC'] },
+  { id: 'linhares',       name: 'Linhares',        tree: 'oliveira', colors: ['#16192E', '#262B47', '#7C88B5', '#E0DCEA'] },
 ];
 
 function hexToHSL(hex: string): string {
@@ -87,7 +110,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (profile) {
       const th = (profile as any).theme || 'claro';
-      setThemeIdState(th);
+      // Migrate any old theme ids to claro silently
+      const exists = THEMES.find(t => t.id === th);
+      setThemeIdState(exists ? th : 'claro');
     }
   }, [profile]);
 
