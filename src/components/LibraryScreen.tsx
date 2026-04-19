@@ -202,48 +202,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     loadLibraries();
   };
 
-  const ensurePublicAndGetUrl = async (): Promise<string | null> => {
-    const lib = libraries.find(l => l.id === activeLibrary);
-    if (!lib) return null;
-    if (!lib.is_public) {
-      await supabase.from('libraries').update({ is_public: true }).eq('id', lib.id);
-      await loadLibraries();
-    }
-    return `${window.location.origin}/lista/${lib.id}`;
-  };
-
-  const copyListLink = async () => {
-    const url = await ensurePublicAndGetUrl();
-    if (!url) return;
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t('library.linkCopiedList'));
-    } catch {
-      showToast(t('library.linkCopiedList'));
-    }
-  };
-
-  const shareList = async () => {
-    const url = await ensurePublicAndGetUrl();
-    if (!url) return;
-    const lib = libraries.find(l => l.id === activeLibrary);
-    const title = lib?.name || 'Bibliotheca';
-    if (typeof navigator !== 'undefined' && (navigator as any).share) {
-      try {
-        await (navigator as any).share({ title, text: title, url });
-        return;
-      } catch {
-        // user cancelled or failed — fall through to clipboard
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast(t('library.linkCopiedList'));
-    } catch {
-      showToast(t('library.linkCopiedList'));
-    }
-  };
-
   const hasActiveFilters = filterGenres.length > 0 || filterFormats.length > 0 || filterStatuses.length > 0 || sortBy !== 'date_newest';
 
   const clearFilters = () => {
