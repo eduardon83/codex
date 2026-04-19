@@ -1,0 +1,12 @@
+{
+  "name": "Folium",
+  "short_name": "Folium",
+  "description": "Folium — the student edition of Bibliotheca. Catalogue your books, leaf by leaf.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF8",
+  "theme_color": "#C9A24A",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" }
+  ]
+}
