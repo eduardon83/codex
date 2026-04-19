@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, Globe, Lock, BookOpen, Pencil, Check, Copy, Share2, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -185,13 +185,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     setNewLibraryName('');
     setShowCreateDialog(false);
     celebrate('library');
-    loadLibraries();
-  };
-
-  const togglePublic = async () => {
-    const lib = libraries.find(l => l.id === activeLibrary);
-    if (!lib) return;
-    await supabase.from('libraries').update({ is_public: !lib.is_public }).eq('id', lib.id);
     loadLibraries();
   };
 
@@ -438,44 +431,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 </button>
               )}
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={togglePublic}
-                  className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {currentLib.is_public ? <Globe size={12} /> : <Lock size={12} />}
-                  {currentLib.is_public ? t('library.public') : t('library.private')}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('library.togglePublic')}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={copyListLink}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Copy size={12} />
-                  {t('library.copyListLink')}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('library.copyListLinkHint')}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={shareList}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  <Share2 size={12} />
-                  {t('library.share')}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('library.shareHint')}</TooltipContent>
-            </Tooltip>
           </div>
         </div>
       )}
