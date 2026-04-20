@@ -15,6 +15,9 @@ interface Stats {
   wishlistCount: number;
   avgRating: number | null;
   topGenre: string | null;
+  loansAsLender: number;
+  loansAsBorrower: number;
+  onTimePercent: number | null;
 }
 
 export default function ProfileStats() {
@@ -33,6 +36,9 @@ export default function ProfileStats() {
       borrowedRes,
       librariesRes,
       historyRes,
+      lenderLoansRes,
+      borrowerLoansRes,
+      borrowerReturnedRes,
     ] = await Promise.all([
       supabase.from('books').select('id', { count: 'exact', head: true }).eq('user_id', uid).eq('is_wishlist', false),
       supabase.from('books').select('id', { count: 'exact', head: true }).eq('user_id', uid).eq('is_wishlist', true),
@@ -40,7 +46,17 @@ export default function ProfileStats() {
       supabase.from('books').select('id', { count: 'exact', head: true }).eq('user_id', uid).eq('is_borrowed', true),
       supabase.from('libraries').select('id', { count: 'exact', head: true }).eq('user_id', uid),
       supabase.from('reading_history').select('status, rating, book_genre').eq('user_id', uid),
+      supabase.from('loan_requests' as any).select('id', { count: 'exact', head: true }).eq('owner_user_id', uid).in('status', ['accepted', 'in_progress', 'overdue', 'returned']),
+      supabase.from('loan_requests' as any).select('id', { count: 'exact', head: true }).eq('requester_user_id', uid).in('status', ['accepted', 'in_progress', 'overdue', 'returned']),
+      supabase.from('loan_requests' as any).select('due_date, returned_at').eq('requester_user_id', uid).eq('status', 'returned'),
     ]);
+
+    const returnedRows = ((borrowerReturnedRes as any).data as any[]) || [];
+    const completed = returnedRows.length;
+    const onTime = returnedRows.filter(r =>
+      r.due_date && r.returned_at && new Date(r.returned_at).getTime() <= new Date(r.due_date).getTime()
+    ).length;
+    const onTimePercent = completed >= 3 ? Math.round((onTime / completed) * 100) : null;
 
     const historyData = (historyRes.data as any[]) || [];
     const booksRead = historyData.filter(h => h.status === 'Read').length;
@@ -73,6 +89,9 @@ export default function ProfileStats() {
       wishlistCount: wishlistRes.count || 0,
       avgRating,
       topGenre,
+      loansAsLender: (lenderLoansRes as any).count || 0,
+      loansAsBorrower: (borrowerLoansRes as any).count || 0,
+      onTimePercent,
     });
   };
 
@@ -91,7 +110,12 @@ export default function ProfileStats() {
     { label: t('profileStats.toRead'), value: stats.toRead },
     { label: t('profileStats.totalLibraries'), value: stats.totalLibraries },
     { label: t('profileStats.wishlist'), value: stats.wishlistCount },
+    { label: t('profileStats.loansAsLender', 'Livros emprestados'), value: stats.loansAsLender },
+    { label: t('profileStats.loansAsBorrower', 'Livros pedidos emprestados'), value: stats.loansAsBorrower },
   ];
+  if (stats.onTimePercent !== null) {
+    metrics.push({ label: t('profileStats.onTimeReturns', 'Devoluções a tempo'), value: `${stats.onTimePercent}%` });
+  }
 
   return (
     <div className="mt-8">
