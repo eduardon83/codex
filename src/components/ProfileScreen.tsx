@@ -7,7 +7,7 @@ import { uploadFileToStorage } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { LogOut, Check, Camera, User, BookOpen, CalendarDays } from 'lucide-react';
+import { LogOut, Check, Camera, User, BookOpen, CalendarDays, History } from 'lucide-react';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
