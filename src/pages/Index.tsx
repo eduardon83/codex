@@ -9,7 +9,7 @@ import LibraryScreen from '@/components/LibraryScreen';
 import AddBookScreen from '@/components/AddBookScreen';
 import BookDetail from '@/components/BookDetail';
 import ProfileScreen from '@/components/ProfileScreen';
-import FindLibrariesScreen from '@/components/FindLibrariesScreen';
+import ProcurarLivroScreen from '@/components/ProcurarLivroScreen';
 import WishlistScreen from '@/components/WishlistScreen';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
@@ -103,7 +103,7 @@ export default function Index() {
       )}
       {activeTab === 'profile' && <ProfileScreen />}
       {activeTab === 'find' && (
-        <FindLibrariesScreen
+        <ProcurarLivroScreen
           onGoToProfile={() => setActiveTab('profile')}
           onOpenLibrary={(lib) => setPublicLibView(lib)}
         />
