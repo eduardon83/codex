@@ -135,6 +135,18 @@ async function tryCommunityCache(isbn: string): Promise<BookData | null> {
   }
 }
 
+// ─── Helper: strip HTML tags + decode common entities ───
+function stripHtml(s: string): string {
+  return s
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // ─── Source 5: ISBNsearch.org scrape ───
 async function tryISBNSearch(isbn: string): Promise<BookData | null> {
   try {
