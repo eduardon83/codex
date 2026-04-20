@@ -285,6 +285,12 @@ export async function fetchBookByISBN(isbn: string): Promise<BookData | null> {
     const scraped = await tryISBNSearch(isbn);
     if (scraped) return scraped;
 
+    const isbndb = await tryISBNdb(isbn);
+    if (isbndb) return isbndb;
+
+    const bf = await tryBookFinder(isbn);
+    if (bf) return bf;
+
     // As a last resort, try Open Library search (sometimes has Portuguese editions)
     const olSearch = await tryOpenLibrarySearch(isbn);
     if (olSearch) return olSearch;
