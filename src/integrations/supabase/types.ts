@@ -104,6 +104,79 @@ export type Database = {
         }
         Relationships: []
       }
+      book_availability: {
+        Row: {
+          author: string | null
+          auto_accept: boolean
+          book_id: string
+          cover_url: string | null
+          created_at: string
+          district_id: string | null
+          id: string
+          is_available: boolean
+          isbn: string | null
+          loan_duration_days: number
+          owner_user_id: string
+          school_id: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          auto_accept?: boolean
+          book_id: string
+          cover_url?: string | null
+          created_at?: string
+          district_id?: string | null
+          id?: string
+          is_available?: boolean
+          isbn?: string | null
+          loan_duration_days?: number
+          owner_user_id: string
+          school_id?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          auto_accept?: boolean
+          book_id?: string
+          cover_url?: string | null
+          created_at?: string
+          district_id?: string | null
+          id?: string
+          is_available?: boolean
+          isbn?: string | null
+          loan_duration_days?: number
+          owner_user_id?: string
+          school_id?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_availability_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: true
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_availability_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "book_availability_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       book_cache: {
         Row: {
           author: string | null
@@ -360,11 +433,20 @@ export type Database = {
           book_id: string
           book_isbn: string | null
           book_title: string
+          borrower_confirmed_return: boolean
           created_at: string
           due_date: string | null
           id: string
+          lender_confirmed_return: boolean
+          message: string | null
           owner_user_id: string
+          rejection_reason: string | null
+          reminder_3day_sent_at: string | null
+          reminder_confirm_sent_at: string | null
+          requested_at: string
           requester_user_id: string
+          responded_at: string | null
+          returned_at: string | null
           status: string
           updated_at: string
         }
@@ -374,11 +456,20 @@ export type Database = {
           book_id: string
           book_isbn?: string | null
           book_title: string
+          borrower_confirmed_return?: boolean
           created_at?: string
           due_date?: string | null
           id?: string
+          lender_confirmed_return?: boolean
+          message?: string | null
           owner_user_id: string
+          rejection_reason?: string | null
+          reminder_3day_sent_at?: string | null
+          reminder_confirm_sent_at?: string | null
+          requested_at?: string
           requester_user_id: string
+          responded_at?: string | null
+          returned_at?: string | null
           status?: string
           updated_at?: string
         }
@@ -388,11 +479,20 @@ export type Database = {
           book_id?: string
           book_isbn?: string | null
           book_title?: string
+          borrower_confirmed_return?: boolean
           created_at?: string
           due_date?: string | null
           id?: string
+          lender_confirmed_return?: boolean
+          message?: string | null
           owner_user_id?: string
+          rejection_reason?: string | null
+          reminder_3day_sent_at?: string | null
+          reminder_confirm_sent_at?: string | null
+          requested_at?: string
           requester_user_id?: string
+          responded_at?: string | null
+          returned_at?: string | null
           status?: string
           updated_at?: string
         }
