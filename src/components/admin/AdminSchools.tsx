@@ -148,6 +148,40 @@ export default function AdminSchools() {
         </p>
       </div>
 
+      <div className="border border-border rounded-md p-4 space-y-3">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="font-['Cormorant_Garamond'] text-xl font-semibold text-foreground">Manutenção</h2>
+            <p className="text-xs text-muted-foreground font-['Josefin_Sans'] mt-1">
+              Importar escolas oficiais do GESEdu (Ministério da Educação).
+            </p>
+          </div>
+          <Button onClick={runImport} disabled={importing} variant="outline">
+            {importing ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> A importar…</> : 'Importar escolas GESEdu'}
+          </Button>
+        </div>
+        {importSummary && (
+          <div className="text-xs font-['Josefin_Sans'] text-muted-foreground border-t border-border pt-3 space-y-1">
+            <div>
+              Total recolhido: <strong className="text-foreground">{importSummary.total_fetched}</strong> ·
+              Inseridas/atualizadas: <strong className="text-foreground">{importSummary.total_upserted}</strong> ·
+              Falhas: <strong className="text-foreground">{importSummary.total_failed}</strong>
+            </div>
+            <details className="cursor-pointer">
+              <summary className="text-foreground">Ver detalhe por distrito</summary>
+              <ul className="mt-2 space-y-0.5 max-h-64 overflow-auto">
+                {Object.entries(importSummary.per_district).map(([d, s]) => (
+                  <li key={d}>
+                    {d}: {s.fetched} fetched, {s.upserted} upserted{s.failed ? `, ${s.failed} failed` : ''}
+                    {s.error ? ` — ${s.error}` : ''}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </div>
+        )}
+      </div>
+
       <Tabs defaultValue="verified">
         <TabsList>
           <TabsTrigger value="verified">
