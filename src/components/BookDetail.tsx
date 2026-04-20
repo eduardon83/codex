@@ -17,6 +17,7 @@ import { formatDate } from '@/i18n';
 import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
+import BookLendingToggle from '@/components/BookLendingToggle';
 
 interface BookDetailProps {
   bookId: string;
@@ -523,6 +524,20 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
               rows={4}
             />
           </div>
+
+          {/* Folium peer-to-peer lending toggle */}
+          {!book.is_borrowed && user?.id === (book as any).user_id !== false && (
+            <div className="mb-4">
+              <BookLendingToggle book={{
+                id: book.id,
+                user_id: user!.id,
+                title: book.title,
+                author: book.author,
+                isbn: book.isbn,
+                cover_url: book.cover_url,
+              }} />
+            </div>
+          )}
 
           {/* Loan / Borrowed section */}
           {book.is_borrowed ? (
