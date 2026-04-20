@@ -7,6 +7,7 @@ import AdminExport from '@/components/admin/AdminExport';
 import AdminAuditLog from '@/components/admin/AdminAuditLog';
 import AdminContent from '@/components/admin/AdminContent';
 import AdminBackups from '@/components/admin/AdminBackups';
+import AdminSchools from '@/components/admin/AdminSchools';
 
 export default function Admin() {
   return (
@@ -16,6 +17,7 @@ export default function Admin() {
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="content" element={<AdminContent />} />
+          <Route path="schools" element={<AdminSchools />} />
           <Route path="backups" element={<AdminBackups />} />
           <Route path="export" element={<AdminExport />} />
           <Route path="audit" element={<AdminAuditLog />} />

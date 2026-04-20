@@ -1,12 +1,13 @@
 import { ReactNode } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database } from 'lucide-react';
+import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database, School } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { path: '/admin/users', label: 'Users', icon: Users },
   { path: '/admin/content', label: 'Conteúdo', icon: FileText },
+  { path: '/admin/schools', label: 'Escolas', icon: School },
   { path: '/admin/backups', label: 'Backups', icon: Database },
   { path: '/admin/export', label: 'Export', icon: Download },
   { path: '/admin/audit', label: 'Audit Log', icon: ScrollText },
