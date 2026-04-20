@@ -59,7 +59,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
 
       const { data } = await q;
       if (!active) return;
-      const rows = (data || []) as AvailRow[];
+      const rows = ((data || []) as unknown) as AvailRow[];
       setResults(rows);
 
       // Resolve owner usernames + school names
@@ -100,7 +100,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-serif text-2xl text-foreground">Procurar livro</h2>
-        <HelpButton screen="find" />
+        <HelpButton screen="discover" />
       </div>
 
       <Tabs defaultValue="books">
@@ -183,7 +183,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
 
         <TabsContent value="public" className="mt-4">
           {/* Reuse existing public-library discovery (Overpass + saved) */}
-          <FindLibrariesScreen onGoToProfile={onGoToProfile} onOpenLibrary={onOpenLibrary} embedded />
+          <FindLibrariesScreen onGoToProfile={onGoToProfile} onOpenLibrary={onOpenLibrary} />
         </TabsContent>
       </Tabs>
 

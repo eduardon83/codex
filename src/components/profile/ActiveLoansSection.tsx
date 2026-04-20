@@ -33,7 +33,7 @@ export default function ActiveLoansSection() {
       .or(`owner_user_id.eq.${user.id},requester_user_id.eq.${user.id}`)
       .in('status', ACTIVE_STATUSES)
       .order('due_date', { ascending: true });
-    setLoans((data || []) as ActiveLoanRow[]);
+    setLoans(((data || []) as unknown) as ActiveLoanRow[]);
   }, [user]);
 
   useEffect(() => {

@@ -33,7 +33,7 @@ export default function PendingRequestsSection() {
       .eq('owner_user_id', user.id)
       .eq('status', 'pending')
       .order('requested_at', { ascending: false });
-    const rows = (data || []) as PendingRequest[];
+    const rows = ((data || []) as unknown) as PendingRequest[];
     setRequests(rows);
 
     const ids = Array.from(new Set(rows.map(r => r.requester_user_id)));

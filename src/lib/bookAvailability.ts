@@ -66,5 +66,5 @@ export async function getBookAvailability(bookId: string) {
     .select('id, is_available, loan_duration_days')
     .eq('book_id', bookId)
     .maybeSingle();
-  return data as { id: string; is_available: boolean; loan_duration_days: number } | null;
+  return data as unknown as { id: string; is_available: boolean; loan_duration_days: number } | null;
 }
