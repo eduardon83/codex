@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { uploadFileToStorage } from '@/lib/storage';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Camera } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
 
 export interface LibraryCardRecord {
   id?: string;
@@ -38,6 +38,9 @@ export default function LibraryCardEditor({ open, onClose, card, onSaved }: Prop
   const [hasExpiry, setHasExpiry] = useState(false);
   const [expiryDate, setExpiryDate] = useState('');
   const [saving, setSaving] = useState(false);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (open) {
@@ -47,13 +50,30 @@ export default function LibraryCardEditor({ open, onClose, card, onSaved }: Prop
       setMemberSince(card?.member_since || '');
       setHasExpiry(!!card?.expiry_date);
       setExpiryDate(card?.expiry_date || '');
+      setPhotoUrl(card?.photo_url || null);
+      setPhotoFile(null);
     }
   }, [open, card]);
+
+  const handlePhotoFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPhotoFile(file);
+      setPhotoUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const removePhoto = () => {
+    setPhotoFile(null);
+    setPhotoUrl(null);
+  };
 
   const save = async () => {
     if (!user || !libraryName.trim()) return;
     setSaving(true);
-    const payload: any = {
+
+    // Insert/update first to get an id, then upload photo (if any) and patch.
+    const basePayload: any = {
       user_id: user.id,
       name: libraryName.trim(), // keep legacy required field
       library_name: libraryName.trim(),
@@ -61,12 +81,31 @@ export default function LibraryCardEditor({ open, onClose, card, onSaved }: Prop
       card_number: cardNumber.trim() || null,
       member_since: memberSince || null,
       expiry_date: hasExpiry && expiryDate ? expiryDate : null,
+      // If user explicitly removed an existing photo, clear it.
+      photo_url: photoUrl === null && !photoFile ? null : (card?.photo_url ?? null),
     };
-    if (card?.id) {
-      await (supabase.from('library_cards' as any).update(payload).eq('id', card.id));
+
+    let recordId = card?.id;
+    if (recordId) {
+      await (supabase.from('library_cards' as any).update(basePayload).eq('id', recordId));
     } else {
-      await (supabase.from('library_cards' as any).insert(payload));
+      const { data: inserted } = await (supabase
+        .from('library_cards' as any)
+        .insert(basePayload)
+        .select('id')
+        .single());
+      recordId = (inserted as any)?.id;
     }
+
+    if (photoFile && recordId) {
+      const ext = photoFile.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const path = `${user.id}/${recordId}.${ext}`;
+      const url = await uploadFileToStorage('library-card-photos', path, photoFile);
+      if (url) {
+        await (supabase.from('library_cards' as any).update({ photo_url: url }).eq('id', recordId));
+      }
+    }
+
     setSaving(false);
     onSaved();
     onClose();
@@ -126,10 +165,40 @@ export default function LibraryCardEditor({ open, onClose, card, onSaved }: Prop
             <label className="text-xs uppercase tracking-wide text-muted-foreground mb-1 block">
               {t('libraryCard.fields.photo')}
             </label>
-            <div className="border border-dashed border-border rounded p-4 flex items-center gap-2 text-muted-foreground text-sm">
-              <Camera size={16} />
-              <span>{t('libraryCard.fields.photoSoon')}</span>
-            </div>
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoFile}
+            />
+            {photoUrl ? (
+              <div className="relative inline-block">
+                <img
+                  src={photoUrl}
+                  alt=""
+                  className="max-h-40 rounded border border-border object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={removePhoto}
+                  className="absolute -top-2 -right-2 bg-background border border-border rounded-full p-1 hover:bg-muted"
+                  aria-label="Remove photo"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => photoInputRef.current?.click()}
+                className="w-full text-sm"
+              >
+                <Upload size={14} className="mr-2" />
+                {t('libraryCard.fields.uploadPhoto', 'Upload photo')}
+              </Button>
+            )}
           </div>
 
           <div className="flex gap-2 pt-2">

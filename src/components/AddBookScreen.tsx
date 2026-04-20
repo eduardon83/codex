@@ -18,6 +18,7 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import GenreMultiSelect, { parseGenres, serializeGenres } from '@/components/GenreMultiSelect';
 import HelpButton from '@/components/tutorial/HelpButton';
+import BarcodeScanner from '@/components/BarcodeScanner';
 
 interface AddBookScreenProps {
   isWishlist?: boolean;
@@ -47,6 +48,7 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
   const [genres, setGenres] = useState<string[]>([]);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
+  const [scannerOpen, setScannerOpen] = useState(false);
 
   // Borrowed book state
   const [isBorrowed, setIsBorrowed] = useState(false);
@@ -209,7 +211,7 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
           <div className="flex gap-2">
             <button
               className="flex-1 py-3 border border-border rounded text-sm text-muted-foreground flex items-center justify-center gap-2 hover:border-foreground hover:text-foreground transition-colors"
-              onClick={() => {}}
+              onClick={() => setScannerOpen(true)}
             >
               <Camera size={16} /> {t('addBook.scanIsbn')}
             </button>
@@ -403,6 +405,48 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
           )}
         </div>
       )}
+
+      <BarcodeScanner
+        open={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onDetected={(code) => {
+          setScannerOpen(false);
+          setIsbn(code);
+          // auto-lookup after a short tick so state updates first
+          setTimeout(() => {
+            setIsbn(code);
+            (async () => {
+              setLoading(true);
+              setError('');
+              setBookSource(null);
+              setIsManualFill(false);
+              const result = await fetchBookByISBN(code);
+              if (result) {
+                setForm((f) => ({
+                  ...f,
+                  title: result.title,
+                  author: result.author,
+                  isbn: result.isbn,
+                  publisher: result.publisher,
+                  publish_date: result.publish_date,
+                  cover_url: result.cover_url,
+                  language: result.language,
+                  page_count: result.page_count?.toString() || '',
+                  genre: result.genre,
+                }));
+                setGenres(parseGenres(result.genre));
+                setBookSource(result.source || null);
+                setMode('manual');
+              } else {
+                setForm((f) => ({ ...f, isbn: code }));
+                setIsManualFill(true);
+                setMode('manual');
+              }
+              setLoading(false);
+            })();
+          }, 50);
+        }}
+      />
     </div>
   );
 }
