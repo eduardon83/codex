@@ -11,7 +11,7 @@ import { LogOut, Check, Camera, User, BookOpen, CalendarDays } from 'lucide-reac
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
-import LocationSelector from '@/components/LocationSelector';
+import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
 import CalendarScreen from '@/components/CalendarScreen';
@@ -120,7 +120,14 @@ export default function ProfileScreen() {
             </p>
             <p className="text-sm text-muted-foreground">@{profile?.username}</p>
             <div className="mt-1">
-              <LocationSelector currentName={profile?.location || null} onSave={saveLocation} />
+              <SchoolSelector
+                current={{
+                  country_code: (profile as any)?.country_code ?? null,
+                  district_id: (profile as any)?.district_id ?? null,
+                  school_id: (profile as any)?.school_id ?? null,
+                }}
+                onSaved={refreshProfile}
+              />
             </div>
             {profile?.bio && (
               <p className="text-xs text-foreground mt-2">{profile.bio}</p>
@@ -136,7 +143,14 @@ export default function ProfileScreen() {
               <Input value={form.last_name} onChange={e => update('last_name', e.target.value)} placeholder={t('profile.lastName')} className="bg-background border-border text-sm h-9" />
             </div>
             <Input value={form.username} onChange={e => update('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} placeholder={t('profile.username')} className="bg-background border-border text-sm h-9" />
-            <LocationSelector currentName={profile?.location || null} onSave={saveLocation} />
+            <SchoolSelector
+              current={{
+                country_code: (profile as any)?.country_code ?? null,
+                district_id: (profile as any)?.district_id ?? null,
+                school_id: (profile as any)?.school_id ?? null,
+              }}
+              onSaved={refreshProfile}
+            />
             <Textarea value={form.bio} onChange={e => update('bio', e.target.value)} placeholder={t('profile.bio')} className="bg-background border-border text-sm resize-none" rows={2} maxLength={280} />
             <div className="flex gap-2">
               <Button onClick={save} size="sm" className="flex-1">{t('profile.save')}</Button>
