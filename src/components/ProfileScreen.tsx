@@ -15,6 +15,7 @@ import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
 import CalendarScreen from '@/components/CalendarScreen';
+import LoanHistoryScreen from '@/components/LoanHistoryScreen';
 import FavouritesSection from '@/components/profile/FavouritesSection';
 import CurrentlyReadingSection from '@/components/profile/CurrentlyReadingSection';
 import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
@@ -33,6 +34,7 @@ export default function ProfileScreen() {
   const [showAbout, setShowAbout] = useState(false);
   const [showReadingHistory, setShowReadingHistory] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showLoanHistory, setShowLoanHistory] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -91,6 +93,7 @@ export default function ProfileScreen() {
   if (showAbout) return <AboutScreen onBack={() => setShowAbout(false)} />;
   if (showReadingHistory) return <ReadingHistoryScreen onBack={() => setShowReadingHistory(false)} />;
   if (showCalendar) return <CalendarScreen onBack={() => setShowCalendar(false)} />;
+  if (showLoanHistory) return <LoanHistoryScreen onBack={() => setShowLoanHistory(false)} />;
 
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
@@ -205,6 +208,16 @@ export default function ProfileScreen() {
       >
         <CalendarDays size={16} />
         {t('calendar.title', 'Calendário')}
+      </Button>
+
+      {/* 6.6 Loan history */}
+      <Button
+        variant="outline"
+        onClick={() => setShowLoanHistory(true)}
+        className="w-full mt-3 flex items-center gap-2"
+      >
+        <History size={16} />
+        {t('loanHistory.title', 'Histórico de empréstimos')}
       </Button>
 
       {/* 6.5 Library cards */}
