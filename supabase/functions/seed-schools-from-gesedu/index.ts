@@ -50,8 +50,7 @@ function inferEducationLevels(ciclo: string | null): string[] {
 function normalizeNatureza(n: string | null): string {
   if (!n) return 'public'
   const s = n.toLowerCase()
-  if (s.includes('priv')) return 'private'
-  if (s.includes('coop')) return 'cooperative'
+  if (s.includes('priv') || s.includes('coop')) return 'private'
   return 'public'
 }
 
