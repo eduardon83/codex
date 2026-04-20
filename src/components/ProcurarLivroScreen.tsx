@@ -8,6 +8,7 @@ import { Search, BookOpen, Loader2, MapPin } from 'lucide-react';
 import LoanRequestModal, { RequestableBook } from '@/components/LoanRequestModal';
 import FindLibrariesScreen from '@/components/FindLibrariesScreen';
 import HelpButton from '@/components/tutorial/HelpButton';
+import { fetchPublicReputations } from '@/lib/loanReputation';
 
 interface AvailRow {
   id: string;
@@ -35,6 +36,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<AvailRow[]>([]);
   const [owners, setOwners] = useState<Record<string, OwnerInfo>>({});
+  const [reputations, setReputations] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [requestTarget, setRequestTarget] = useState<RequestableBook | null>(null);
 
@@ -91,6 +93,8 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
         };
       });
       setOwners(map);
+      const reps = await fetchPublicReputations(ownerIds);
+      if (active) setReputations(reps);
       setLoading(false);
     }, 200);
     return () => { active = false; clearTimeout(t); };
@@ -153,7 +157,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
                           <p className="text-sm font-medium text-foreground line-clamp-2">{r.title}</p>
                           {r.author && <p className="text-xs text-muted-foreground line-clamp-1">{r.author}</p>}
                           <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                            <MapPin size={10} /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}
+                            <MapPin size={10} /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}{reputations[r.owner_user_id] !== undefined ? ` · ${reputations[r.owner_user_id]}% devoluções a tempo` : ''}
                           </p>
                           <Button
                             size="sm"
