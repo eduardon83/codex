@@ -42,6 +42,30 @@ export default function AdminSchools() {
   const [submitters, setSubmitters] = useState<Record<string, Submitter>>({});
   const [search, setSearch] = useState('');
   const [actingId, setActingId] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importSummary, setImportSummary] = useState<null | {
+    total_fetched: number;
+    total_upserted: number;
+    total_failed: number;
+    per_district: Record<string, { fetched: number; upserted: number; failed: number; error?: string }>;
+  }>(null);
+
+  const runImport = async () => {
+    setImporting(true);
+    setImportSummary(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('seed-schools-from-gesedu');
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Falha na importação');
+      setImportSummary(data.summary);
+      toast.success(`Importação concluída: ${data.summary.total_upserted} escolas atualizadas`);
+      load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -122,6 +146,40 @@ export default function AdminSchools() {
         <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mt-1">
           Gerir escolas verificadas e submissões pendentes.
         </p>
+      </div>
+
+      <div className="border border-border rounded-md p-4 space-y-3">
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="font-['Cormorant_Garamond'] text-xl font-semibold text-foreground">Manutenção</h2>
+            <p className="text-xs text-muted-foreground font-['Josefin_Sans'] mt-1">
+              Importar escolas oficiais do GESEdu (Ministério da Educação).
+            </p>
+          </div>
+          <Button onClick={runImport} disabled={importing} variant="outline">
+            {importing ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> A importar…</> : 'Importar escolas GESEdu'}
+          </Button>
+        </div>
+        {importSummary && (
+          <div className="text-xs font-['Josefin_Sans'] text-muted-foreground border-t border-border pt-3 space-y-1">
+            <div>
+              Total recolhido: <strong className="text-foreground">{importSummary.total_fetched}</strong> ·
+              Inseridas/atualizadas: <strong className="text-foreground">{importSummary.total_upserted}</strong> ·
+              Falhas: <strong className="text-foreground">{importSummary.total_failed}</strong>
+            </div>
+            <details className="cursor-pointer">
+              <summary className="text-foreground">Ver detalhe por distrito</summary>
+              <ul className="mt-2 space-y-0.5 max-h-64 overflow-auto">
+                {Object.entries(importSummary.per_district).map(([d, s]) => (
+                  <li key={d}>
+                    {d}: {s.fetched} fetched, {s.upserted} upserted{s.failed ? `, ${s.failed} failed` : ''}
+                    {s.error ? ` — ${s.error}` : ''}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </div>
+        )}
       </div>
 
       <Tabs defaultValue="verified">
