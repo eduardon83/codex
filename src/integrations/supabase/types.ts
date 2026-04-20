@@ -254,6 +254,30 @@ export type Database = {
           },
         ]
       }
+      districts: {
+        Row: {
+          country_code: string
+          created_at: string
+          id: string
+          name: string
+          region: string | null
+        }
+        Insert: {
+          country_code?: string
+          created_at?: string
+          id?: string
+          name: string
+          region?: string | null
+        }
+        Update: {
+          country_code?: string
+          created_at?: string
+          id?: string
+          name?: string
+          region?: string | null
+        }
+        Relationships: []
+      }
       libraries: {
         Row: {
           created_at: string
@@ -432,7 +456,9 @@ export type Database = {
           age_group: string
           avatar_url: string | null
           bio: string | null
+          country_code: string
           created_at: string
+          district_id: string | null
           first_name: string | null
           id: string
           language: string
@@ -441,6 +467,7 @@ export type Database = {
           location_lat: number | null
           location_lng: number | null
           profile_completed: boolean
+          school_id: string | null
           suspended: boolean
           theme: string
           updated_at: string
@@ -451,7 +478,9 @@ export type Database = {
           age_group?: string
           avatar_url?: string | null
           bio?: string | null
+          country_code?: string
           created_at?: string
+          district_id?: string | null
           first_name?: string | null
           id?: string
           language?: string
@@ -460,6 +489,7 @@ export type Database = {
           location_lat?: number | null
           location_lng?: number | null
           profile_completed?: boolean
+          school_id?: string | null
           suspended?: boolean
           theme?: string
           updated_at?: string
@@ -470,7 +500,9 @@ export type Database = {
           age_group?: string
           avatar_url?: string | null
           bio?: string | null
+          country_code?: string
           created_at?: string
+          district_id?: string | null
           first_name?: string | null
           id?: string
           language?: string
@@ -479,13 +511,29 @@ export type Database = {
           location_lat?: number | null
           location_lng?: number | null
           profile_completed?: boolean
+          school_id?: string | null
           suspended?: boolean
           theme?: string
           updated_at?: string
           user_id?: string
           username?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reading_history: {
         Row: {
@@ -680,6 +728,62 @@ export type Database = {
             columns: ["library_id"]
             isOneToOne: false
             referencedRelation: "public_libraries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schools: {
+        Row: {
+          address: string | null
+          concelho: string | null
+          created_at: string
+          district_id: string
+          education_levels: string[]
+          id: string
+          is_active: boolean
+          is_verified: boolean
+          me_code: string | null
+          name: string
+          school_type: string
+          submitted_by_user_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          concelho?: string | null
+          created_at?: string
+          district_id: string
+          education_levels?: string[]
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          me_code?: string | null
+          name: string
+          school_type?: string
+          submitted_by_user_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          concelho?: string | null
+          created_at?: string
+          district_id?: string
+          education_levels?: string[]
+          id?: string
+          is_active?: boolean
+          is_verified?: boolean
+          me_code?: string | null
+          name?: string
+          school_type?: string
+          submitted_by_user_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schools_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
             referencedColumns: ["id"]
           },
         ]
