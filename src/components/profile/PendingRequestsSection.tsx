@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Inbox } from 'lucide-react';
 import { toast } from 'sonner';
+import { fetchPublicReputations } from '@/lib/loanReputation';
 
 interface PendingRequest {
   id: string;
@@ -22,6 +23,7 @@ export default function PendingRequestsSection() {
   const { user } = useAuth();
   const [requests, setRequests] = useState<PendingRequest[]>([]);
   const [info, setInfo] = useState<Record<string, RequesterInfo>>({});
+  const [reputations, setReputations] = useState<Record<string, number>>({});
   const [acting, setActing] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
 
@@ -57,6 +59,8 @@ export default function PendingRequestsSection() {
         };
       });
       setInfo(map);
+      const reps = await fetchPublicReputations(ids);
+      setReputations(reps);
     }
     setLoaded(true);
   }, [user]);
@@ -154,7 +158,7 @@ export default function PendingRequestsSection() {
               <div className="flex-1 min-w-0 space-y-1">
                 <p className="text-sm font-medium text-foreground line-clamp-1">{r.book_title}</p>
                 <p className="text-[11px] text-muted-foreground">
-                  @{requesterLabel}{meta?.school_name ? ` · ${meta.school_name}` : ''}
+                  @{requesterLabel}{meta?.school_name ? ` · ${meta.school_name}` : ''}{reputations[r.requester_user_id] !== undefined ? ` · ${reputations[r.requester_user_id]}% devoluções a tempo` : ''}
                 </p>
                 {r.message && (
                   <p className="text-xs text-foreground italic border-l-2 border-border pl-2">"{r.message}"</p>
