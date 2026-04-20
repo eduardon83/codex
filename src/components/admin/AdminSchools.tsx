@@ -42,6 +42,30 @@ export default function AdminSchools() {
   const [submitters, setSubmitters] = useState<Record<string, Submitter>>({});
   const [search, setSearch] = useState('');
   const [actingId, setActingId] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importSummary, setImportSummary] = useState<null | {
+    total_fetched: number;
+    total_upserted: number;
+    total_failed: number;
+    per_district: Record<string, { fetched: number; upserted: number; failed: number; error?: string }>;
+  }>(null);
+
+  const runImport = async () => {
+    setImporting(true);
+    setImportSummary(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('seed-schools-from-gesedu');
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || 'Falha na importação');
+      setImportSummary(data.summary);
+      toast.success(`Importação concluída: ${data.summary.total_upserted} escolas atualizadas`);
+      load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setImporting(false);
+    }
+  };
 
   const load = async () => {
     setLoading(true);
