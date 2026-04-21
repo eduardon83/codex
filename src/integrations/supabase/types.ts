@@ -640,11 +640,13 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_status: string
           age_group: string
           avatar_url: string | null
           bio: string | null
           country_code: string
           created_at: string
+          date_of_birth: string | null
           district_id: string | null
           first_name: string | null
           id: string
@@ -653,6 +655,10 @@ export type Database = {
           location: string | null
           location_lat: number | null
           location_lng: number | null
+          parent_consent_confirmed_at: string | null
+          parent_consent_sent_at: string | null
+          parent_consent_token: string | null
+          parent_email: string | null
           profile_completed: boolean
           school_id: string | null
           suspended: boolean
@@ -662,11 +668,13 @@ export type Database = {
           username: string | null
         }
         Insert: {
+          account_status?: string
           age_group?: string
           avatar_url?: string | null
           bio?: string | null
           country_code?: string
           created_at?: string
+          date_of_birth?: string | null
           district_id?: string | null
           first_name?: string | null
           id?: string
@@ -675,6 +683,10 @@ export type Database = {
           location?: string | null
           location_lat?: number | null
           location_lng?: number | null
+          parent_consent_confirmed_at?: string | null
+          parent_consent_sent_at?: string | null
+          parent_consent_token?: string | null
+          parent_email?: string | null
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
@@ -684,11 +696,13 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          account_status?: string
           age_group?: string
           avatar_url?: string | null
           bio?: string | null
           country_code?: string
           created_at?: string
+          date_of_birth?: string | null
           district_id?: string | null
           first_name?: string | null
           id?: string
@@ -697,6 +711,10 @@ export type Database = {
           location?: string | null
           location_lat?: number | null
           location_lng?: number | null
+          parent_consent_confirmed_at?: string | null
+          parent_consent_sent_at?: string | null
+          parent_consent_token?: string | null
+          parent_email?: string | null
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
@@ -1100,6 +1118,7 @@ export type Database = {
       admin_export_users: { Args: never; Returns: Json }
       admin_get_stats: { Args: never; Returns: Json }
       admin_get_users: { Args: never; Returns: Json }
+      confirm_parental_consent: { Args: { _token: string }; Returns: boolean }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
