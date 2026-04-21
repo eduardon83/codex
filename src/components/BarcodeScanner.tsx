@@ -105,6 +105,7 @@ export default function BarcodeScanner({ open, onClose, onDetected }: Props) {
 
     return () => {
       cancelled = true;
+      permissionStream?.getTracks().forEach((tr) => tr.stop());
       controlsRef.current?.stop();
       controlsRef.current = null;
     };
