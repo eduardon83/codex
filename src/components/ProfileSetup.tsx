@@ -1,70 +1,343 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useMemo, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import { useEffect } from 'react';
+import { Loader2, Search, ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
+import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
+import foliumLogo from '@/assets/folium-logo.svg';
+import { THEMES } from '@/hooks/useTheme';
+
+type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+
+interface District { id: string; name: string; }
+interface School { id: string; name: string; concelho: string | null; me_code?: string | null; }
+
+function calculateAge(dob: string): number {
+  if (!dob) return 0;
+  const birth = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  return age;
+}
 
 export default function ProfileSetup() {
-  const { t } = useTranslation();
-  const { user, refreshProfile } = useAuth();
-  const [form, setForm] = useState({
-    first_name: '',
-    last_name: '',
-    username: '',
-    location: '',
-    bio: '',
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { user, refreshProfile, signOut } = useAuth();
+  const [step, setStep] = useState<Step>('basics');
+  const [saving, setSaving] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Step 1: basics
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [dob, setDob] = useState('');
+
+  // Step 3a: parental consent
+  const [parentEmail, setParentEmail] = useState('');
+  const [consentAge, setConsentAge] = useState(false);
+  const [consentTerms, setConsentTerms] = useState(false);
+
+  // Step 4: school
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [districtId, setDistrictId] = useState<string>('');
+  const [schoolQuery, setSchoolQuery] = useState('');
+  const [schoolResults, setSchoolResults] = useState<School[]>([]);
+  const [schoolId, setSchoolId] = useState<string>('');
+  const [searching, setSearching] = useState(false);
+
+  // Step 5: theme
+  const [themeId, setThemeId] = useState('claro');
+
+  const age = useMemo(() => calculateAge(dob), [dob]);
+
+  // Load districts when reaching school step
+  useEffect(() => {
+    if (step !== 'school') return;
+    supabase.from('districts').select('id, name').eq('country_code', 'PT').order('name')
+      .then(({ data }) => setDistricts((data || []) as District[]));
+  }, [step]);
+
+  // Search schools
+  useEffect(() => {
+    if (step !== 'school' || !districtId) { setSchoolResults([]); return; }
+    let active = true;
+    setSearching(true);
+    const t = setTimeout(async () => {
+      let q = supabase.from('schools').select('id, name, concelho').eq('district_id', districtId).order('name').limit(20);
+      if (schoolQuery.trim()) q = q.ilike('name', `%${schoolQuery.trim()}%`);
+      const { data } = await q;
+      const districtName = districts.find(d => d.id === districtId)?.name;
+      const fallback = districtName
+        ? (FALLBACK_SCHOOLS_BY_DISTRICT[districtName] || [])
+            .filter(s => !schoolQuery.trim() || s.name.toLowerCase().includes(schoolQuery.trim().toLowerCase()))
+            .slice(0, 20)
+            .map((s, i) => ({ id: `${districtId}-fallback-${s.me_code || i}`, name: s.name, concelho: s.concelho, me_code: s.me_code }))
+        : [];
+      if (active) {
+        setSchoolResults(((data && data.length > 0 ? data : fallback) || []) as School[]);
+        setSearching(false);
+      }
+    }, 200);
+    return () => { active = false; clearTimeout(t); };
+  }, [step, districtId, schoolQuery, districts]);
+
+  // ---- Step 1 → next ----
+  const submitBasics = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
-    setError('');
-    setLoading(true);
-
-    const { error: err } = await supabase
-      .from('profiles')
-      .update({
-        ...form,
-        profile_completed: true,
-      })
-      .eq('user_id', user.id);
-
-    if (err) {
-      setError(err.message);
-    } else {
-      await refreshProfile();
+    if (!firstName.trim() || !username.trim() || !dob) {
+      toast.error('Preenche todos os campos.');
+      return;
     }
-    setLoading(false);
+    if (age < 12) { setStep('underage_block'); return; }
+    if (age < 18) { setStep('parental_consent'); return; }
+    setStep('school');
   };
 
-  const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
+  // ---- Step 3a → submit consent ----
+  const submitConsent = async () => {
+    if (!user) return;
+    if (!parentEmail.trim() || !consentAge || !consentTerms) {
+      toast.error('Preenche o email e aceita as condições.');
+      return;
+    }
+    setSaving(true);
+    const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+    const { error } = await supabase.from('profiles').update({
+      first_name: firstName,
+      last_name: lastName,
+      username,
+      date_of_birth: dob,
+      parent_email: parentEmail.trim(),
+      parent_consent_token: token,
+      parent_consent_sent_at: new Date().toISOString(),
+      account_status: 'pending_parental_consent',
+      profile_completed: true,
+      age_group: 'under_18',
+    } as any).eq('user_id', user.id);
+    if (error) { toast.error(error.message); setSaving(false); return; }
 
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6">
-      <div className="w-full max-w-sm">
-        <h1 className="font-serif text-3xl text-foreground mb-2 text-center">{t('profileSetup.welcome')}</h1>
-        <p className="text-muted-foreground text-sm text-center mb-8">
-          {t('profileSetup.tellUs')}
-        </p>
+    // Fire-and-forget consent email
+    supabase.functions.invoke('send-parental-consent', {
+      body: { token, parentEmail: parentEmail.trim(), childName: firstName, childUserId: user.id },
+    }).catch(() => {});
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex gap-3">
-            <Input placeholder={t('profileSetup.firstName')} value={form.first_name} onChange={e => update('first_name', e.target.value)} required className="bg-background border-border h-11 text-sm" />
-            <Input placeholder={t('profileSetup.lastName')} value={form.last_name} onChange={e => update('last_name', e.target.value)} required className="bg-background border-border h-11 text-sm" />
+    setSaving(false);
+    await refreshProfile();
+  };
+
+  // ---- Step 4 → next ----
+  const submitSchool = async () => {
+    if (!user || !districtId || !schoolId) { toast.error('Selecciona distrito e escola.'); return; }
+    setSaving(true);
+
+    let resolvedSchoolId = schoolId;
+    if (schoolId.includes('-fallback-')) {
+      const sel = schoolResults.find(s => s.id === schoolId);
+      if (sel) {
+        const { data: created, error: cErr } = await supabase.from('schools').insert({
+          name: sel.name, concelho: sel.concelho, district_id: districtId,
+          me_code: sel.me_code ?? null, school_type: 'public', education_levels: [],
+          is_verified: false, submitted_by_user_id: user.id,
+        } as any).select('id').single();
+        if (cErr) { toast.error(cErr.message); setSaving(false); return; }
+        resolvedSchoolId = created.id;
+      }
+    }
+
+    const { error } = await supabase.from('profiles').update({
+      first_name: firstName,
+      last_name: lastName,
+      username,
+      date_of_birth: dob,
+      country_code: 'PT',
+      district_id: districtId,
+      school_id: resolvedSchoolId,
+      age_group: age < 18 ? 'under_18' : 'over_18',
+    } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    setStep('theme');
+  };
+
+  // ---- Step 5 → finalize ----
+  const finalize = async () => {
+    if (!user) return;
+    setSaving(true);
+    const { error } = await supabase.from('profiles').update({
+      theme: themeId,
+      profile_completed: true,
+      account_status: 'active',
+    } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    await refreshProfile();
+  };
+
+  const Header = ({ onBack }: { onBack?: () => void }) => (
+    <div className="flex flex-col items-center mb-6">
+      {onBack && (
+        <button onClick={onBack} className="self-start text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2">
+          <ArrowLeft className="w-3 h-3" /> Voltar
+        </button>
+      )}
+      <img src={foliumLogo} alt="Folium" className="w-40 mb-4" />
+      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">Bem-vindo ao Folium</h1>
+      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">Conta-nos um pouco sobre ti</p>
+    </div>
+  );
+
+  // ===== STEP RENDERS =====
+
+  if (step === 'underage_block') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="w-full max-w-sm text-center">
+          <img src={foliumLogo} alt="Folium" className="w-40 mx-auto mb-6" />
+          <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-3">
+            Desculpa, o Folium é para maiores de 12 anos.
+          </h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            Volta a visitar-nos quando fizeres 12 anos!
+          </p>
+          <Button onClick={signOut} variant="outline" className="w-full h-11">Sair</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'parental_consent') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header onBack={() => setStep('basics')} />
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">
+              Como tens menos de 18 anos, precisamos do consentimento do teu encarregado de educação.
+            </p>
+            <div className="space-y-1">
+              <Label className="text-xs">Email do encarregado de educação</Label>
+              <Input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)}
+                placeholder="email@exemplo.pt" className="h-11 text-sm" />
+            </div>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox checked={consentAge} onCheckedChange={v => setConsentAge(!!v)} className="mt-0.5" />
+              <span>Confirmo que tenho entre 12 e 17 anos.</span>
+            </label>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox checked={consentTerms} onCheckedChange={v => setConsentTerms(!!v)} className="mt-0.5" />
+              <span>O meu encarregado de educação irá receber um email para autorizar a minha conta.</span>
+            </label>
+            <Button onClick={submitConsent} disabled={saving} className="w-full h-11">
+              {saving ? 'A enviar…' : 'Enviar pedido de consentimento'}
+            </Button>
           </div>
-          <Input placeholder={t('profileSetup.username')} value={form.username} onChange={e => update('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} required className="bg-background border-border h-11 text-sm" />
-          <Input placeholder={t('profileSetup.locationPlaceholder')} value={form.location} onChange={e => update('location', e.target.value)} className="bg-background border-border h-11 text-sm" />
-          <Textarea placeholder={t('profileSetup.bioPlaceholder')} value={form.bio} onChange={e => update('bio', e.target.value)} maxLength={280} rows={3} className="bg-background border-border text-sm resize-none" />
+        </div>
+      </div>
+    );
+  }
 
-          {error && <p className="text-destructive text-sm">{error}</p>}
+  if (step === 'school') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header onBack={() => setStep('basics')} />
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">A tua escola</p>
+            <div className="space-y-1">
+              <Label className="text-xs">Distrito</Label>
+              <Select value={districtId} onValueChange={v => { setDistrictId(v); setSchoolId(''); setSchoolQuery(''); }}>
+                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder="Selecciona distrito…" /></SelectTrigger>
+                <SelectContent>
+                  {districts.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <Label className="text-xs">Escola</Label>
+              <div className="relative">
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                <Input value={schoolQuery} onChange={e => { setSchoolQuery(e.target.value); setSchoolId(''); }}
+                  placeholder={districtId ? 'Procurar escola…' : 'Selecciona primeiro o distrito'}
+                  disabled={!districtId} className="h-11 text-sm pl-7" />
+              </div>
+              {districtId && (
+                <div className="border border-border rounded-md max-h-48 overflow-y-auto bg-background">
+                  {searching ? (
+                    <div className="flex justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
+                  ) : schoolResults.length === 0 ? (
+                    <p className="text-xs text-muted-foreground text-center py-3">Sem resultados.</p>
+                  ) : schoolResults.map(s => (
+                    <button key={s.id} type="button" onClick={() => { setSchoolId(s.id); setSchoolQuery(s.name); }}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-muted/50 border-b border-border last:border-0 ${schoolId === s.id ? 'bg-muted/40' : ''}`}>
+                      <div className="text-foreground">{s.name}</div>
+                      {s.concelho && <div className="text-xs text-muted-foreground">{s.concelho}</div>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Button onClick={submitSchool} disabled={saving || !districtId || !schoolId} className="w-full h-11">
+              {saving ? 'A guardar…' : 'Continuar'}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-          <Button type="submit" className="w-full h-11" disabled={loading}>
-            {loading ? t('profileSetup.saving') : t('profileSetup.continue')}
+  if (step === 'theme') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-md">
+          <Header />
+          <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">Escolhe o teu tema</p>
+          <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
+            {THEMES.map(th => (
+              <button key={th.id} onClick={() => setThemeId(th.id)}
+                className={`p-2 border rounded text-left transition-colors ${themeId === th.id ? 'border-foreground' : 'border-border hover:border-foreground'}`}>
+                <div className="flex h-5 rounded overflow-hidden mb-1.5">
+                  {th.colors.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
+                </div>
+                <p className="text-xs text-foreground">{th.name}</p>
+              </button>
+            ))}
+          </div>
+          <Button onClick={finalize} disabled={saving} className="w-full h-11">
+            {saving ? 'A finalizar…' : 'Entrar no Folium'}
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // STEP 1: basics
+  return (
+    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="w-full max-w-sm">
+        <Header />
+        <form onSubmit={submitBasics} className="space-y-3">
+          <div className="flex gap-2">
+            <Input placeholder="Nome" value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
+            <Input placeholder="Apelido" value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
+          </div>
+          <Input placeholder="@utilizador" value={username}
+            onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+            required className="h-11 text-sm" />
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground">Data de nascimento</Label>
+            <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
+              max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
+          </div>
+          <Button type="submit" className="w-full h-11">Continuar</Button>
         </form>
       </div>
     </div>
