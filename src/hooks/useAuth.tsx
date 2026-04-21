@@ -35,12 +35,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const ensureProfile = async (userId: string) => {
+    const { error } = await supabase
+      .from('profiles')
+      .upsert({ user_id: userId } as never, { onConflict: 'user_id' });
+
+    return !error;
+  };
+
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
+    let { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
+
+    if (error) {
+      setProfile(null);
+      return;
+    }
+
+    if (!data) {
+      const created = await ensureProfile(userId);
+      if (!created) {
+        setProfile(null);
+        return;
+      }
+
+      const profileResult = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      data = profileResult.data;
+      error = profileResult.error;
+    }
+
+    if (error) {
+      setProfile(null);
+      return;
+    }
+
     if (data) {
       const p = data as Profile;
       setProfile(p);
