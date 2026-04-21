@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import AuthScreen from '@/components/AuthScreen';
 import ProfileSetup from '@/components/ProfileSetup';
+import PendingParentalConsent from '@/components/PendingParentalConsent';
 import BottomNav from '@/components/BottomNav';
 import AppHeader from '@/components/AppHeader';
 import LibraryScreen from '@/components/LibraryScreen';
@@ -29,8 +30,16 @@ export default function Index() {
   const [activeTab, setActiveTab] = useState<Tab>('library');
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
   const [publicLibView, setPublicLibView] = useState<PublicLibraryView | null>(null);
+  const [routingReady, setRoutingReady] = useState(false);
 
-  if (loading) {
+  // 200ms grace period after auth/profile resolves to avoid flash
+  useEffect(() => {
+    if (loading) { setRoutingReady(false); return; }
+    const t = setTimeout(() => setRoutingReady(true), 200);
+    return () => clearTimeout(t);
+  }, [loading, user, profile]);
+
+  if (loading || (user && !routingReady)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <OwlLoader />
@@ -59,7 +68,27 @@ export default function Index() {
     );
   }
 
-  if (profile && !profile.profile_completed) return <ProfileSetup />;
+  // Profile-based routing
+  if (!profile || profile.account_status === 'pending_setup' || !profile.profile_completed) {
+    return <ProfileSetup />;
+  }
+
+  if (profile.account_status === 'pending_parental_consent') {
+    return <PendingParentalConsent />;
+  }
+
+  if (profile.account_status === 'blocked_underage') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6">
+        <div className="text-center max-w-sm">
+          <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-2">Folium</h1>
+          <p className="text-muted-foreground text-sm font-['Josefin_Sans']">
+            Desculpa, o Folium é para maiores de 12 anos.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Public library detail view
   if (publicLibView) {

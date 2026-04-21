@@ -14,6 +14,9 @@ interface Profile {
   profile_completed: boolean;
   language: string;
   suspended: boolean;
+  account_status?: string;
+  date_of_birth?: string | null;
+  parent_email?: string | null;
 }
 
 interface AuthContextType {
