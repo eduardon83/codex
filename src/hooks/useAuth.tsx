@@ -89,29 +89,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
+    let active = true;
+
+    const syncAuthState = (nextSession: Session | null) => {
+      if (!active) return;
+
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
+
+      if (!nextSession?.user) {
+        setProfile(null);
         setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      void fetchProfile(nextSession.user.id).finally(() => {
+        if (active) setLoading(false);
+      });
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, nextSession) => {
+        syncAuthState(nextSession);
       }
     );
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        return fetchProfile(session.user.id).finally(() => setLoading(false));
-      }
-      setLoading(false);
-    });
+    supabase.auth.getSession()
+      .then(({ data: { session: initialSession } }) => {
+        syncAuthState(initialSession);
+      })
+      .catch(() => {
+        if (!active) return;
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setLoading(false);
+      });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string) => {
