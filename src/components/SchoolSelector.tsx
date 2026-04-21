@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Loader2, MapPin, Pencil, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 
 interface District { id: string; name: string; }
 interface School {
@@ -19,6 +20,7 @@ interface School {
   name: string;
   concelho: string | null;
   district_id: string;
+  me_code?: string | null;
 }
 
 interface Country { code: string; label: string; available: boolean; }
@@ -109,13 +111,26 @@ export default function SchoolSelector({ current, onSaved }: Props) {
         q = q.ilike('name', `%${schoolQuery.trim()}%`);
       }
       const { data } = await q;
+      const fallbackDistrict = districts.find((district) => district.id === districtId)?.name;
+      const fallbackRows = fallbackDistrict
+        ? (FALLBACK_SCHOOLS_BY_DISTRICT[fallbackDistrict] || [])
+            .filter((school) => !schoolQuery.trim() || school.name.toLowerCase().includes(schoolQuery.trim().toLowerCase()))
+            .slice(0, 20)
+            .map((school, index) => ({
+              id: `${districtId}-fallback-${school.me_code || index}`,
+              name: school.name,
+              concelho: school.concelho,
+              district_id: districtId,
+              me_code: school.me_code,
+            }))
+        : [];
       if (active) {
-        setSchoolResults((data || []) as School[]);
+        setSchoolResults(((data && data.length > 0 ? data : fallbackRows) || []) as School[]);
         setSearching(false);
       }
     }, 200);
     return () => { active = false; clearTimeout(t); };
-  }, [editing, districtId, schoolQuery]);
+  }, [editing, districtId, schoolQuery, districts]);
 
   const selectedSchool = useMemo(
     () => schoolResults.find((s) => s.id === schoolId) || savedSchool,
@@ -135,11 +150,39 @@ export default function SchoolSelector({ current, onSaved }: Props) {
       toast.error('Selecciona distrito e escola');
       return;
     }
+
     setSaving(true);
+
+    let resolvedSchoolId = schoolId;
+
+    if (schoolId.includes('-fallback-') && selectedSchool) {
+      const { data: createdSchool, error: createError } = await supabase
+        .from('schools')
+        .insert({
+          name: selectedSchool.name,
+          concelho: selectedSchool.concelho,
+          district_id: districtId,
+          me_code: selectedSchool.me_code ?? null,
+          school_type: 'public',
+          education_levels: [],
+          is_verified: false,
+          submitted_by_user_id: user.id,
+        } as any)
+        .select('id')
+        .single();
+
+      if (createError) {
+        setSaving(false);
+        return toast.error(createError.message);
+      }
+
+      resolvedSchoolId = createdSchool.id;
+    }
+
     const { error } = await supabase.from('profiles').update({
       country_code: country,
       district_id: districtId,
-      school_id: schoolId,
+      school_id: resolvedSchoolId,
     } as any).eq('user_id', user.id);
     setSaving(false);
     if (error) return toast.error(error.message);

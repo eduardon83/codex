@@ -36,6 +36,12 @@ export default function ProfileScreen() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showLoanHistory, setShowLoanHistory] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const displayProfile = {
+    first_name: editing ? form.first_name : profile?.first_name || '',
+    last_name: editing ? form.last_name : profile?.last_name || '',
+    username: editing ? form.username : profile?.username || '',
+    bio: editing ? form.bio : profile?.bio || '',
+  };
 
   useEffect(() => {
     if (profile) {
@@ -53,7 +59,8 @@ export default function ProfileScreen() {
   }, [profile, user]);
 
   const save = async () => {
-    await supabase.from('profiles').update(form as any).eq('user_id', user!.id);
+    if (!user) return;
+    await supabase.from('profiles').upsert({ user_id: user.id, ...form } as any, { onConflict: 'user_id' });
     await refreshProfile();
     setEditing(false);
   };
@@ -121,9 +128,9 @@ export default function ProfileScreen() {
         {!editing ? (
           <div className="flex-1 min-w-0">
             <p className="text-foreground truncate" style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '22px' }}>
-              {profile?.first_name} {profile?.last_name}
+              {[displayProfile.first_name, displayProfile.last_name].filter(Boolean).join(' ')}
             </p>
-            <p className="text-sm text-muted-foreground">@{profile?.username}</p>
+            {displayProfile.username && <p className="text-sm text-muted-foreground">@{displayProfile.username}</p>}
             <div className="mt-1">
               <SchoolSelector
                 current={{
@@ -134,8 +141,8 @@ export default function ProfileScreen() {
                 onSaved={refreshProfile}
               />
             </div>
-            {profile?.bio && (
-              <p className="text-xs text-foreground mt-2">{profile.bio}</p>
+            {displayProfile.bio && (
+              <p className="text-xs text-foreground mt-2">{displayProfile.bio}</p>
             )}
             <Button variant="outline" size="sm" onClick={() => setEditing(true)} className="mt-3">
               {t('profile.editProfile')}
