@@ -35,20 +35,58 @@ export default function BarcodeScanner({ open, onClose, onDetected }: Props) {
     const reader = new BrowserMultiFormatReader(hints);
 
     let cancelled = false;
+    let permissionStream: MediaStream | null = null;
 
     (async () => {
       try {
-        const devices = await BrowserMultiFormatReader.listVideoInputDevices();
-        // Prefer rear-facing camera if available
-        const rear = devices.find((d) => /back|rear|environment/i.test(d.label));
-        const deviceId = rear?.deviceId || devices[0]?.deviceId;
-        if (!deviceId) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
           setError(t('scanner.noCamera', 'No camera available on this device.'));
           return;
         }
+
+        // Request camera permission FIRST. Without this, listVideoInputDevices()
+        // often returns an empty array (or devices with no labels) on mobile
+        // browsers, causing a false "no camera" error. Prefer the rear camera.
+        try {
+          permissionStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: 'environment' } },
+          });
+        } catch (permErr: any) {
+          if (permErr?.name === 'NotAllowedError' || permErr?.name === 'SecurityError') {
+            setError(t('scanner.permissionDenied', 'Camera permission denied. Please allow camera access in your browser settings.'));
+          } else if (permErr?.name === 'NotFoundError' || permErr?.name === 'OverconstrainedError') {
+            // Retry without the facingMode constraint (e.g. laptops with only a front camera).
+            try {
+              permissionStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            } catch {
+              setError(t('scanner.noCamera', 'No camera available on this device.'));
+              return;
+            }
+          } else {
+            setError(permErr?.message || t('scanner.error', 'Could not start the camera.'));
+            return;
+          }
+        }
+
+        if (cancelled) {
+          permissionStream?.getTracks().forEach((tr) => tr.stop());
+          return;
+        }
+
+        const devices = await BrowserMultiFormatReader.listVideoInputDevices();
+        const rear = devices.find((d) => /back|rear|environment|trás|traseira|arrière|trasera/i.test(d.label));
+        let deviceId: string | undefined = rear?.deviceId || devices[0]?.deviceId;
+
+        // Stop the temporary permission stream — zxing will open its own.
+        permissionStream?.getTracks().forEach((tr) => tr.stop());
+        permissionStream = null;
+
         if (cancelled) return;
+
+        // If we somehow have no deviceId but getUserMedia worked, fall back to
+        // letting the browser pick (passing undefined uses default constraints).
         const controls = await reader.decodeFromVideoDevice(
-          deviceId,
+          deviceId ?? null,
           videoRef.current!,
           (result, _err, ctrl) => {
             if (result) {
@@ -67,6 +105,7 @@ export default function BarcodeScanner({ open, onClose, onDetected }: Props) {
 
     return () => {
       cancelled = true;
+      permissionStream?.getTracks().forEach((tr) => tr.stop());
       controlsRef.current?.stop();
       controlsRef.current = null;
     };
