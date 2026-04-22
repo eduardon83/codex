@@ -68,7 +68,11 @@
     "saveError": "Não foi possível guardar o perfil.",
     "requiredFields": "Preenche todos os campos.",
     "consentRequired": "Preenche o email e aceita as condições.",
-    "schoolRequired": "Selecciona distrito e escola."
+    "schoolRequired": "Selecciona distrito e escola.",
+    "termsIntro": "Antes de continuares, lê e aceita os documentos legais do Folium.",
+    "acceptTerms": "Li e aceito os Termos e Condições de Utilização",
+    "acceptPrivacyPrefix": "Li e aceito a",
+    "privacyPolicy": "Política de Privacidade"
   },
   "profile": {
     "title": "Perfil",
@@ -584,5 +588,13 @@
       "subscribe": "Subscrever",
       "subscribed": "Subscrito"
     }
+  },
+  "legal": {
+    "groupTitle": "Termos e Legal",
+    "termsTitle": "Termos e Condições",
+    "privacyTitle": "Política de Privacidade",
+    "acceptedVersion": "Versão aceite",
+    "acceptedOn": "Aceite em {{date}}",
+    "documentPreparing": "Documento em preparação."
   }
 }

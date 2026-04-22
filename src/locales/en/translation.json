@@ -68,7 +68,11 @@
     "saveError": "Could not save profile.",
     "requiredFields": "Fill in all fields.",
     "consentRequired": "Enter the email and accept the conditions.",
-    "schoolRequired": "Select district and school."
+    "schoolRequired": "Select district and school.",
+    "termsIntro": "Before continuing, read and accept Folium’s legal documents.",
+    "acceptTerms": "I have read and accept the Terms and Conditions of Use",
+    "acceptPrivacyPrefix": "I have read and accept the",
+    "privacyPolicy": "Privacy Policy"
   },
   "profile": {
     "title": "Profile",
@@ -584,5 +588,13 @@
       "subscribe": "Subscribe",
       "subscribed": "Subscribed"
     }
+  },
+  "legal": {
+    "groupTitle": "Terms & Legal",
+    "termsTitle": "Terms and Conditions",
+    "privacyTitle": "Privacy Policy",
+    "acceptedVersion": "Accepted version",
+    "acceptedOn": "Accepted on {{date}}",
+    "documentPreparing": "Document in preparation."
   }
 }
