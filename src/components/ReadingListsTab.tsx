@@ -23,6 +23,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
+import { tGenre } from '@/lib/displayMappings';
 
 interface ReadingList {
   id: string;
@@ -450,7 +451,7 @@ export default function ReadingListsTab() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="_all">{t('readingLists.allGenres')}</SelectItem>
-                  {uniqueGenres.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}
+                  {uniqueGenres.map(g => <SelectItem key={g} value={g}>{tGenre(g, t)}</SelectItem>)}
                 </SelectContent>
               </Select>
             )}
