@@ -21,6 +21,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { MoreHorizontal, Search, Shield, Ban, Trash2, Eye, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { resolveAvatarSrc } from '@/lib/avatars';
 
 interface AdminUser {
   user_id: string;
@@ -246,7 +247,7 @@ export default function AdminUsers() {
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Avatar className="w-8 h-8">
-                      {u.avatar_url && <AvatarImage src={u.avatar_url} />}
+                      <AvatarImage src={resolveAvatarSrc(u.avatar_url)} />
                       <AvatarFallback className="text-xs">{initials(u)}</AvatarFallback>
                     </Avatar>
                     <div>
@@ -389,7 +390,7 @@ export default function AdminUsers() {
               <div className="mt-6 space-y-4">
                 <div className="flex items-center gap-4">
                   <Avatar className="w-16 h-16">
-                    {profileView.avatar_url && <AvatarImage src={profileView.avatar_url} />}
+                    <AvatarImage src={resolveAvatarSrc(profileView.avatar_url)} />
                     <AvatarFallback className="text-lg">{initials(profileView)}</AvatarFallback>
                   </Avatar>
                   <div>
