@@ -692,9 +692,12 @@ export type Database = {
           location_lat: number | null
           location_lng: number | null
           parent_consent_confirmed_at: string | null
+          parent_consent_expires_at: string | null
+          parent_consent_granted_at: string | null
           parent_consent_sent_at: string | null
           parent_consent_token: string | null
           parent_email: string | null
+          pending_email_confirmation_after_parental_consent: boolean
           profile_completed: boolean
           school_id: string | null
           suspended: boolean
@@ -722,9 +725,12 @@ export type Database = {
           location_lat?: number | null
           location_lng?: number | null
           parent_consent_confirmed_at?: string | null
+          parent_consent_expires_at?: string | null
+          parent_consent_granted_at?: string | null
           parent_consent_sent_at?: string | null
           parent_consent_token?: string | null
           parent_email?: string | null
+          pending_email_confirmation_after_parental_consent?: boolean
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
@@ -752,9 +758,12 @@ export type Database = {
           location_lat?: number | null
           location_lng?: number | null
           parent_consent_confirmed_at?: string | null
+          parent_consent_expires_at?: string | null
+          parent_consent_granted_at?: string | null
           parent_consent_sent_at?: string | null
           parent_consent_token?: string | null
           parent_email?: string | null
+          pending_email_confirmation_after_parental_consent?: boolean
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
@@ -1224,6 +1233,23 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_parental_consent_request: {
+        Args: { _token: string }
+        Returns: {
+          age: number
+          first_name: string
+          language: string
+          terms_accepted_at: string
+          terms_version: string
+        }[]
+      }
+      grant_parental_consent: {
+        Args: { _token: string }
+        Returns: {
+          activated: boolean
+          first_name: string
+        }[]
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       lookup_user_id_by_username: {
