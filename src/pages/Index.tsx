@@ -58,10 +58,10 @@ export default function Index() {
             <span className="text-2xl">🚫</span>
           </div>
           <h1 className="font-['Cormorant_Garamond'] text-2xl font-semibold text-foreground mb-2">
-            {t('app.accountSuspended', 'Account Suspended')}
+            {t('app.accountSuspended')}
           </h1>
           <p className="text-muted-foreground text-sm font-['Josefin_Sans']">
-            {t('app.accountSuspendedDesc', 'Your account has been suspended. Please contact support for more information.')}
+            {t('app.accountSuspendedDesc')}
           </p>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function Index() {
         <div className="text-center max-w-sm">
           <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-2">Folium</h1>
           <p className="text-muted-foreground text-sm font-['Josefin_Sans']">
-            Desculpa, o Folium é para maiores de 12 anos.
+            {t('app.underageBlocked')}
           </p>
         </div>
       </div>
