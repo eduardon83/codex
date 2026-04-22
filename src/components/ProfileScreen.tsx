@@ -6,7 +6,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,7 +32,6 @@ import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
 import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
-import { fetchCurrentLegalDocument, LegalDocumentRecord, LegalDocumentType } from '@/lib/legalDocuments';
 import AvatarPickerDialog from '@/components/AvatarPickerDialog';
 import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
 
@@ -49,9 +47,6 @@ export default function ProfileScreen() {
   const [showReadingHistory, setShowReadingHistory] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showLoanHistory, setShowLoanHistory] = useState(false);
-  const [legalModal, setLegalModal] = useState<LegalDocumentType | null>(null);
-  const [legalDocument, setLegalDocument] = useState<LegalDocumentRecord | null>(null);
-  const [loadingLegal, setLoadingLegal] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteStep, setDeleteStep] = useState<'warning' | 'confirm'>('warning');
   const [deletePassword, setDeletePassword] = useState('');
@@ -119,15 +114,6 @@ export default function ProfileScreen() {
   };
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
-
-  const openLegalDocument = async (type: LegalDocumentType) => {
-    setLegalModal(type);
-    setLegalDocument(null);
-    setLoadingLegal(true);
-    const document = await fetchCurrentLegalDocument(type, profile?.language || 'pt');
-    setLegalDocument(document);
-    setLoadingLegal(false);
-  };
 
   const openDeleteAccount = () => {
     setDeleteStep('warning');
@@ -341,36 +327,11 @@ export default function ProfileScreen() {
       </div>
 
       <div className="mt-8 border-t border-border pt-5">
-        <p className="text-sm text-muted-foreground mb-3">{t('legal.groupTitle')}</p>
-        <div className="space-y-2">
-          <Button variant="outline" className="w-full justify-start" onClick={() => openLegalDocument('terms')}>
-            {t('legal.termsTitle')}
-          </Button>
-          <Button variant="outline" className="w-full justify-start" onClick={() => openLegalDocument('privacy')}>
-            {t('legal.privacyTitle')}
-          </Button>
-          <div className="text-xs text-muted-foreground border border-border rounded-md px-3 py-2">
-            <span className="text-foreground">{t('legal.acceptedVersion')}</span>{' '}
-            {(profile as any)?.terms_version || '—'}
-            {(profile as any)?.terms_accepted_at && (
-              <span className="block mt-1">{t('legal.acceptedOn', { date: new Date((profile as any).terms_accepted_at).toLocaleDateString(profile?.language || 'pt') })}</span>
-            )}
-          </div>
-        </div>
+        <p className="text-sm text-muted-foreground mb-3">{t('about.title')}</p>
+        <Button variant="outline" className="w-full justify-start" onClick={() => setShowAbout(true)}>
+          {t('about.title')}
+        </Button>
       </div>
-
-      <Dialog open={!!legalModal} onOpenChange={(open) => !open && setLegalModal(null)}>
-        <DialogContent className="bg-background border-border max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="font-serif">
-              {legalModal === 'privacy' ? t('legal.privacyTitle') : t('legal.termsTitle')}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[60vh] overflow-y-auto rounded-md border border-border p-3 text-sm leading-relaxed whitespace-pre-wrap">
-            {loadingLegal ? t('app.loading') : (legalDocument?.content || t('legal.documentPreparing'))}
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <div className="mt-8 border-t border-border pt-5">
         <button
@@ -440,13 +401,6 @@ export default function ProfileScreen() {
         onOpenChange={setAvatarPickerOpen}
         onConfirm={saveAvatar}
       />
-
-      <button
-        onClick={() => setShowAbout(true)}
-        className="mt-8 text-sm text-muted-foreground hover:text-foreground w-full text-center transition-colors"
-      >
-        {t('about.title')}
-      </button>
 
       <button
         onClick={signOut}
