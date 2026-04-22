@@ -379,6 +379,68 @@ export default function ProfileScreen() {
         </DialogContent>
       </Dialog>
 
+      <div className="mt-8 border-t border-border pt-5">
+        <button
+          onClick={openDeleteAccount}
+          className="w-full text-center text-sm text-destructive/80 hover:text-destructive transition-colors"
+        >
+          {t('profile.deleteAccount')}
+        </button>
+      </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-background border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">
+              {deleteStep === 'warning' ? t('profile.deleteAccountWarningTitle') : t('profile.deleteAccountConfirmTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 text-left">
+              <span className="block">
+                {deleteStep === 'warning'
+                  ? t('profile.deleteAccountWarningBody')
+                  : hasPasswordProvider
+                    ? t('profile.deleteAccountPasswordBody')
+                    : t('profile.deleteAccountOAuthBody')}
+              </span>
+              {deleteStep === 'warning' && activeLoanCount > 0 && (
+                <span className="block text-destructive/80">{t('profile.deleteAccountActiveLoans')}</span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {deleteStep === 'confirm' && hasPasswordProvider && (
+            <div className="space-y-2">
+              <Input
+                type="password"
+                value={deletePassword}
+                onChange={e => setDeletePassword(e.target.value)}
+                placeholder={t('auth.password')}
+                className="bg-background border-border"
+              />
+              {deleteError && <p className="text-xs text-destructive">{deleteError}</p>}
+            </div>
+          )}
+          {deleteStep === 'confirm' && !hasPasswordProvider && deleteError && (
+            <p className="text-xs text-destructive">{deleteError}</p>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingAccount}>{t('profile.cancel')}</AlertDialogCancel>
+            {deleteStep === 'warning' ? (
+              <AlertDialogAction onClick={(e) => { e.preventDefault(); setDeleteStep('confirm'); }}>
+                {t('profile.deleteAccountContinue')}
+              </AlertDialogAction>
+            ) : (
+              <AlertDialogAction
+                onClick={(e) => { e.preventDefault(); deleteAccount(); }}
+                disabled={deletingAccount || (hasPasswordProvider && !deletePassword)}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deletingAccount ? t('profile.deleteAccountDeleting') : (hasPasswordProvider ? t('profile.deleteAccountPermanent') : t('profile.deleteAccountConfirmOAuth'))}
+              </AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <button
         onClick={() => setShowAbout(true)}
         className="mt-8 text-sm text-muted-foreground hover:text-foreground w-full text-center transition-colors"
