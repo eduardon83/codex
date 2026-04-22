@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { X, ChevronDown } from 'lucide-react';
+import { tGenre } from '@/lib/displayMappings';
 
 export const GENRE_OPTIONS = [
   'Academic', 'Alternate History', 'Biography', "Children's Story", 'Comedy',
@@ -61,7 +62,7 @@ export default function GenreMultiSelect({ selected, onChange, disabled }: Genre
                 selected.includes(genre) ? 'bg-accent text-accent-foreground' : 'text-foreground'
               }`}
             >
-              {genre}
+              {tGenre(genre, t)}
             </button>
           ))}
         </div>
@@ -71,7 +72,7 @@ export default function GenreMultiSelect({ selected, onChange, disabled }: Genre
         <div className="flex flex-wrap gap-1.5 mt-2">
           {selected.map(genre => (
             <span key={genre} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-accent text-accent-foreground">
-              {genre}
+              {tGenre(genre, t)}
               <button type="button" onClick={() => toggle(genre)}><X size={10} /></button>
             </span>
           ))}

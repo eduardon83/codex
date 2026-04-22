@@ -25,6 +25,7 @@ import { GENRE_OPTIONS, parseGenres } from '@/components/GenreMultiSelect';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
 import HelpButton from '@/components/tutorial/HelpButton';
 import LibraryCardExpiryBanner from '@/components/LibraryCardExpiryBanner';
+import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 
 interface Library {
   id: string;
@@ -332,12 +333,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const canDeleteLibrary = libraries.length > 1;
   const currentLibraryHasActiveLoans = books.some(book => onLoanBookIds.has(book.id));
 
-  const formatLabel = (f: string) => t(`addBook.${f.toLowerCase()}`);
-  const statusLabel = (s: string) => {
-    const map: Record<string, string> = { 'Unread': 'library.unread', 'Currently Reading': 'library.currentlyReading', 'Read': 'library.read' };
-    return t(map[s] || s);
-  };
-
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'title_az', label: t('library.titleAZ') },
     { value: 'title_za', label: t('library.titleZA') },
@@ -554,7 +549,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                           : 'bg-secondary text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      {g}
+                      {tGenre(g, t)}
                     </button>
                   ))}
                 </div>
@@ -573,7 +568,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                           : 'bg-secondary text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      {formatLabel(f)}
+                      {tFormat(f, t)}
                     </button>
                   ))}
                 </div>
@@ -592,7 +587,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                           : 'bg-secondary text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      {statusLabel(s)}
+                      {tStatus(s, t)}
                     </button>
                   ))}
                 </div>

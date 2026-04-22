@@ -621,5 +621,39 @@
     "successTitle": "Conta autorizada",
     "successBody": "Obrigado! A conta de {{name}} está agora activa.",
     "invalid": "Este link já não é válido ou expirou. Se precisas de ajuda, contacta folium@kendirstudios.pt"
+  },
+  "genres": {
+    "Academic": "Académico",
+    "Alternate History": "História Alternativa",
+    "Biography": "Biografia",
+    "Children's Story": "História Infantil",
+    "Comedy": "Comédia",
+    "Cookbook": "Culinária",
+    "Fairy Tale": "Conto de Fadas",
+    "Fantasy": "Fantasia",
+    "Historical": "Histórico",
+    "Horror": "Terror",
+    "Magazine": "Revista",
+    "Mystery": "Mistério",
+    "Non-fiction": "Não-ficção",
+    "Play": "Peça de Teatro",
+    "Poetry": "Poesia",
+    "Romance": "Romance",
+    "Science Fiction": "Ficção Científica",
+    "Self-help": "Autoajuda",
+    "Thriller & Suspense": "Thriller e Suspense",
+    "Travel": "Viagens",
+    "Western": "Western"
+  },
+  "formats": {
+    "Softcover": "Capa mole",
+    "Hardcover": "Capa dura",
+    "Ebook": "Ebook",
+    "Other": "Outro"
+  },
+  "reading_status": {
+    "Unread": "Não lido",
+    "Currently Reading": "A ler",
+    "Read": "Lido"
   }
 }

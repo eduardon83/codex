@@ -18,6 +18,7 @@ import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
 import BookLendingToggle from '@/components/BookLendingToggle';
+import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 
 interface BookDetailProps {
   bookId: string;
@@ -56,12 +57,6 @@ interface ActiveLoan {
   loan_due_date: string | null;
   loan_notifications_enabled: boolean;
 }
-
-const STATUS_MAP: Record<string, string> = {
-  'Unread': 'bookDetail.unread',
-  'Currently Reading': 'bookDetail.currentlyReading',
-  'Read': 'bookDetail.read',
-};
 
 export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const { t } = useTranslation();
@@ -308,17 +303,17 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
 
   const statuses = ['Unread', 'Currently Reading', 'Read'];
   const formatOptions = [
-    { value: 'Softcover', label: t('addBook.softcover') },
-    { value: 'Hardcover', label: t('addBook.hardcover') },
-    { value: 'Ebook', label: t('addBook.ebook') },
-    { value: 'Other', label: t('addBook.other') },
+    { value: 'Softcover', label: tFormat('Softcover', t) },
+    { value: 'Hardcover', label: tFormat('Hardcover', t) },
+    { value: 'Ebook', label: tFormat('Ebook', t) },
+    { value: 'Other', label: tFormat('Other', t) },
   ];
 
   const metaRows = [
     [t('bookDetail.publisher'), book.publisher],
     [t('bookDetail.published'), book.publish_date],
     [t('bookDetail.added'), formatDate(book.created_at)],
-    [t('bookDetail.format'), book.format],
+    [t('bookDetail.format'), book.format ? tFormat(book.format, t) : null],
     [t('bookDetail.series'), book.series_name ? `${book.series_name}${book.volume_number ? ` #${book.volume_number}` : ''}` : null],
     [t('bookDetail.language'), book.language],
     [t('bookDetail.pages'), book.page_count?.toString()],
@@ -497,7 +492,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {t(STATUS_MAP[s])}
+                {tStatus(s, t)}
               </button>
             ))}
           </div>
@@ -531,7 +526,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             return genres.length > 0 ? (
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {genres.map(g => (
-                  <span key={g} className="px-2 py-0.5 rounded text-xs bg-accent text-accent-foreground">{g}</span>
+                  <span key={g} className="px-2 py-0.5 rounded text-xs bg-accent text-accent-foreground">{tGenre(g, t)}</span>
                 ))}
               </div>
             ) : (

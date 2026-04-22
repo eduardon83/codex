@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
+import { tGenre } from '@/lib/displayMappings';
 
 interface Stats {
   totalBooks: number;
@@ -138,7 +139,7 @@ export default function ProfileStats() {
         {stats.topGenre && (
           <div className="border border-border rounded-md p-3">
             <p className="text-[11px] uppercase tracking-wider text-muted-foreground font-sans">{t('profileStats.topGenre')}</p>
-            <Badge variant="secondary" className="mt-2 bg-accent/20 text-accent-foreground text-xs">{stats.topGenre}</Badge>
+            <Badge variant="secondary" className="mt-2 bg-accent/20 text-accent-foreground text-xs">{tGenre(stats.topGenre, t)}</Badge>
           </div>
         )}
       </div>
