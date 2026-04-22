@@ -2,12 +2,22 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays, Trash2 } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
@@ -74,6 +84,8 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [loansFromOthers, setLoansFromOthers] = useState<Loan[]>([]);
   const [editingName, setEditingName] = useState(false);
   const [editName, setEditName] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingLibrary, setDeletingLibrary] = useState(false);
   const [dismissedBanner, setDismissedBanner] = useState(false);
   const [dismissedBorrowBanner, setDismissedBorrowBanner] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
@@ -110,6 +122,10 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     if (data && data.length > 0) {
       setLibraries(data as Library[]);
       if (!activeLibrary) setActiveLibrary(data[0].id);
+    } else {
+      setLibraries([]);
+      setActiveLibrary('');
+      setBooks([]);
     }
   };
 
@@ -202,6 +218,34 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     loadLibraries();
   };
 
+  const deleteCurrentLibrary = async () => {
+    if (!activeLibrary || libraries.length <= 1) return;
+    setDeletingLibrary(true);
+
+    const libraryId = activeLibrary;
+    const nextLibrary = libraries.find(l => l.id !== libraryId);
+
+    const { data: libraryBooks } = await supabase
+      .from('books')
+      .select('id')
+      .eq('library_id', libraryId);
+    const bookIds = ((libraryBooks as { id: string }[] | null) || []).map(b => b.id);
+
+    if (bookIds.length > 0) {
+      await supabase.from('book_availability' as any).delete().in('book_id', bookIds);
+    }
+    await supabase.from('books').delete().eq('library_id', libraryId);
+    await supabase.from('libraries').delete().eq('id', libraryId);
+
+    setDeleteDialogOpen(false);
+    setEditingName(false);
+    setActiveLibrary(nextLibrary?.id || '');
+    setBooks([]);
+    setDeletingLibrary(false);
+    showToast(t('library.libraryDeleted'));
+    loadLibraries();
+  };
+
   const hasActiveFilters = filterGenres.length > 0 || filterFormats.length > 0 || filterStatuses.length > 0 || sortBy !== 'date_newest';
 
   const clearFilters = () => {
@@ -285,6 +329,8 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   }, [books, searchQuery, filterGenres, filterFormats, filterStatuses, sortBy]);
 
   const currentLib = libraries.find(l => l.id === activeLibrary);
+  const canDeleteLibrary = libraries.length > 1;
+  const currentLibraryHasActiveLoans = books.some(book => onLoanBookIds.has(book.id));
 
   const formatLabel = (f: string) => t(`addBook.${f.toLowerCase()}`);
   const statusLabel = (s: string) => {
@@ -340,21 +386,38 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1">
             {editingName ? (
-              <div className="flex items-center gap-2 flex-1">
-                <Input
-                  value={editName}
-                  onChange={e => setEditName(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && saveEditName()}
-                  className="bg-background border-border text-lg font-serif h-9"
-                  autoFocus
-                />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={editName}
+                    onChange={e => setEditName(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && saveEditName()}
+                    className="bg-background border-border text-lg font-serif h-9"
+                    autoFocus
+                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button onClick={saveEditName} className="text-foreground hover:opacity-70 transition-opacity">
+                        <Check size={18} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t('library.confirmName')}</TooltipContent>
+                  </Tooltip>
+                </div>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button onClick={saveEditName} className="text-foreground hover:opacity-70 transition-opacity">
-                      <Check size={18} />
-                    </button>
+                    <span className="inline-block mt-2">
+                      <button
+                        onClick={() => canDeleteLibrary && setDeleteDialogOpen(true)}
+                        disabled={!canDeleteLibrary}
+                        className="inline-flex items-center gap-1.5 text-xs text-destructive hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-40 transition-opacity"
+                      >
+                        <Trash2 size={13} />
+                        {t('library.deleteLibrary')}
+                      </button>
+                    </span>
                   </TooltipTrigger>
-                  <TooltipContent>{t('library.confirmName')}</TooltipContent>
+                  {!canDeleteLibrary && <TooltipContent>{t('library.cannotDeleteOnlyLibrary')}</TooltipContent>}
                 </Tooltip>
               </div>
             ) : (
@@ -737,6 +800,33 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           <Button onClick={createLibrary} className="w-full">{t('library.create')}</Button>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-background border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">{t('library.deleteLibraryTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('library.deleteLibraryBody')}
+              {currentLibraryHasActiveLoans && (
+                <span className="mt-2 block">{t('library.deleteLibraryActiveLoans')}</span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingLibrary}>{t('library.cancelDeleteLibrary')}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deletingLibrary}
+              onClick={(event) => {
+                event.preventDefault();
+                deleteCurrentLibrary();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('library.confirmDeleteLibrary')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
