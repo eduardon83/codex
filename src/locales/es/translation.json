@@ -215,7 +215,15 @@
     "select": "Seleccionar",
     "selectAll": "Seleccionar todo",
     "moveSelected": "Mover a biblioteca",
-    "cancelSelect": "Cancelar"
+    "cancelSelect": "Cancelar",
+    "deleteLibrary": "Eliminar biblioteca",
+    "cannotDeleteOnlyLibrary": "No puedes eliminar tu única biblioteca.",
+    "deleteLibraryTitle": "¿Eliminar biblioteca?",
+    "deleteLibraryBody": "Todos los libros de esta biblioteca se eliminarán permanentemente. Esta acción no se puede deshacer.",
+    "deleteLibraryActiveLoans": "Esta biblioteca tiene libros prestados. ¿Confirmas que quieres eliminarla de todos modos?",
+    "cancelDeleteLibrary": "Cancelar",
+    "confirmDeleteLibrary": "Eliminar",
+    "libraryDeleted": "Biblioteca eliminada."
   },
   "addBook": {
     "title": "Añadir Libro",

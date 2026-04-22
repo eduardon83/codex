@@ -215,7 +215,15 @@
     "select": "Select",
     "selectAll": "Select all",
     "moveSelected": "Move to library",
-    "cancelSelect": "Cancel"
+    "cancelSelect": "Cancel",
+    "deleteLibrary": "Delete library",
+    "cannotDeleteOnlyLibrary": "You can't delete your only library.",
+    "deleteLibraryTitle": "Delete library?",
+    "deleteLibraryBody": "All books in this library will be permanently deleted. This action cannot be undone.",
+    "deleteLibraryActiveLoans": "This library has books on loan. Are you sure you want to delete it anyway?",
+    "cancelDeleteLibrary": "Cancel",
+    "confirmDeleteLibrary": "Delete",
+    "libraryDeleted": "Library deleted."
   },
   "addBook": {
     "title": "Add Book",
