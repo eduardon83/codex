@@ -1008,6 +1008,114 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_plan_items: {
+        Row: {
+          author: string | null
+          book_id: string | null
+          cover_url: string | null
+          created_at: string
+          id: string
+          isbn: string | null
+          plan_id: string
+          priority: number
+          status: Database["public"]["Enums"]["reading_plan_item_status"]
+          target_month: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          book_id?: string | null
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          isbn?: string | null
+          plan_id: string
+          priority?: number
+          status?: Database["public"]["Enums"]["reading_plan_item_status"]
+          target_month?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          book_id?: string | null
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          isbn?: string | null
+          plan_id?: string
+          priority?: number
+          status?: Database["public"]["Enums"]["reading_plan_item_status"]
+          target_month?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_plan_items_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reading_plan_items_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "reading_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reading_plans: {
+        Row: {
+          created_at: string
+          created_by_user_id: string | null
+          description: string | null
+          district_id: string | null
+          ends_at: string | null
+          id: string
+          is_template: boolean
+          name: string
+          scope: Database["public"]["Enums"]["reading_plan_scope"] | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["reading_plan_status"]
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by_user_id?: string | null
+          description?: string | null
+          district_id?: string | null
+          ends_at?: string | null
+          id?: string
+          is_template?: boolean
+          name: string
+          scope?: Database["public"]["Enums"]["reading_plan_scope"] | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["reading_plan_status"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by_user_id?: string | null
+          description?: string | null
+          district_id?: string | null
+          ends_at?: string | null
+          id?: string
+          is_template?: boolean
+          name?: string
+          scope?: Database["public"]["Enums"]["reading_plan_scope"] | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["reading_plan_status"]
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       saved_libraries: {
         Row: {
           created_at: string
@@ -1163,6 +1271,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       public_libraries: {
@@ -1251,6 +1380,13 @@ export type Database = {
           first_name: string
         }[]
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
       lookup_user_id_by_username: {
         Args: { _username: string }
@@ -1275,7 +1411,14 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "teacher" | "entity" | "moderator" | "user"
+      reading_plan_item_status: "planned" | "reading" | "done" | "skipped"
+      reading_plan_scope:
+        | "personal"
+        | "school_district"
+        | "regional"
+        | "national"
+      reading_plan_status: "active" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1402,6 +1545,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "teacher", "entity", "moderator", "user"],
+      reading_plan_item_status: ["planned", "reading", "done", "skipped"],
+      reading_plan_scope: [
+        "personal",
+        "school_district",
+        "regional",
+        "national",
+      ],
+      reading_plan_status: ["active", "archived"],
+    },
   },
 } as const

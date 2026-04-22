@@ -9,10 +9,10 @@
   },
   "nav": {
     "library": "Biblioteca",
-    "addBook": "Añadir",
-    "profile": "Perfil",
-    "find": "Buscar",
-    "wishlist": "Deseos"
+    "lists": "Listas",
+    "search": "Buscar",
+    "events": "Eventos",
+    "profile": "Perfil"
   },
   "auth": {
     "signIn": "Iniciar sesión",

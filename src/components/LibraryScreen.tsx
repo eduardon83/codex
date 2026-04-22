@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays, Trash2 } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays, Trash2, MoreVertical } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,9 +23,12 @@ import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
 import { GENRE_OPTIONS, parseGenres } from '@/components/GenreMultiSelect';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
+import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
 import HelpButton from '@/components/tutorial/HelpButton';
 import LibraryCardExpiryBanner from '@/components/LibraryCardExpiryBanner';
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
 
 interface Library {
   id: string;
@@ -90,6 +93,8 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [dismissedBanner, setDismissedBanner] = useState(false);
   const [dismissedBorrowBanner, setDismissedBorrowBanner] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
+  const [showPlanSheet, setShowPlanSheet] = useState(false);
 
   // Multi-select state
   const [selectMode, setSelectMode] = useState(false);
@@ -248,6 +253,16 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   };
 
   const hasActiveFilters = filterGenres.length > 0 || filterFormats.length > 0 || filterStatuses.length > 0 || sortBy !== 'date_newest';
+
+  const openAddToPlan = (book: Book) => {
+    setPlanBook({ book_id: book.id, title: book.title, author: book.author, cover_url: book.cover_url });
+    setShowPlanSheet(true);
+  };
+
+  const goCreatePlan = () => {
+    onWishlist();
+    window.dispatchEvent(new Event('folium-open-planos'));
+  };
 
   const clearFilters = () => {
     setFilterGenres([]);
@@ -669,7 +684,21 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{book.author || t('library.unknownAuthor')}</p>
               </div>
-              {!selectMode && <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />}
+              {!selectMode && (
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <span role="button" tabIndex={0} onClick={(e) => e.stopPropagation()} className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:text-foreground">
+                        <MoreVertical size={16} />
+                      </span>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openAddToPlan(book); }}>Adicionar ao plano</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <ChevronRight size={16} className="text-muted-foreground" />
+                </div>
+              )}
             </button>
           ))}
         </div>
@@ -771,6 +800,13 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       )}
 
       {/* Move to library sheet */}
+      <AddToPlanSheet
+        book={planBook}
+        open={showPlanSheet}
+        onOpenChange={setShowPlanSheet}
+        onNoActivePlan={() => toast('Não tens um plano activo.', { action: { label: 'Criar plano →', onClick: goCreatePlan } })}
+      />
+
       <MoveToLibrarySheet
         open={showMoveSheet}
         onOpenChange={setShowMoveSheet}
