@@ -235,7 +235,7 @@ export default function ProfileSetup() {
       usernameInputRef.current?.focus();
       return;
     }
-    if (age >= 13 && age < 18) { setStep('parental_consent'); return; }
+    if (age >= 13 && age < 18) { setStep('avatar'); return; }
     setStep('school');
   };
 
@@ -339,7 +339,7 @@ export default function ProfileSetup() {
 
   const continueFromAvatar = async () => {
     if (!profile?.avatar_url) await saveSetupAvatar(avatarId);
-    setStep('theme');
+    setStep(age >= 13 && age < 18 ? 'parental_consent' : 'theme');
   };
 
   // ---- Step 5 → finalize ----
@@ -575,7 +575,7 @@ export default function ProfileSetup() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-sm">
-          <Header onBack={() => setStep('school')} />
+          <Header onBack={() => setStep(age >= 13 && age < 18 ? 'basics' : 'school')} />
           <div className="space-y-4 text-center">
             <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('avatars.setupIntro')}</p>
             <img
