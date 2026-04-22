@@ -6,11 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { lovable } from '@/integrations/lovable/index';
 import foliumLogo from '@/assets/folium-logo.svg';
+import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import AboutScreen from '@/components/AboutScreen';
 import { useTheme } from '@/hooks/useTheme';
-
-const OLD_GOLD_DARK = '#C9A24A';
-const OLD_GOLD_LIGHT = '#A8832A';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function AuthScreen() {
   const { t } = useTranslation();
@@ -26,8 +25,7 @@ export default function AuthScreen() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  const isClaro = currentTheme.id === 'claro';
-  const goldColor = isClaro ? OLD_GOLD_LIGHT : OLD_GOLD_DARK;
+  const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,14 +54,12 @@ export default function AuthScreen() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
           <img
-            src={foliumLogo}
+            src={logo}
             alt="Folium"
             className="w-60 min-w-[240px]"
-            style={{ color: goldColor }}
           />
           <p
             className="mt-4 text-center font-serif italic text-base leading-snug px-2"
-            style={{ color: goldColor }}
           >
             Faz das folhas uma biblioteca só tua e descobre o mundo da leitura!
           </p>

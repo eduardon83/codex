@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import foliumLogo from '@/assets/folium-logo.svg';
+import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { Loader2, Check, X } from 'lucide-react';
+import { useTheme } from '@/hooks/useTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function ParentalConsent() {
+  const { currentTheme } = useTheme();
   const [status, setStatus] = useState<'loading' | 'success' | 'invalid'>('loading');
+  const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -20,7 +25,7 @@ export default function ParentalConsent() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <img src={foliumLogo} alt="Folium" className="w-40 mx-auto mb-6" />
+        <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
         {status === 'loading' && (
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />

@@ -3,13 +3,18 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import foliumLogo from '@/assets/folium-logo.svg';
+import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { Mail, RefreshCw, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTheme } from '@/hooks/useTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function PendingParentalConsent() {
   const { profile, signOut, refreshProfile } = useAuth();
+  const { currentTheme } = useTheme();
   const [resending, setResending] = useState(false);
   const [checking, setChecking] = useState(false);
+  const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
 
   const resend = async () => {
     setResending(true);
@@ -35,7 +40,7 @@ export default function PendingParentalConsent() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <img src={foliumLogo} alt="Folium" className="w-40 mx-auto mb-6" />
+        <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary mb-4">
           <Mail className="w-6 h-6 text-foreground" />
         </div>
