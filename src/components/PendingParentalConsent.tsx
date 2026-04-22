@@ -19,7 +19,7 @@ export default function PendingParentalConsent() {
   const resend = async () => {
     setResending(true);
     try {
-      const { error } = await supabase.functions.invoke('send-parental-consent', {
+      const { error } = await supabase.functions.invoke('send-parental-consent-email', {
         body: { resend: true },
       });
       if (error) throw error;

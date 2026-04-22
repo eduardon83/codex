@@ -39,7 +39,7 @@ export default function ParentalConsent() {
     const row = data?.[0];
     setApproving(false);
     if (error || !row) { setStatus('invalid'); return; }
-    setRequest(prev => ({ ...(prev || {}), first_name: row.first_name }));
+    setRequest(prev => ({ first_name: row.first_name, age: prev?.age ?? null, language: prev?.language ?? null }));
     setStatus('success');
   };
 
