@@ -172,7 +172,7 @@ export default function ProfileSetup() {
   const submitBasics = (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName.trim() || !username.trim() || !dob) {
-      toast.error('Preenche todos os campos.');
+      toast.error(t('profileSetup.requiredFields'));
       return;
     }
     if (usernameStatus !== 'available') {
@@ -188,7 +188,7 @@ export default function ProfileSetup() {
   const submitConsent = async () => {
     if (!user) return;
     if (!parentEmail.trim() || !consentAge || !consentTerms) {
-      toast.error('Preenche o email e aceita as condições.');
+      toast.error(t('profileSetup.consentRequired'));
       return;
     }
     setSaving(true);
@@ -224,7 +224,7 @@ export default function ProfileSetup() {
 
   // ---- Step 4 → next ----
   const submitSchool = async () => {
-    if (!user || !districtId || !schoolId) { toast.error('Selecciona distrito e escola.'); return; }
+    if (!user || !districtId || !schoolId) { toast.error(t('profileSetup.schoolRequired')); return; }
     setSaving(true);
 
     let resolvedSchoolId = schoolId;
