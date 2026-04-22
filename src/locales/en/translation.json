@@ -103,7 +103,21 @@
     "pickFavourite": "Pick a favourite book",
     "addCurrentlyReading": "Add currently reading",
     "pickCurrentlyReading": "Pick a book you're reading",
-    "removeFromSection": "Remove"
+    "removeFromSection": "Remove",
+    "deleteAccount": "Delete account",
+    "deleteAccountWarningTitle": "Are you sure?",
+    "deleteAccountWarningBody": "Deleting your account permanently removes your profile, all your books, libraries, lists, reading history and preferences. This action cannot be undone.",
+    "deleteAccountActiveLoans": "You currently have books lent to others. We recommend resolving them before deleting your account.",
+    "deleteAccountContinue": "Continue",
+    "deleteAccountConfirmTitle": "Confirm deletion",
+    "deleteAccountPasswordBody": "Type your password to confirm that you want to delete the account.",
+    "deleteAccountOAuthBody": "Click confirm to permanently delete your account.",
+    "deleteAccountPermanent": "Delete account permanently",
+    "deleteAccountConfirmOAuth": "Delete account",
+    "deleteAccountDeleting": "Deleting…",
+    "deleteAccountPasswordError": "Incorrect password. Try again.",
+    "deleteAccountError": "Could not delete the account. Try again.",
+    "accountDeleted": "Your account has been deleted."
   },
   "libraryCard": {
     "sectionTitle": "Library Card",
