@@ -79,6 +79,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const [showReturnConfirm, setShowReturnConfirm] = useState(false);
   const [showLostConfirm, setShowLostConfirm] = useState(false);
   const [showBorrowReturnConfirm, setShowBorrowReturnConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<Record<string, string>>({});
   const [editTags, setEditTags] = useState<string[]>([]);
@@ -86,6 +87,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const [editGenres, setEditGenres] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [showCoverMenu, setShowCoverMenu] = useState(false);
+  const [deletingBook, setDeletingBook] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [allLibraries, setAllLibraries] = useState<{ id: string; name: string }[]>([]);
@@ -193,6 +195,30 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const returnBorrowedBook = async () => {
     await supabase.from('books').delete().eq('id', bookId);
     setShowBorrowReturnConfirm(false);
+    onBack();
+  };
+
+  const deleteBook = async () => {
+    if (!book) return;
+    setDeletingBook(true);
+
+    if (activeLoan) {
+      await supabase.from('loans').update({
+        is_active: false,
+        return_date: new Date().toISOString(),
+      }).eq('id', activeLoan.id);
+    }
+
+    await supabase.from('book_availability' as any).delete().eq('book_id', bookId);
+    if (book.isbn) {
+      await supabase.from('reading_list_books').delete().eq('isbn', book.isbn);
+    }
+    await supabase.from('user_favourites').delete().eq('source_book_id', bookId);
+    await supabase.from('books').delete().eq('id', bookId);
+
+    setDeletingBook(false);
+    setShowDeleteConfirm(false);
+    showToast(t('bookDetail.bookDeleted'));
     onBack();
   };
 
@@ -443,6 +469,16 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
               {saving ? t('bookDetail.saving') : t('bookDetail.saveChanges')}
             </Button>
           </div>
+
+          <div className="border-t border-border pt-4">
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="inline-flex items-center gap-2 text-sm text-destructive/80 hover:text-destructive transition-colors"
+            >
+              <Trash2 size={15} />
+              {t('bookDetail.deleteBook')}
+            </button>
+          </div>
         </div>
       ) : (
         /* ─── VIEW MODE ─── */
@@ -653,6 +689,31 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             <AlertDialogCancel>{t('profile.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={returnBorrowedBook}>
               {t('bookDetail.confirmReturn')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('bookDetail.deleteBookTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('bookDetail.deleteBookDesc')}
+              {activeLoan && <span className="mt-2 block">{t('bookDetail.deleteBookActiveLoan')}</span>}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingBook}>{t('profile.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deletingBook}
+              onClick={(event) => {
+                event.preventDefault();
+                deleteBook();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('bookDetail.confirmDeleteBook')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
