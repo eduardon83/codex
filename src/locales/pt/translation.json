@@ -655,5 +655,12 @@
     "Unread": "Não lido",
     "Currently Reading": "A ler",
     "Read": "Lido"
+  },
+  "avatars": {
+    "choose": "Escolher avatar",
+    "confirm": "Confirmar",
+    "info": "Info",
+    "setupIntro": "Escolhe um avatar para o teu perfil.",
+    "defaultAlt": "Avatar Folium"
   }
 }
