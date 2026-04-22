@@ -176,19 +176,16 @@ export default function ProfileScreen() {
 
       {/* 1. Header block */}
       <div className="flex items-start gap-4 mb-6">
-        <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
-        <button onClick={() => avatarInputRef.current?.click()} className="relative group flex-shrink-0">
-          {(profile as any)?.avatar_url ? (
-            <img src={(profile as any).avatar_url} alt="" className="w-20 h-20 rounded-full object-cover group-hover:opacity-80 transition-opacity" />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center group-hover:bg-secondary/70 transition-colors">
-              <User size={28} className="text-muted-foreground" />
-            </div>
-          )}
-          <div className="absolute bottom-0 right-0 bg-accent text-accent-foreground rounded-full p-1">
-            <Camera size={12} />
-          </div>
-        </button>
+        <div className="flex-shrink-0 space-y-2 text-center">
+          <img
+            src={resolveAvatarSrc((profile as any)?.avatar_url)}
+            alt={getAvatarById((profile as any)?.avatar_url)?.name || t('avatars.defaultAlt')}
+            className="h-20 w-20 rounded-full border border-border object-cover"
+          />
+          <Button type="button" variant="outline" size="sm" className="h-7 px-2 text-[11px]" onClick={() => setAvatarPickerOpen(true)}>
+            {t('avatars.choose')}
+          </Button>
+        </div>
 
         {!editing ? (
           <div className="flex-1 min-w-0">
@@ -436,6 +433,13 @@ export default function ProfileScreen() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AvatarPickerDialog
+        open={avatarPickerOpen}
+        value={(profile as any)?.avatar_url}
+        onOpenChange={setAvatarPickerOpen}
+        onConfirm={saveAvatar}
+      />
 
       <button
         onClick={() => setShowAbout(true)}
