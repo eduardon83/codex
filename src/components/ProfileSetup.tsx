@@ -349,6 +349,24 @@ export default function ProfileSetup() {
 
   // ===== STEP RENDERS =====
 
+  if (step === 'age_gate') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header />
+          <form onSubmit={submitAgeGate} className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
+              <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
+                max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
+            </div>
+            <Button type="submit" className="w-full h-11">{t('profileSetup.continue')}</Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   if (step === 'underage_block') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
@@ -361,6 +379,48 @@ export default function ProfileSetup() {
             {t('profileSetup.underageSubtitle')}
           </p>
           <Button onClick={signOut} variant="outline" className="w-full h-11">{t('profile.signOut')}</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'terms') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header onBack={() => setStep('age_gate')} />
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('profileSetup.termsIntro')}</p>
+            <div className="max-h-[320px] overflow-y-auto rounded-md border border-border bg-card p-3 text-sm leading-relaxed text-card-foreground whitespace-pre-wrap">
+              {loadingLegal ? t('app.loading') : (termsDocument?.content || t('legal.documentPreparing'))}
+            </div>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox checked={acceptedTerms} onCheckedChange={v => setAcceptedTerms(!!v)} className="mt-0.5" />
+              <span>{t('profileSetup.acceptTerms')}</span>
+            </label>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox checked={acceptedPrivacy} onCheckedChange={v => setAcceptedPrivacy(!!v)} className="mt-0.5" />
+              <span>
+                {t('profileSetup.acceptPrivacyPrefix')}{' '}
+                <button type="button" onClick={(e) => { e.preventDefault(); setShowPrivacy(true); }} className="text-foreground underline underline-offset-2">
+                  {t('profileSetup.privacyPolicy')}
+                </button>
+              </span>
+            </label>
+            <Button onClick={submitTerms} disabled={saving || loadingLegal || !acceptedTerms || !acceptedPrivacy} className="w-full h-11">
+              {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
+            </Button>
+          </div>
+          <Dialog open={showPrivacy} onOpenChange={setShowPrivacy}>
+            <DialogContent className="bg-background border-border max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="font-serif">{t('legal.privacyTitle')}</DialogTitle>
+              </DialogHeader>
+              <div className="max-h-[60vh] overflow-y-auto rounded-md border border-border p-3 text-sm leading-relaxed whitespace-pre-wrap">
+                {privacyDocument?.content || t('legal.documentPreparing')}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     );
@@ -481,7 +541,7 @@ export default function ProfileSetup() {
     );
   }
 
-  // STEP 1: basics
+  // STEP: basics
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-sm">
@@ -505,11 +565,6 @@ export default function ProfileSetup() {
                 <span>{usernameMessage}</span>
               </p>
             )}
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
-            <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
-              max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
           </div>
           <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">{t('profileSetup.continue')}</Button>
         </form>
