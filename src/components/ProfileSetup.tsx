@@ -168,6 +168,10 @@ export default function ProfileSetup() {
       toast.error('Preenche todos os campos.');
       return;
     }
+    if (usernameStatus !== 'available') {
+      usernameInputRef.current?.focus();
+      return;
+    }
     if (age < 12) { setStep('underage_block'); return; }
     if (age < 18) { setStep('parental_consent'); return; }
     setStep('school');
@@ -182,19 +186,25 @@ export default function ProfileSetup() {
     }
     setSaving(true);
     const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
-    const { error } = await supabase.from('profiles').update({
-      first_name: firstName,
-      last_name: lastName,
-      username,
-      date_of_birth: dob,
-      parent_email: parentEmail.trim(),
-      parent_consent_token: token,
-      parent_consent_sent_at: new Date().toISOString(),
-      account_status: 'pending_parental_consent',
-      profile_completed: true,
-      age_group: 'under_18',
-    } as any).eq('user_id', user.id);
-    if (error) { toast.error(error.message); setSaving(false); return; }
+    try {
+      const { error } = await supabase.from('profiles').update({
+        first_name: firstName,
+        last_name: lastName,
+        username,
+        date_of_birth: dob,
+        parent_email: parentEmail.trim(),
+        parent_consent_token: token,
+        parent_consent_sent_at: new Date().toISOString(),
+        account_status: 'pending_parental_consent',
+        profile_completed: true,
+        age_group: 'under_18',
+      } as any).eq('user_id', user.id);
+      if (error) throw error;
+    } catch (error) {
+      handleProfileSaveError(error);
+      setSaving(false);
+      return;
+    }
 
     // Fire-and-forget consent email
     supabase.functions.invoke('send-parental-consent', {
@@ -224,18 +234,24 @@ export default function ProfileSetup() {
       }
     }
 
-    const { error } = await supabase.from('profiles').update({
-      first_name: firstName,
-      last_name: lastName,
-      username,
-      date_of_birth: dob,
-      country_code: 'PT',
-      district_id: districtId,
-      school_id: resolvedSchoolId,
-      age_group: age < 18 ? 'under_18' : 'over_18',
-    } as any).eq('user_id', user.id);
+    try {
+      const { error } = await supabase.from('profiles').update({
+        first_name: firstName,
+        last_name: lastName,
+        username,
+        date_of_birth: dob,
+        country_code: 'PT',
+        district_id: districtId,
+        school_id: resolvedSchoolId,
+        age_group: age < 18 ? 'under_18' : 'over_18',
+      } as any).eq('user_id', user.id);
+      if (error) throw error;
+    } catch (error) {
+      handleProfileSaveError(error);
+      setSaving(false);
+      return;
+    }
     setSaving(false);
-    if (error) { toast.error(error.message); return; }
     setStep('theme');
   };
 
