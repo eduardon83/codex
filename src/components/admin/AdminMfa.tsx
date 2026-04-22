@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function AdminMfa({ onVerified }: Props) {
+  const { t } = useTranslation();
   const [step, setStep] = useState<'loading' | 'enroll' | 'verify'>('loading');
   const [qrCode, setQrCode] = useState('');
   const [factorId, setFactorId] = useState('');
@@ -35,7 +37,7 @@ export default function AdminMfa({ onVerified }: Props) {
         friendlyName: 'Bibliotheca Admin',
       });
       if (error || !enrollData) {
-        setError(error?.message || 'Failed to set up 2FA');
+        setError(error?.message || t('admin.setupFailed'));
         return;
       }
       setQrCode(enrollData.totp.qr_code);
@@ -65,7 +67,7 @@ export default function AdminMfa({ onVerified }: Props) {
     });
 
     if (verifyError) {
-      setError('Invalid code. Please try again.');
+      setError(t('admin.invalidCode'));
       setCode('');
       setLoading(false);
       return;
@@ -77,7 +79,7 @@ export default function AdminMfa({ onVerified }: Props) {
   if (step === 'loading') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground text-sm font-['Josefin_Sans']">Setting up security…</p>
+        <p className="text-muted-foreground text-sm font-['Josefin_Sans']">{t('admin.settingUpSecurity')}</p>
       </div>
     );
   }
@@ -90,19 +92,19 @@ export default function AdminMfa({ onVerified }: Props) {
             <Shield className="w-8 h-8 text-primary" />
           </div>
           <h1 className="font-['Cormorant_Garamond'] text-2xl font-semibold text-foreground">
-            {step === 'enroll' ? 'Set Up Two-Factor Authentication' : 'Two-Factor Authentication'}
+            {step === 'enroll' ? t('admin.setup2fa') : t('admin.twoFactor')}
           </h1>
           <p className="text-muted-foreground text-sm mt-2 font-['Josefin_Sans']">
             {step === 'enroll'
-              ? 'Scan this QR code with Google Authenticator or Authy'
-              : 'Enter the 6-digit code from your authenticator app'}
+              ? t('admin.scanQr')
+              : t('admin.enterCode')}
           </p>
         </div>
 
         {step === 'enroll' && qrCode && (
           <div className="flex justify-center">
             <div className="bg-white p-4 rounded-lg">
-              <img src={qrCode} alt="QR Code for 2FA setup" className="w-48 h-48" />
+              <img src={qrCode} alt={t('admin.qrAlt')} className="w-48 h-48" />
             </div>
           </div>
         )}
@@ -126,7 +128,7 @@ export default function AdminMfa({ onVerified }: Props) {
           {error && <p className="text-destructive text-sm text-center">{error}</p>}
 
           <Button onClick={handleVerify} className="w-full h-11" disabled={code.length !== 6 || loading}>
-            {loading ? '…' : 'Verify'}
+            {loading ? '…' : t('admin.verify')}
           </Button>
         </div>
       </div>
