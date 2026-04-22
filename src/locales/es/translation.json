@@ -423,7 +423,7 @@
     "lastUpdated": "Última actualización: {{date}}"
   },
   "readingHistory": {
-    "title": "Lista de lectura",
+    "title": "Mis lecturas",
     "searchPlaceholder": "Buscar por título o autor…",
     "tabReading": "Leyendo",
     "tabRead": "Leído",
