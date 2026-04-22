@@ -416,15 +416,27 @@ export default function ProfileSetup() {
             <Input placeholder="Nome" value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
             <Input placeholder="Apelido" value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
           </div>
-          <Input placeholder="@utilizador" value={username}
-            onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            required className="h-11 text-sm" />
+          <div className="space-y-1">
+            <Input ref={usernameInputRef} placeholder="@utilizador" value={username}
+              onChange={e => setUsername(e.target.value.toLowerCase())}
+              required className="h-11 text-sm" />
+            {usernameMessage && (
+              <p className={`flex items-center gap-1.5 text-xs font-['Josefin_Sans'] ${
+                usernameStatus === 'available' ? 'text-green-600' : usernameStatus === 'error' ? 'text-destructive' : 'text-muted-foreground'
+              }`}>
+                {usernameStatus === 'checking' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                {usernameStatus === 'available' && <CheckCircle2 className="w-3.5 h-3.5" />}
+                {usernameStatus === 'error' && <XCircle className="w-3.5 h-3.5" />}
+                <span>{usernameMessage}</span>
+              </p>
+            )}
+          </div>
           <div className="space-y-1">
             <Label className="text-xs text-muted-foreground">Data de nascimento</Label>
             <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
               max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
           </div>
-          <Button type="submit" className="w-full h-11">Continuar</Button>
+          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">Continuar</Button>
         </form>
       </div>
     </div>
