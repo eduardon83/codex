@@ -8,6 +8,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { tFormat, tGenre } from '@/lib/displayMappings';
+import { parseGenres } from '@/components/GenreMultiSelect';
 
 interface ReadingHistoryEntry {
   id: string;
@@ -47,6 +49,8 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 function BookRow({ entry, onClick }: { entry: ReadingHistoryEntry; onClick: () => void }) {
+  const { t } = useTranslation();
+  const firstGenre = parseGenres(entry.book_genre)[0];
   return (
     <TooltipProvider delayDuration={400}>
       <Tooltip>
@@ -67,9 +71,9 @@ function BookRow({ entry, onClick }: { entry: ReadingHistoryEntry; onClick: () =
               <p className="text-xs text-muted-foreground truncate">{entry.book_author || '—'}</p>
               <div className="flex items-center gap-2 mt-1">
                 {entry.book_year && <span className="text-xs text-muted-foreground">{entry.book_year}</span>}
-                {entry.book_genre && (
+                {firstGenre && (
                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-accent/20 text-accent-foreground">
-                    {entry.book_genre.split(',')[0]}
+                    {tGenre(firstGenre, t)}
                   </Badge>
                 )}
               </div>
@@ -95,8 +99,8 @@ function BookRow({ entry, onClick }: { entry: ReadingHistoryEntry; onClick: () =
                   {new Date(entry.date_finished).toLocaleDateString()}
                 </p>
               )}
-              {entry.book_genre && (
-                <Badge variant="secondary" className="text-[10px] mt-1">{entry.book_genre.split(',')[0]}</Badge>
+              {firstGenre && (
+                <Badge variant="secondary" className="text-[10px] mt-1">{tGenre(firstGenre, t)}</Badge>
               )}
             </div>
           </div>
@@ -109,6 +113,7 @@ function BookRow({ entry, onClick }: { entry: ReadingHistoryEntry; onClick: () =
 function DetailSheet({ entry, open, onClose }: { entry: ReadingHistoryEntry | null; open: boolean; onClose: () => void }) {
   const { t } = useTranslation();
   if (!entry) return null;
+  const genres = parseGenres(entry.book_genre);
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -128,8 +133,8 @@ function DetailSheet({ entry, open, onClose }: { entry: ReadingHistoryEntry | nu
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">{entry.book_author || '—'}</p>
               {entry.rating && <StarRating rating={entry.rating} />}
-              {entry.book_genre && (
-                <Badge variant="secondary" className="text-xs bg-accent/20">{entry.book_genre}</Badge>
+              {genres.length > 0 && (
+                <Badge variant="secondary" className="text-xs bg-accent/20">{genres.map(g => tGenre(g, t)).join(', ')}</Badge>
               )}
             </div>
           </div>
@@ -142,7 +147,7 @@ function DetailSheet({ entry, open, onClose }: { entry: ReadingHistoryEntry | nu
               <div><p className="text-muted-foreground text-xs">{t('bookDetail.published')}</p><p className="text-foreground">{entry.book_year}</p></div>
             )}
             {entry.book_format && (
-              <div><p className="text-muted-foreground text-xs">{t('bookDetail.format')}</p><p className="text-foreground">{entry.book_format}</p></div>
+              <div><p className="text-muted-foreground text-xs">{t('bookDetail.format')}</p><p className="text-foreground">{tFormat(entry.book_format, t)}</p></div>
             )}
             {entry.book_pages && (
               <div><p className="text-muted-foreground text-xs">{t('bookDetail.pages')}</p><p className="text-foreground">{entry.book_pages}</p></div>
