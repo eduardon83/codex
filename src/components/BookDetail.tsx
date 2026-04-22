@@ -469,6 +469,16 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
               {saving ? t('bookDetail.saving') : t('bookDetail.saveChanges')}
             </Button>
           </div>
+
+          <div className="border-t border-border pt-4">
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="inline-flex items-center gap-2 text-sm text-destructive/80 hover:text-destructive transition-colors"
+            >
+              <Trash2 size={15} />
+              {t('bookDetail.deleteBook')}
+            </button>
+          </div>
         </div>
       ) : (
         /* ─── VIEW MODE ─── */
@@ -679,6 +689,31 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             <AlertDialogCancel>{t('profile.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={returnBorrowedBook}>
               {t('bookDetail.confirmReturn')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('bookDetail.deleteBookTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('bookDetail.deleteBookDesc')}
+              {activeLoan && <span className="mt-2 block">{t('bookDetail.deleteBookActiveLoan')}</span>}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingBook}>{t('profile.cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deletingBook}
+              onClick={(event) => {
+                event.preventDefault();
+                deleteBook();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('bookDetail.confirmDeleteBook')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
