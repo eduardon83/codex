@@ -1,25 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
-import logoLight from '@/assets/bibliotheca-line-lightmode.png';
-import logoDark from '@/assets/bibliotheca-line-darkmode.png';
-import { useTheme } from '@/hooks/useTheme';
-import {
-  appVersion,
-  buildYear,
-  authorBio,
-  intention,
-  termsAndConditions,
-  termsLastUpdated,
-} from '@/config/about';
+import leafIcon from '@/assets/folium-icon.svg';
+import { aboutLegalContent, buildYear } from '@/config/about';
 
 interface AboutScreenProps {
   onBack: () => void;
 }
 
 export default function AboutScreen({ onBack }: AboutScreenProps) {
-  const { t } = useTranslation();
-  const { theme } = useTheme();
-  const logo = theme === 'claro' ? logoLight : logoDark;
+  const { t, i18n } = useTranslation();
+  const language = ['pt', 'en', 'es', 'fr'].includes(i18n.language) ? i18n.language : 'pt';
+  const blocks = aboutLegalContent[language] || aboutLegalContent.pt;
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -32,43 +23,33 @@ export default function AboutScreen({ onBack }: AboutScreenProps) {
           <ArrowLeft size={16} /> {t('bookDetail.back')}
         </button>
 
-        {/* App identity */}
-        <div className="flex flex-col items-center mb-10">
-          <img src={logo} alt="Bibliotheca" className="w-60 min-w-[240px] mb-4" />
-          <p className="text-sm text-muted-foreground">
-            {t('about.version', { version: appVersion })}
-          </p>
-          <p className="text-sm text-muted-foreground mt-1 text-center">
-            {t('about.description')}
-          </p>
-        </div>
+        <header className="flex flex-col items-center mb-10">
+          <span
+            className="h-16 w-12 bg-gold"
+            style={{ mask: `url(${leafIcon}) center / contain no-repeat`, WebkitMask: `url(${leafIcon}) center / contain no-repeat` }}
+            aria-hidden="true"
+          />
+          <h1 className="font-serif text-4xl text-foreground mt-3">Folium</h1>
+        </header>
 
-        {/* About */}
-        <section className="mb-8">
-          <h2 className="font-serif text-xl text-foreground mb-3">{t('about.aboutHeading')}</h2>
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{authorBio}</p>
-        </section>
-
-        {/* Our intention */}
-        <section className="mb-8">
-          <h2 className="font-serif text-xl text-foreground mb-3">{t('about.intentionHeading')}</h2>
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{intention}</p>
-        </section>
-
-        {/* Terms & Conditions */}
-        <section className="mb-10">
-          <h2 className="font-serif text-xl text-foreground mb-1">{t('about.termsHeading')}</h2>
-          <p className="text-xs text-muted-foreground mb-3">
-            {t('about.lastUpdated', { date: termsLastUpdated })}
-          </p>
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">
-            {termsAndConditions}
-          </p>
-        </section>
+        <article className="space-y-5 font-sans">
+          {blocks.map((block, index) => {
+            if (block.type === 'eyebrow') {
+              return <p key={index} className="text-xs uppercase tracking-[0.12em] text-muted-foreground">{block.text}</p>;
+            }
+            if (block.type === 'lead') {
+              return <p key={index} className="text-base leading-relaxed text-foreground">{block.text}</p>;
+            }
+            if (block.type === 'heading') {
+              return <h2 key={index} className="pt-3 font-serif text-2xl text-foreground">{block.text}</h2>;
+            }
+            return <p key={index} className="text-sm leading-relaxed text-foreground">{block.text}</p>;
+          })}
+        </article>
 
         {/* Version footer */}
         <p className="text-center text-xs text-muted-foreground pb-6">
-          Bibliotheca v{appVersion} · {buildYear}
+          Folium · {buildYear}
         </p>
       </div>
     </div>
