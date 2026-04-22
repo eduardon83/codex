@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, BookOpen, Library, Handshake, Heart, TrendingUp } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
+import { tGenre } from '@/lib/displayMappings';
 
 interface Stats {
   total_users: number;
@@ -43,6 +45,7 @@ const metricCards = [
 ] as const;
 
 export default function AdminDashboard() {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -125,7 +128,7 @@ export default function AdminDashboard() {
             <div className="mt-3 space-y-2">
               {stats.top_genres.map((g) => (
                 <div key={g.genre} className="flex items-center justify-between">
-                  <span className="text-sm font-['Josefin_Sans'] text-foreground">{g.genre}</span>
+                  <span className="text-sm font-['Josefin_Sans'] text-foreground">{tGenre(g.genre, t)}</span>
                   <span className="text-xs text-muted-foreground font-mono">{g.count}</span>
                 </div>
               ))}
