@@ -321,7 +321,13 @@
     "returnBy": "Devolver hasta",
     "returnBorrowedBook": "Devolver libro",
     "borrowReturnTitle": "¿Marcar como devuelto y eliminar de la biblioteca?",
-    "borrowReturnDesc": "Esto eliminará permanentemente este libro prestado de tu biblioteca."
+    "borrowReturnDesc": "Esto eliminará permanentemente este libro prestado de tu biblioteca.",
+    "deleteBook": "Eliminar libro",
+    "deleteBookTitle": "¿Eliminar libro?",
+    "deleteBookDesc": "Este libro se eliminará permanentemente de tu biblioteca.",
+    "deleteBookActiveLoan": "Este libro está actualmente prestado. Eliminarlo cerrará el préstamo.",
+    "confirmDeleteBook": "Eliminar",
+    "bookDeleted": "Libro eliminado."
   },
   "findLibraries": {
     "title": "Descubrir",

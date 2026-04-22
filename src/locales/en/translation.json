@@ -321,7 +321,13 @@
     "returnBy": "Return by",
     "returnBorrowedBook": "Return book",
     "borrowReturnTitle": "Mark as returned and remove from library?",
-    "borrowReturnDesc": "This will permanently remove this borrowed book from your library."
+    "borrowReturnDesc": "This will permanently remove this borrowed book from your library.",
+    "deleteBook": "Delete book",
+    "deleteBookTitle": "Delete book?",
+    "deleteBookDesc": "This book will be permanently removed from your library.",
+    "deleteBookActiveLoan": "This book is currently on loan. Deleting it will close the loan.",
+    "confirmDeleteBook": "Delete",
+    "bookDeleted": "Book deleted."
   },
   "findLibraries": {
     "title": "Discover",

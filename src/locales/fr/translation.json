@@ -321,7 +321,13 @@
     "returnBy": "Retourner avant le",
     "returnBorrowedBook": "Retourner le livre",
     "borrowReturnTitle": "Marquer comme rendu et retirer de la bibliothèque ?",
-    "borrowReturnDesc": "Cela supprimera définitivement ce livre emprunté de votre bibliothèque."
+    "borrowReturnDesc": "Cela supprimera définitivement ce livre emprunté de votre bibliothèque.",
+    "deleteBook": "Supprimer le livre",
+    "deleteBookTitle": "Supprimer le livre ?",
+    "deleteBookDesc": "Ce livre sera définitivement supprimé de votre bibliothèque.",
+    "deleteBookActiveLoan": "Ce livre est actuellement prêté. Le supprimer clôturera le prêt.",
+    "confirmDeleteBook": "Supprimer",
+    "bookDeleted": "Livre supprimé."
   },
   "findLibraries": {
     "title": "Découvrir",
