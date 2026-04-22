@@ -9,11 +9,11 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { useEffect } from 'react';
-import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
-import { THEMES } from '@/hooks/useTheme';
+import { applyTheme, THEMES } from '@/hooks/useTheme';
 
 type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
@@ -60,6 +60,7 @@ export default function ProfileSetup() {
 
   // Step 5: theme
   const [themeId, setThemeId] = useState('claro');
+  const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
 
   const age = useMemo(() => calculateAge(dob), [dob]);
 
@@ -269,6 +270,13 @@ export default function ProfileSetup() {
     await refreshProfile();
   };
 
+  const previewTheme = (id: string) => {
+    const theme = THEMES.find(th => th.id === id);
+    if (!theme) return;
+    setThemeId(id);
+    applyTheme(theme);
+  };
+
   const Header = ({ onBack }: { onBack?: () => void }) => (
     <div className="flex flex-col items-center mb-6">
       {onBack && (
@@ -388,17 +396,27 @@ export default function ProfileSetup() {
           <Header />
           <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">Escolhe o teu tema</p>
           <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
-            {THEMES.map(th => (
-              <button key={th.id} onClick={() => setThemeId(th.id)}
-                className={`p-2 border rounded text-left transition-colors ${themeId === th.id ? 'border-foreground' : 'border-border hover:border-foreground'}`}>
-                <div className="flex h-5 rounded overflow-hidden mb-1.5">
-                  {th.colors.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
-                </div>
-                <p className="text-xs text-foreground">{th.name}</p>
-              </button>
-            ))}
+            {THEMES.map(th => {
+              const isSelected = themeId === th.id;
+              return (
+                <button key={th.id} onClick={() => previewTheme(th.id)}
+                  className="relative min-h-[92px] p-2 border rounded text-left bg-card text-card-foreground transition-colors hover:border-accent"
+                  style={{ borderColor: isSelected ? selectedTheme.colors[2] : undefined }}>
+                  {isSelected && (
+                    <span className="absolute right-2 top-2 grid h-5 w-5 place-items-center rounded-full bg-accent text-accent-foreground">
+                      <Check className="h-3 w-3" />
+                    </span>
+                  )}
+                  <div className="flex h-5 rounded overflow-hidden mb-1.5 border border-border">
+                    {th.colors.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
+                  </div>
+                  <p className="text-xs text-foreground pr-6">{th.name}</p>
+                  {th.description && <p className="mt-0.5 text-[10px] leading-tight italic text-muted-foreground line-clamp-2">{th.description}</p>}
+                </button>
+              );
+            })}
           </div>
-          <Button onClick={finalize} disabled={saving} className="w-full h-11">
+          <Button onClick={finalize} disabled={saving} className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90">
             {saving ? 'A finalizar…' : 'Entrar no Folium'}
           </Button>
         </div>

@@ -6,6 +6,7 @@ export interface ThemeOption {
   id: string;
   name: string;
   tree: 'claro' | 'olmo' | 'carvalho' | 'betula' | 'oliveira';
+  description?: string;
   // [deepest, deep, accent, highlight]
   colors: [string, string, string, string];
 }
@@ -20,24 +21,24 @@ export const THEMES: ThemeOption[] = [
   { id: 'claro', name: 'Claro', tree: 'claro', colors: ['#FAFAF8', '#F0EDE8', '#6B8E7F', '#2C2A26'] },
 
   // Olmo · scholarly, tall — ink skies + warm gold
-  { id: 'idanha',         name: 'Idanha',          tree: 'olmo',     colors: ['#0B2545', '#1B3A6B', '#4A90C7', '#FFD166'] },
-  { id: 'marialva',       name: 'Marialva',        tree: 'olmo',     colors: ['#1A2E2A', '#2A4742', '#6B8E7F', '#F5E6C0'] },
-  { id: 'piodao',         name: 'Piódão',          tree: 'olmo',     colors: ['#1A1F28', '#1F3347', '#D4A556', '#EDDAAE'] },
+  { id: 'idanha',         name: 'Idanha-a-Velha',  tree: 'olmo',     description: 'Vila romana com 2000 anos. Ruínas, oliveiras e uma catedral visigótica.', colors: ['#0B2545', '#1B3A6B', '#4A90C7', '#FFD166'] },
+  { id: 'marialva',       name: 'Marialva',        tree: 'olmo',     description: 'Aldeia em ruínas sobre o vale do Côa. Lenda, silêncio e vinhas.', colors: ['#1A2E2A', '#2A4742', '#6B8E7F', '#F5E6C0'] },
+  { id: 'piodao',         name: 'Piódão',          tree: 'olmo',     description: 'Aldeia de xisto escuro com portas azuis, encravada na Serra do Açor.', colors: ['#1A1F28', '#1F3347', '#D4A556', '#EDDAAE'] },
 
   // Carvalho · warm, grand
-  { id: 'almeida',        name: 'Almeida',         tree: 'carvalho', colors: ['#1E1A2E', '#2D2445', '#7A5B9A', '#F0B27A'] },
-  { id: 'trancoso',       name: 'Trancoso',        tree: 'carvalho', colors: ['#1A0B2E', '#3B1552', '#9B4DCA', '#FFB627'] },
-  { id: 'castelo-rod',    name: 'Castelo Rodrigo', tree: 'carvalho', colors: ['#231708', '#402811', '#D19C45', '#F5D789'] },
+  { id: 'almeida',        name: 'Almeida',         tree: 'carvalho', description: 'Fortaleza em forma de estrela, a maior do seu tipo em Portugal.', colors: ['#1E1A2E', '#2D2445', '#7A5B9A', '#F0B27A'] },
+  { id: 'trancoso',       name: 'Trancoso',        tree: 'carvalho', description: 'Cidade-muralha onde D. Dinis se casou. Judiarias, lendas e Bandarra.', colors: ['#1A0B2E', '#3B1552', '#9B4DCA', '#FFB627'] },
+  { id: 'castelo-rod',    name: 'Castelo Rodrigo', tree: 'carvalho', description: 'Aldeia fortificada no alto, rodeada de oliveiras centenárias e amendoeiras.', colors: ['#231708', '#402811', '#D19C45', '#F5D789'] },
 
   // Bétula · delicate, light
-  { id: 'belmonte',       name: 'Belmonte',        tree: 'betula',   colors: ['#2B1D24', '#4A2F38', '#C98A82', '#F4DFC5'] },
-  { id: 'monsanto',       name: 'Monsanto',        tree: 'betula',   colors: ['#2A1F3D', '#3E2D52', '#D66F93', '#FFC9B5'] },
-  { id: 'sortelha',       name: 'Sortelha',        tree: 'betula',   colors: ['#1E2A22', '#2F3E33', '#B5704A', '#F0B860'] },
+  { id: 'belmonte',       name: 'Belmonte',        tree: 'betula',   description: 'Terra de Pedro Álvares Cabral e de uma antiga comunidade judaica.', colors: ['#2B1D24', '#4A2F38', '#C98A82', '#F4DFC5'] },
+  { id: 'monsanto',       name: 'Monsanto',        tree: 'betula',   description: 'Casas construídas entre e sob enormes rochedos e um castelo imponente.', colors: ['#2A1F3D', '#3E2D52', '#D66F93', '#FFC9B5'] },
+  { id: 'sortelha',       name: 'Sortelha',        tree: 'betula',   description: 'Castelo medieval perfeitamente preservado, envolto em muralha de granito.', colors: ['#1E2A22', '#2F3E33', '#B5704A', '#F0B860'] },
 
   // Oliveira · poetry, elevation
-  { id: 'castelo-mendo',  name: 'Castelo Mendo',   tree: 'oliveira', colors: ['#1A2320', '#2C3830', '#8BA18B', '#E8DCC4'] },
-  { id: 'castelo-novo',   name: 'Castelo Novo',    tree: 'oliveira', colors: ['#1F1A15', '#3A2D20', '#BA8554', '#F1E2BC'] },
-  { id: 'linhares',       name: 'Linhares',        tree: 'oliveira', colors: ['#16192E', '#262B47', '#7C88B5', '#E0DCEA'] },
+  { id: 'castelo-mendo',  name: 'Castelo Mendo',   tree: 'oliveira', description: 'Aldeia esquecida no tempo. Um javali de pedra guarda a porta principal.', colors: ['#1A2320', '#2C3830', '#8BA18B', '#E8DCC4'] },
+  { id: 'castelo-novo',   name: 'Castelo Novo',    tree: 'oliveira', description: 'Granito imponente e nascentes termais, ao pé da Serra da Gardunha.', colors: ['#1F1A15', '#3A2D20', '#BA8554', '#F1E2BC'] },
+  { id: 'linhares',       name: 'Linhares da Beira', tree: 'oliveira', description: 'Aldeia suspensa entre o céu e a Serra da Estrela. Ponto de parapente.', colors: ['#16192E', '#262B47', '#7C88B5', '#E0DCEA'] },
 ];
 
 function hexToHSL(hex: string): string {
@@ -58,7 +59,7 @@ function hexToHSL(hex: string): string {
   return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
 }
 
-function applyTheme(theme: ThemeOption) {
+export function applyTheme(theme: ThemeOption) {
   const root = document.documentElement;
   const [bgPrimary, bgSecondary, accent, textPrimary] = theme.colors.map(hexToHSL);
 
