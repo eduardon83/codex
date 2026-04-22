@@ -565,6 +565,38 @@ export default function ProfileSetup() {
     );
   }
 
+  if (step === 'avatar') {
+    const selectedAvatar = getAvatarById(avatarId);
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header onBack={() => setStep('school')} />
+          <div className="space-y-4 text-center">
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('avatars.setupIntro')}</p>
+            <img
+              src={resolveAvatarSrc(avatarId)}
+              alt={selectedAvatar?.name || t('avatars.defaultAlt')}
+              className="mx-auto h-28 w-28 rounded-full border border-border object-cover"
+            />
+            <p className="text-sm text-foreground">{selectedAvatar?.name}</p>
+            <Button type="button" variant="outline" onClick={() => setAvatarPickerOpen(true)} className="w-full h-11">
+              {t('avatars.choose')}
+            </Button>
+            <Button onClick={() => setStep('theme')} className="w-full h-11">
+              {t('profileSetup.continue')}
+            </Button>
+          </div>
+          <AvatarPickerDialog
+            open={avatarPickerOpen}
+            value={avatarId}
+            onOpenChange={setAvatarPickerOpen}
+            onConfirm={saveSetupAvatar}
+          />
+        </div>
+      </div>
+    );
+  }
+
   // STEP: basics
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
