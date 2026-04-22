@@ -14,6 +14,7 @@ import { useAppToast } from '@/components/ToastNotification';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import HelpButton from '@/components/tutorial/HelpButton';
+import { resolveAvatarSrc } from '@/lib/avatars';
 
 interface WishlistItem {
   id: string;
@@ -34,6 +35,7 @@ interface LoanRequest {
   status: string;
   created_at: string;
   requester_username?: string | null;
+  requester_avatar_url?: string | null;
 }
 
 export default function WishlistScreen() {
@@ -83,14 +85,15 @@ export default function WishlistScreen() {
       const requesterIds = [...new Set((data as any[]).map((r: any) => r.requester_user_id))];
       const { data: profiles } = await supabase
         .from('public_profiles' as any)
-        .select('user_id, username')
+        .select('user_id, username, avatar_url')
         .in('user_id', requesterIds);
-      const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p.username]));
+      const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
 
       setLoanRequests(
         (data as any[]).map((r: any) => ({
           ...r,
-          requester_username: profileMap.get(r.requester_user_id) || null,
+          requester_username: profileMap.get(r.requester_user_id)?.username || null,
+          requester_avatar_url: profileMap.get(r.requester_user_id)?.avatar_url || null,
         }))
       );
     } else {
@@ -284,6 +287,7 @@ export default function WishlistScreen() {
                     <p className="text-sm text-foreground truncate">{request.book_title}</p>
                     {request.book_author && <p className="text-xs text-muted-foreground truncate">{request.book_author}</p>}
                     <p className="text-xs text-accent mt-0.5">
+                      <img src={resolveAvatarSrc(request.requester_avatar_url)} alt="" className="mr-1 inline h-4 w-4 rounded-full border border-border object-cover align-middle" />
                       {t('wishlist.requestedBy', { username: request.requester_username ? `@${request.requester_username}` : t('wishlist.aUser') })}
                     </p>
                   </div>
