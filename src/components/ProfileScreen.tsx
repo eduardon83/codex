@@ -8,7 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { LogOut, Check, Camera, User, BookOpen, CalendarDays, History } from 'lucide-react';
+import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
@@ -40,7 +51,17 @@ export default function ProfileScreen() {
   const [legalModal, setLegalModal] = useState<LegalDocumentType | null>(null);
   const [legalDocument, setLegalDocument] = useState<LegalDocumentRecord | null>(null);
   const [loadingLegal, setLoadingLegal] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteStep, setDeleteStep] = useState<'warning' | 'confirm'>('warning');
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [activeLoanCount, setActiveLoanCount] = useState(0);
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const hasPasswordProvider = Boolean(
+    (user as any)?.identities?.some((identity: any) => identity.provider === 'email') ||
+    (user as any)?.app_metadata?.provider === 'email'
+  );
   const displayProfile = {
     first_name: editing ? form.first_name : profile?.first_name || '',
     last_name: editing ? form.last_name : profile?.last_name || '',
@@ -60,6 +81,7 @@ export default function ProfileScreen() {
     if (user) {
       supabase.from('books').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_wishlist', false).then(({ count }) => setBookCount(count || 0));
       supabase.from('libraries').select('id', { count: 'exact', head: true }).eq('user_id', user.id).then(({ count }) => setLibraryCount(count || 0));
+      supabase.from('loans').select('id', { count: 'exact', head: true }).eq('lender_id', user.id).eq('is_active', true).then(({ count }) => setActiveLoanCount(count || 0));
     }
   }, [profile, user]);
 
@@ -109,6 +131,39 @@ export default function ProfileScreen() {
     const document = await fetchCurrentLegalDocument(type, profile?.language || 'pt');
     setLegalDocument(document);
     setLoadingLegal(false);
+  };
+
+  const openDeleteAccount = () => {
+    setDeleteStep('warning');
+    setDeletePassword('');
+    setDeleteError('');
+    setDeleteDialogOpen(true);
+  };
+
+  const deleteAccount = async () => {
+    if (!user) return;
+    setDeleteError('');
+    setDeletingAccount(true);
+
+    if (hasPasswordProvider) {
+      const { error } = await supabase.auth.signInWithPassword({ email: user.email || '', password: deletePassword });
+      if (error) {
+        setDeleteError(t('profile.deleteAccountPasswordError'));
+        setDeletingAccount(false);
+        return;
+      }
+    }
+
+    const { error } = await supabase.functions.invoke('delete-account', { body: { userId: user.id } });
+    if (error) {
+      setDeleteError(error.message || t('profile.deleteAccountError'));
+      setDeletingAccount(false);
+      return;
+    }
+
+    setDeleteDialogOpen(false);
+    await signOut();
+    toast.success(t('profile.accountDeleted'));
   };
 
   if (showAbout) return <AboutScreen onBack={() => setShowAbout(false)} />;
@@ -323,6 +378,68 @@ export default function ProfileScreen() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <div className="mt-8 border-t border-border pt-5">
+        <button
+          onClick={openDeleteAccount}
+          className="w-full text-center text-sm text-destructive/80 hover:text-destructive transition-colors"
+        >
+          {t('profile.deleteAccount')}
+        </button>
+      </div>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-background border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">
+              {deleteStep === 'warning' ? t('profile.deleteAccountWarningTitle') : t('profile.deleteAccountConfirmTitle')}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3 text-left">
+              <span className="block">
+                {deleteStep === 'warning'
+                  ? t('profile.deleteAccountWarningBody')
+                  : hasPasswordProvider
+                    ? t('profile.deleteAccountPasswordBody')
+                    : t('profile.deleteAccountOAuthBody')}
+              </span>
+              {deleteStep === 'warning' && activeLoanCount > 0 && (
+                <span className="block text-destructive/80">{t('profile.deleteAccountActiveLoans')}</span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          {deleteStep === 'confirm' && hasPasswordProvider && (
+            <div className="space-y-2">
+              <Input
+                type="password"
+                value={deletePassword}
+                onChange={e => setDeletePassword(e.target.value)}
+                placeholder={t('auth.password')}
+                className="bg-background border-border"
+              />
+              {deleteError && <p className="text-xs text-destructive">{deleteError}</p>}
+            </div>
+          )}
+          {deleteStep === 'confirm' && !hasPasswordProvider && deleteError && (
+            <p className="text-xs text-destructive">{deleteError}</p>
+          )}
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingAccount}>{t('profile.cancel')}</AlertDialogCancel>
+            {deleteStep === 'warning' ? (
+              <AlertDialogAction onClick={(e) => { e.preventDefault(); setDeleteStep('confirm'); }}>
+                {t('profile.deleteAccountContinue')}
+              </AlertDialogAction>
+            ) : (
+              <AlertDialogAction
+                onClick={(e) => { e.preventDefault(); deleteAccount(); }}
+                disabled={deletingAccount || (hasPasswordProvider && !deletePassword)}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deletingAccount ? t('profile.deleteAccountDeleting') : (hasPasswordProvider ? t('profile.deleteAccountPermanent') : t('profile.deleteAccountConfirmOAuth'))}
+              </AlertDialogAction>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <button
         onClick={() => setShowAbout(true)}

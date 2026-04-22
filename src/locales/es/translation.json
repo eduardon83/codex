@@ -103,7 +103,21 @@
     "pickFavourite": "Elegir libro favorito",
     "addCurrentlyReading": "Añadir libro en lectura",
     "pickCurrentlyReading": "Elegir libro en lectura",
-    "removeFromSection": "Quitar"
+    "removeFromSection": "Quitar",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccountWarningTitle": "¿Estás seguro?",
+    "deleteAccountWarningBody": "Eliminar tu cuenta borra permanentemente tu perfil, todos tus libros, bibliotecas, listas, historial de lecturas y preferencias. Esta acción no se puede deshacer.",
+    "deleteAccountActiveLoans": "Actualmente tienes libros prestados a otras personas. Recomendamos resolverlos antes de eliminar la cuenta.",
+    "deleteAccountContinue": "Continuar",
+    "deleteAccountConfirmTitle": "Confirma la eliminación",
+    "deleteAccountPasswordBody": "Escribe tu contraseña para confirmar que quieres eliminar la cuenta.",
+    "deleteAccountOAuthBody": "Haz clic en confirmar para eliminar tu cuenta permanentemente.",
+    "deleteAccountPermanent": "Eliminar cuenta permanentemente",
+    "deleteAccountConfirmOAuth": "Eliminar cuenta",
+    "deleteAccountDeleting": "Eliminando…",
+    "deleteAccountPasswordError": "Contraseña incorrecta. Inténtalo de nuevo.",
+    "deleteAccountError": "No se pudo eliminar la cuenta. Inténtalo de nuevo.",
+    "accountDeleted": "Tu cuenta ha sido eliminada."
   },
   "libraryCard": {
     "sectionTitle": "Carné de Biblioteca",

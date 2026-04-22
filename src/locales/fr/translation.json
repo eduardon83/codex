@@ -103,7 +103,21 @@
     "pickFavourite": "Choisir un livre favori",
     "addCurrentlyReading": "Ajouter une lecture",
     "pickCurrentlyReading": "Choisir un livre en lecture",
-    "removeFromSection": "Retirer"
+    "removeFromSection": "Retirer",
+    "deleteAccount": "Supprimer le compte",
+    "deleteAccountWarningTitle": "Êtes-vous sûr ?",
+    "deleteAccountWarningBody": "Supprimer votre compte retire définitivement votre profil, tous vos livres, bibliothèques, listes, historique de lecture et préférences. Cette action est irréversible.",
+    "deleteAccountActiveLoans": "Vous avez actuellement des livres prêtés à d’autres personnes. Nous vous recommandons de les résoudre avant de supprimer le compte.",
+    "deleteAccountContinue": "Continuer",
+    "deleteAccountConfirmTitle": "Confirmer la suppression",
+    "deleteAccountPasswordBody": "Saisissez votre mot de passe pour confirmer que vous voulez supprimer le compte.",
+    "deleteAccountOAuthBody": "Cliquez sur confirmer pour supprimer définitivement votre compte.",
+    "deleteAccountPermanent": "Supprimer définitivement le compte",
+    "deleteAccountConfirmOAuth": "Supprimer le compte",
+    "deleteAccountDeleting": "Suppression…",
+    "deleteAccountPasswordError": "Mot de passe incorrect. Réessayez.",
+    "deleteAccountError": "Impossible de supprimer le compte. Réessayez.",
+    "accountDeleted": "Votre compte a été supprimé."
   },
   "libraryCard": {
     "sectionTitle": "Carte de Bibliothèque",

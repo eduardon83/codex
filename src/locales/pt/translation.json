@@ -103,7 +103,21 @@
     "pickFavourite": "Escolher livro favorito",
     "addCurrentlyReading": "Adicionar a ler agora",
     "pickCurrentlyReading": "Escolher livro a ler",
-    "removeFromSection": "Remover"
+    "removeFromSection": "Remover",
+    "deleteAccount": "Eliminar conta",
+    "deleteAccountWarningTitle": "Tens a certeza?",
+    "deleteAccountWarningBody": "Apagar a tua conta remove permanentemente o teu perfil, todos os teus livros, bibliotecas, listas, histórico de leituras e preferências. Esta ação não pode ser desfeita.",
+    "deleteAccountActiveLoans": "Tens livros emprestados actualmente. Recomendamos que os resolvas antes de apagar a conta.",
+    "deleteAccountContinue": "Continuar",
+    "deleteAccountConfirmTitle": "Confirma a eliminação",
+    "deleteAccountPasswordBody": "Escreve a tua palavra-passe para confirmar que queres apagar a conta.",
+    "deleteAccountOAuthBody": "Clica em confirmar para apagar a tua conta permanentemente.",
+    "deleteAccountPermanent": "Apagar conta permanentemente",
+    "deleteAccountConfirmOAuth": "Apagar conta",
+    "deleteAccountDeleting": "A apagar…",
+    "deleteAccountPasswordError": "Palavra-passe incorrecta. Tenta novamente.",
+    "deleteAccountError": "Não foi possível apagar a conta. Tenta novamente.",
+    "accountDeleted": "A tua conta foi eliminada."
   },
   "libraryCard": {
     "sectionTitle": "Cartão de Biblioteca",
