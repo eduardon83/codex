@@ -8,7 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { LogOut, Check, Camera, User, BookOpen, CalendarDays, History } from 'lucide-react';
+import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
@@ -40,7 +51,17 @@ export default function ProfileScreen() {
   const [legalModal, setLegalModal] = useState<LegalDocumentType | null>(null);
   const [legalDocument, setLegalDocument] = useState<LegalDocumentRecord | null>(null);
   const [loadingLegal, setLoadingLegal] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteStep, setDeleteStep] = useState<'warning' | 'confirm'>('warning');
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [activeLoanCount, setActiveLoanCount] = useState(0);
   const avatarInputRef = useRef<HTMLInputElement>(null);
+  const hasPasswordProvider = Boolean(
+    (user as any)?.identities?.some((identity: any) => identity.provider === 'email') ||
+    (user as any)?.app_metadata?.provider === 'email'
+  );
   const displayProfile = {
     first_name: editing ? form.first_name : profile?.first_name || '',
     last_name: editing ? form.last_name : profile?.last_name || '',
@@ -60,6 +81,7 @@ export default function ProfileScreen() {
     if (user) {
       supabase.from('books').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_wishlist', false).then(({ count }) => setBookCount(count || 0));
       supabase.from('libraries').select('id', { count: 'exact', head: true }).eq('user_id', user.id).then(({ count }) => setLibraryCount(count || 0));
+      supabase.from('loans').select('id', { count: 'exact', head: true }).eq('lender_id', user.id).eq('is_active', true).then(({ count }) => setActiveLoanCount(count || 0));
     }
   }, [profile, user]);
 
@@ -109,6 +131,39 @@ export default function ProfileScreen() {
     const document = await fetchCurrentLegalDocument(type, profile?.language || 'pt');
     setLegalDocument(document);
     setLoadingLegal(false);
+  };
+
+  const openDeleteAccount = () => {
+    setDeleteStep('warning');
+    setDeletePassword('');
+    setDeleteError('');
+    setDeleteDialogOpen(true);
+  };
+
+  const deleteAccount = async () => {
+    if (!user) return;
+    setDeleteError('');
+    setDeletingAccount(true);
+
+    if (hasPasswordProvider) {
+      const { error } = await supabase.auth.signInWithPassword({ email: user.email || '', password: deletePassword });
+      if (error) {
+        setDeleteError(t('profile.deleteAccountPasswordError'));
+        setDeletingAccount(false);
+        return;
+      }
+    }
+
+    const { error } = await supabase.functions.invoke('delete-account', { body: { userId: user.id } });
+    if (error) {
+      setDeleteError(error.message || t('profile.deleteAccountError'));
+      setDeletingAccount(false);
+      return;
+    }
+
+    setDeleteDialogOpen(false);
+    await signOut();
+    toast.success(t('profile.accountDeleted'));
   };
 
   if (showAbout) return <AboutScreen onBack={() => setShowAbout(false)} />;
