@@ -2,7 +2,10 @@
   "app": {
     "name": "Bibliotheca",
     "tagline": "Votre catalogue de livres personnel",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "accountSuspended": "Compte suspendu",
+    "accountSuspendedDesc": "Votre compte a été suspendu. Contactez le support pour plus d’informations.",
+    "underageBlocked": "Désolé, Folium est réservé aux plus de 12 ans."
   },
   "nav": {
     "library": "Bibliothèque",
@@ -27,7 +30,7 @@
     "googleSignIn": "Continuer avec Google"
   },
   "profileSetup": {
-    "welcome": "Bienvenue sur Bibliotheca",
+    "welcome": "Bienvenue sur Folium",
     "tellUs": "Parlez-nous un peu de vous",
     "firstName": "Prénom",
     "lastName": "Nom",
@@ -35,7 +38,37 @@
     "locationPlaceholder": "Lieu (ex : Paris, France)",
     "bioPlaceholder": "Une courte bio sur vous et vos habitudes de lecture...",
     "saving": "Enregistrement...",
-    "continue": "Continuer"
+    "continue": "Continuer",
+    "welcomeFolium": "Bienvenue sur Folium",
+    "back": "Retour",
+    "dateOfBirth": "Date de naissance",
+    "underageTitle": "Désolé, Folium est réservé aux plus de 12 ans.",
+    "underageSubtitle": "Revenez quand vous aurez 12 ans !",
+    "parentalIntro": "Comme vous avez moins de 18 ans, nous avons besoin du consentement de votre parent ou tuteur.",
+    "parentEmail": "Email du parent ou tuteur",
+    "confirmAge": "Je confirme avoir entre 12 et 17 ans.",
+    "confirmConsentEmail": "Mon parent ou tuteur recevra un email pour autoriser mon compte.",
+    "sending": "Envoi…",
+    "sendConsent": "Envoyer la demande de consentement",
+    "yourSchool": "Votre école",
+    "district": "District",
+    "selectDistrict": "Sélectionnez un district…",
+    "school": "École",
+    "searchSchool": "Rechercher une école…",
+    "selectDistrictFirst": "Sélectionnez d’abord le district",
+    "noResults": "Aucun résultat.",
+    "chooseTheme": "Choisissez votre thème",
+    "finishing": "Finalisation…",
+    "enterFolium": "Entrer dans Folium",
+    "usernameChecking": "Vérification...",
+    "usernameAvailable": "Nom d’utilisateur disponible",
+    "usernameTaken": "Ce nom d’utilisateur est déjà utilisé. Essayez-en un autre.",
+    "usernameInvalid": "Le nom d’utilisateur doit contenir au moins 3 caractères et uniquement des lettres, chiffres, _ et .",
+    "usernameCheckError": "Impossible de vérifier le nom d’utilisateur. Réessayez.",
+    "saveError": "Impossible d’enregistrer le profil.",
+    "requiredFields": "Remplissez tous les champs.",
+    "consentRequired": "Saisissez l’email et acceptez les conditions.",
+    "schoolRequired": "Sélectionnez un district et une école."
   },
   "profile": {
     "title": "Profil",
@@ -97,9 +130,34 @@
     "legendLoan": "Prêt",
     "legendBorrow": "Retour",
     "legendCard": "Carte",
-    "type": { "loan": "Prêt", "borrow": "Retour", "card": "Carte" },
-    "month": { "jan": "Janvier", "feb": "Février", "mar": "Mars", "apr": "Avril", "may": "Mai", "jun": "Juin", "jul": "Juillet", "aug": "Août", "sep": "Septembre", "oct": "Octobre", "nov": "Novembre", "dec": "Décembre" },
-    "dow": { "sun": "Dim", "mon": "Lun", "tue": "Mar", "wed": "Mer", "thu": "Jeu", "fri": "Ven", "sat": "Sam" }
+    "type": {
+      "loan": "Prêt",
+      "borrow": "Retour",
+      "card": "Carte"
+    },
+    "month": {
+      "jan": "Janvier",
+      "feb": "Février",
+      "mar": "Mars",
+      "apr": "Avril",
+      "may": "Mai",
+      "jun": "Juin",
+      "jul": "Juillet",
+      "aug": "Août",
+      "sep": "Septembre",
+      "oct": "Octobre",
+      "nov": "Novembre",
+      "dec": "Décembre"
+    },
+    "dow": {
+      "sun": "Dim",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mer",
+      "thu": "Jeu",
+      "fri": "Ven",
+      "sat": "Sam"
+    }
   },
   "library": {
     "books": "livres",
@@ -382,32 +440,106 @@
     "close": "Fermer",
     "notVisibleHint": "Cet élément n'est pas visible pour le moment.",
     "library": {
-      "tabs": { "title": "Vos bibliothèques", "desc": "Passez d'une bibliothèque à l'autre. Chacune garde ses propres livres." },
-      "search": { "title": "Recherche", "desc": "Filtrez rapidement la bibliothèque actuelle par titre ou auteur." },
-      "filter": { "title": "Filtres", "desc": "Filtrez par genre, format ou statut de lecture, et choisissez le tri." },
-      "add": { "title": "Ajouter un livre", "desc": "Touchez pour ajouter un livre par ISBN, photo ou saisie manuelle." },
-      "book": { "title": "Détails du livre", "desc": "Touchez un livre pour voir les détails, le modifier, le prêter ou mettre à jour son statut." }
+      "tabs": {
+        "title": "Vos bibliothèques",
+        "desc": "Passez d'une bibliothèque à l'autre. Chacune garde ses propres livres."
+      },
+      "search": {
+        "title": "Recherche",
+        "desc": "Filtrez rapidement la bibliothèque actuelle par titre ou auteur."
+      },
+      "filter": {
+        "title": "Filtres",
+        "desc": "Filtrez par genre, format ou statut de lecture, et choisissez le tri."
+      },
+      "add": {
+        "title": "Ajouter un livre",
+        "desc": "Touchez pour ajouter un livre par ISBN, photo ou saisie manuelle."
+      },
+      "book": {
+        "title": "Détails du livre",
+        "desc": "Touchez un livre pour voir les détails, le modifier, le prêter ou mettre à jour son statut."
+      }
     },
     "addBook": {
-      "mode": { "title": "ISBN ou manuel", "desc": "Recherchez par ISBN pour pré-remplir, ou passez à la saisie manuelle ci-dessous." },
-      "fields": { "title": "Champs pré-remplis", "desc": "Si trouvé, les détails sont pré-remplis. Vous pouvez tout modifier avant d'enregistrer." },
-      "tags": { "title": "Étiquettes", "desc": "Ajoutez jusqu'à 5 étiquettes personnelles pour retrouver ce livre plus tard." },
-      "save": { "title": "Enregistrer", "desc": "Enregistre le livre dans la bibliothèque choisie et met à jour votre historique de lecture." }
+      "mode": {
+        "title": "ISBN ou manuel",
+        "desc": "Recherchez par ISBN pour pré-remplir, ou passez à la saisie manuelle ci-dessous."
+      },
+      "fields": {
+        "title": "Champs pré-remplis",
+        "desc": "Si trouvé, les détails sont pré-remplis. Vous pouvez tout modifier avant d'enregistrer."
+      },
+      "tags": {
+        "title": "Étiquettes",
+        "desc": "Ajoutez jusqu'à 5 étiquettes personnelles pour retrouver ce livre plus tard."
+      },
+      "save": {
+        "title": "Enregistrer",
+        "desc": "Enregistre le livre dans la bibliothèque choisie et met à jour votre historique de lecture."
+      }
     },
     "profile": {
-      "stats": { "title": "Vos statistiques", "desc": "Un aperçu rapide de vos livres et du nombre de bibliothèques." },
-      "reading": { "title": "Liste de lecture", "desc": "Votre historique complet : lus, en cours ou à lire." },
-      "favourites": { "title": "Statistiques détaillées", "desc": "Genres, note moyenne, livres prêtés et plus — en temps réel." },
-      "theme": { "title": "Thème", "desc": "Choisissez l'apparence qui vous plaît. Chaque thème change aussi l'arbre de fond." }
+      "stats": {
+        "title": "Vos statistiques",
+        "desc": "Un aperçu rapide de vos livres et du nombre de bibliothèques."
+      },
+      "reading": {
+        "title": "Liste de lecture",
+        "desc": "Votre historique complet : lus, en cours ou à lire."
+      },
+      "favourites": {
+        "title": "Statistiques détaillées",
+        "desc": "Genres, note moyenne, livres prêtés et plus — en temps réel."
+      },
+      "theme": {
+        "title": "Thème",
+        "desc": "Choisissez l'apparence qui vous plaît. Chaque thème change aussi l'arbre de fond."
+      }
     },
     "discover": {
-      "tabs": { "title": "Trois sections", "desc": "Étagères : bibliothèques publiques de personnes ; Bibliothèques : publiques à proximité ; Listes de lecture : listes curées." },
-      "distance": { "title": "Rayon de recherche", "desc": "Choisissez la distance pour chercher des bibliothèques publiques : 5, 15 ou 50 km." },
-      "save": { "title": "Sauvegarder une étagère", "desc": "Touchez le cœur pour sauvegarder une étagère et y revenir quand vous voulez." }
+      "tabs": {
+        "title": "Trois sections",
+        "desc": "Étagères : bibliothèques publiques de personnes ; Bibliothèques : publiques à proximité ; Listes de lecture : listes curées."
+      },
+      "distance": {
+        "title": "Rayon de recherche",
+        "desc": "Choisissez la distance pour chercher des bibliothèques publiques : 5, 15 ou 50 km."
+      },
+      "save": {
+        "title": "Sauvegarder une étagère",
+        "desc": "Touchez le cœur pour sauvegarder une étagère et y revenir quand vous voulez."
+      }
     },
     "wishlist": {
-      "add": { "title": "Ajouter un livre", "desc": "Ajoutez par ISBN (manuel ou scan), ou en saisissant titre, auteur et ISBN manuellement." },
-      "share": { "title": "Partager la liste", "desc": "Envoyez votre liste de souhaits à vos amis via le menu de partage de l'appareil." }
+      "add": {
+        "title": "Ajouter un livre",
+        "desc": "Ajoutez par ISBN (manuel ou scan), ou en saisissant titre, auteur et ISBN manuellement."
+      },
+      "share": {
+        "title": "Partager la liste",
+        "desc": "Envoyez votre liste de souhaits à vos amis via le menu de partage de l'appareil."
+      }
     }
+  },
+  "admin": {
+    "dashboard": "Tableau de bord",
+    "users": "Utilisateurs",
+    "content": "Contenu",
+    "schools": "Écoles",
+    "backups": "Backups",
+    "export": "Exporter",
+    "auditLog": "Journal d’audit",
+    "backToApp": "Retour à l’app",
+    "admin": "Admin",
+    "settingUpSecurity": "Configuration de la sécurité…",
+    "setup2fa": "Configurer l’authentification à deux facteurs",
+    "twoFactor": "Authentification à deux facteurs",
+    "scanQr": "Scannez ce QR code avec Google Authenticator ou Authy",
+    "enterCode": "Saisissez le code à 6 chiffres de votre application d’authentification",
+    "invalidCode": "Code invalide. Réessayez.",
+    "verify": "Vérifier",
+    "setupFailed": "Impossible de configurer 2FA",
+    "qrAlt": "QR Code pour configurer 2FA"
   }
 }

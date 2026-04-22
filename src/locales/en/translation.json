@@ -2,7 +2,10 @@
   "app": {
     "name": "Bibliotheca",
     "tagline": "Your personal book catalogue",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "accountSuspended": "Account suspended",
+    "accountSuspendedDesc": "Your account has been suspended. Please contact support for more information.",
+    "underageBlocked": "Sorry, Folium is for people over 12."
   },
   "nav": {
     "library": "Library",
@@ -27,7 +30,7 @@
     "googleSignIn": "Continue with Google"
   },
   "profileSetup": {
-    "welcome": "Welcome to Bibliotheca",
+    "welcome": "Welcome to Folium",
     "tellUs": "Tell us a bit about yourself",
     "firstName": "First name",
     "lastName": "Last name",
@@ -35,7 +38,37 @@
     "locationPlaceholder": "Location (e.g. London, UK)",
     "bioPlaceholder": "A short bio about you and your reading habits...",
     "saving": "Saving...",
-    "continue": "Continue"
+    "continue": "Continue",
+    "welcomeFolium": "Welcome to Folium",
+    "back": "Back",
+    "dateOfBirth": "Date of birth",
+    "underageTitle": "Sorry, Folium is for people over 12.",
+    "underageSubtitle": "Come back when you turn 12!",
+    "parentalIntro": "Because you are under 18, we need consent from your parent or guardian.",
+    "parentEmail": "Parent or guardian email",
+    "confirmAge": "I confirm that I am between 12 and 17 years old.",
+    "confirmConsentEmail": "My parent or guardian will receive an email to authorise my account.",
+    "sending": "Sending…",
+    "sendConsent": "Send consent request",
+    "yourSchool": "Your school",
+    "district": "District",
+    "selectDistrict": "Select district…",
+    "school": "School",
+    "searchSchool": "Search school…",
+    "selectDistrictFirst": "Select district first",
+    "noResults": "No results.",
+    "chooseTheme": "Choose your theme",
+    "finishing": "Finishing…",
+    "enterFolium": "Enter Folium",
+    "usernameChecking": "Checking...",
+    "usernameAvailable": "Username available",
+    "usernameTaken": "This username is already taken. Try another.",
+    "usernameInvalid": "Username must be at least 3 characters and can only contain letters, numbers, _ and .",
+    "usernameCheckError": "Could not check the username. Try again.",
+    "saveError": "Could not save profile.",
+    "requiredFields": "Fill in all fields.",
+    "consentRequired": "Enter the email and accept the conditions.",
+    "schoolRequired": "Select district and school."
   },
   "profile": {
     "title": "Profile",
@@ -97,9 +130,34 @@
     "legendLoan": "Loan",
     "legendBorrow": "Return",
     "legendCard": "Card",
-    "type": { "loan": "Loan", "borrow": "Return", "card": "Card" },
-    "month": { "jan": "January", "feb": "February", "mar": "March", "apr": "April", "may": "May", "jun": "June", "jul": "July", "aug": "August", "sep": "September", "oct": "October", "nov": "November", "dec": "December" },
-    "dow": { "sun": "Sun", "mon": "Mon", "tue": "Tue", "wed": "Wed", "thu": "Thu", "fri": "Fri", "sat": "Sat" }
+    "type": {
+      "loan": "Loan",
+      "borrow": "Return",
+      "card": "Card"
+    },
+    "month": {
+      "jan": "January",
+      "feb": "February",
+      "mar": "March",
+      "apr": "April",
+      "may": "May",
+      "jun": "June",
+      "jul": "July",
+      "aug": "August",
+      "sep": "September",
+      "oct": "October",
+      "nov": "November",
+      "dec": "December"
+    },
+    "dow": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    }
   },
   "library": {
     "books": "books",
@@ -382,32 +440,106 @@
     "close": "Close",
     "notVisibleHint": "This element isn't visible right now.",
     "library": {
-      "tabs": { "title": "Your libraries", "desc": "Switch between your different libraries here. Each one keeps its own books." },
-      "search": { "title": "Search", "desc": "Quickly filter the current library by title or author." },
-      "filter": { "title": "Filters", "desc": "Narrow down by genre, format or reading status, and choose how to sort." },
-      "add": { "title": "Add a book", "desc": "Tap to add a new book by ISBN, photo or manual entry." },
-      "book": { "title": "Book details", "desc": "Tap any book to see details, edit info, lend it or update its reading status." }
+      "tabs": {
+        "title": "Your libraries",
+        "desc": "Switch between your different libraries here. Each one keeps its own books."
+      },
+      "search": {
+        "title": "Search",
+        "desc": "Quickly filter the current library by title or author."
+      },
+      "filter": {
+        "title": "Filters",
+        "desc": "Narrow down by genre, format or reading status, and choose how to sort."
+      },
+      "add": {
+        "title": "Add a book",
+        "desc": "Tap to add a new book by ISBN, photo or manual entry."
+      },
+      "book": {
+        "title": "Book details",
+        "desc": "Tap any book to see details, edit info, lend it or update its reading status."
+      }
     },
     "addBook": {
-      "mode": { "title": "ISBN or manual", "desc": "Look up by ISBN to auto-fill the details, or switch to manual entry below." },
-      "fields": { "title": "Auto-filled fields", "desc": "When found, the book's details are pre-filled. You can edit anything before saving." },
-      "tags": { "title": "Tags", "desc": "Add up to 5 personal tags to help you find this book later." },
-      "save": { "title": "Save", "desc": "Saves the book to the selected library and updates your reading history." }
+      "mode": {
+        "title": "ISBN or manual",
+        "desc": "Look up by ISBN to auto-fill the details, or switch to manual entry below."
+      },
+      "fields": {
+        "title": "Auto-filled fields",
+        "desc": "When found, the book's details are pre-filled. You can edit anything before saving."
+      },
+      "tags": {
+        "title": "Tags",
+        "desc": "Add up to 5 personal tags to help you find this book later."
+      },
+      "save": {
+        "title": "Save",
+        "desc": "Saves the book to the selected library and updates your reading history."
+      }
     },
     "profile": {
-      "stats": { "title": "Your stats", "desc": "A quick glance at how many books you have and across how many libraries." },
-      "reading": { "title": "Reading List", "desc": "Your full reading history — books you've read, are reading, or want to read." },
-      "favourites": { "title": "Detailed stats", "desc": "Genres, average rating, books on loan and more — all updated in real time." },
-      "theme": { "title": "Theme", "desc": "Pick the look that suits your mood. Each theme also changes the background tree." }
+      "stats": {
+        "title": "Your stats",
+        "desc": "A quick glance at how many books you have and across how many libraries."
+      },
+      "reading": {
+        "title": "Reading List",
+        "desc": "Your full reading history — books you've read, are reading, or want to read."
+      },
+      "favourites": {
+        "title": "Detailed stats",
+        "desc": "Genres, average rating, books on loan and more — all updated in real time."
+      },
+      "theme": {
+        "title": "Theme",
+        "desc": "Pick the look that suits your mood. Each theme also changes the background tree."
+      }
     },
     "discover": {
-      "tabs": { "title": "Three sections", "desc": "Shelves are people's public libraries; Libraries are nearby public libraries; Reading lists are curated lists." },
-      "distance": { "title": "Search radius", "desc": "Choose how far to look for nearby public libraries: 5, 15 or 50 km." },
-      "save": { "title": "Save a shelf", "desc": "Tap the heart to save a shelf so you can come back to it any time." }
+      "tabs": {
+        "title": "Three sections",
+        "desc": "Shelves are people's public libraries; Libraries are nearby public libraries; Reading lists are curated lists."
+      },
+      "distance": {
+        "title": "Search radius",
+        "desc": "Choose how far to look for nearby public libraries: 5, 15 or 50 km."
+      },
+      "save": {
+        "title": "Save a shelf",
+        "desc": "Tap the heart to save a shelf so you can come back to it any time."
+      }
     },
     "wishlist": {
-      "add": { "title": "Add a book", "desc": "Add by scanning or typing an ISBN, or by entering title, author and ISBN manually." },
-      "share": { "title": "Share your wishlist", "desc": "Send your wishlist to friends and family using your device's share menu." }
+      "add": {
+        "title": "Add a book",
+        "desc": "Add by scanning or typing an ISBN, or by entering title, author and ISBN manually."
+      },
+      "share": {
+        "title": "Share your wishlist",
+        "desc": "Send your wishlist to friends and family using your device's share menu."
+      }
     }
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "content": "Content",
+    "schools": "Schools",
+    "backups": "Backups",
+    "export": "Export",
+    "auditLog": "Audit Log",
+    "backToApp": "Back to App",
+    "admin": "Admin",
+    "settingUpSecurity": "Setting up security…",
+    "setup2fa": "Set Up Two-Factor Authentication",
+    "twoFactor": "Two-Factor Authentication",
+    "scanQr": "Scan this QR code with Google Authenticator or Authy",
+    "enterCode": "Enter the 6-digit code from your authenticator app",
+    "invalidCode": "Invalid code. Please try again.",
+    "verify": "Verify",
+    "setupFailed": "Failed to set up 2FA",
+    "qrAlt": "QR Code for 2FA setup"
   }
 }
