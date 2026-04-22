@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { parseGenres } from "@/components/GenreMultiSelect";
+import { tGenre, tStatus } from "@/lib/displayMappings";
 import { BookOpen } from "lucide-react";
 
 interface Library {
@@ -19,13 +21,8 @@ interface Book {
   reading_status: string;
 }
 
-const statusLabel = (s: string) => {
-  if (s === "Currently Reading") return "A ler";
-  if (s === "Read") return "Lido";
-  return "Por ler";
-};
-
 export default function PublicList() {
+  const { t } = useTranslation();
   const { libraryId } = useParams<{ libraryId: string }>();
   const [library, setLibrary] = useState<Library | null>(null);
   const [ownerUsername, setOwnerUsername] = useState<string | null>(null);
@@ -167,7 +164,7 @@ export default function PublicList() {
                         style={{ fontFamily: "'Josefin Sans', sans-serif" }}
                         className="text-[10px] uppercase tracking-wider px-2 py-0.5 border border-neutral-300 text-neutral-600 rounded-full"
                       >
-                        {statusLabel(b.reading_status)}
+                        {tStatus(b.reading_status, t)}
                       </span>
                       {genres.slice(0, 3).map((g) => (
                         <span
@@ -175,7 +172,7 @@ export default function PublicList() {
                           style={{ fontFamily: "'Josefin Sans', sans-serif" }}
                           className="text-[10px] uppercase tracking-wider px-2 py-0.5 bg-neutral-100 text-neutral-600 rounded-full"
                         >
-                          {g}
+                          {tGenre(g, t)}
                         </span>
                       ))}
                     </div>
