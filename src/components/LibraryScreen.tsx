@@ -796,6 +796,33 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           <Button onClick={createLibrary} className="w-full">{t('library.create')}</Button>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent className="bg-background border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-serif">{t('library.deleteLibraryTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('library.deleteLibraryBody')}
+              {currentLibraryHasActiveLoans && (
+                <span className="mt-2 block">{t('library.deleteLibraryActiveLoans')}</span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingLibrary}>{t('library.cancelDeleteLibrary')}</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={deletingLibrary}
+              onClick={(event) => {
+                event.preventDefault();
+                deleteCurrentLibrary();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('library.confirmDeleteLibrary')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
