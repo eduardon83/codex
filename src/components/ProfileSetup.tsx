@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,14 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { useEffect } from 'react';
-import { Loader2, Search, ArrowLeft } from 'lucide-react';
+import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
 import { THEMES } from '@/hooks/useTheme';
 
 type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
 interface District { id: string; name: string; }
 interface School { id: string; name: string; concelho: string | null; me_code?: string | null; }
@@ -34,11 +35,14 @@ export default function ProfileSetup() {
   const { user, refreshProfile, signOut } = useAuth();
   const [step, setStep] = useState<Step>('basics');
   const [saving, setSaving] = useState(false);
+  const usernameInputRef = useRef<HTMLInputElement>(null);
 
   // Step 1: basics
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
+  const [usernameMessage, setUsernameMessage] = useState('');
   const [dob, setDob] = useState('');
 
   // Step 3a: parental consent
@@ -58,6 +62,73 @@ export default function ProfileSetup() {
   const [themeId, setThemeId] = useState('claro');
 
   const age = useMemo(() => calculateAge(dob), [dob]);
+
+  const showUsernameTaken = () => {
+    setUsernameStatus('error');
+    setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+    setStep('basics');
+    window.setTimeout(() => {
+      usernameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      usernameInputRef.current?.focus();
+    }, 50);
+  };
+
+  const isUsernameConflict = (error: unknown) => {
+    const err = error as { code?: string; message?: string; details?: string; constraint?: string } | null;
+    const text = `${err?.constraint || ''} ${err?.message || ''} ${err?.details || ''}`.toLowerCase();
+    return err?.code === '23505' && text.includes('username');
+  };
+
+  const handleProfileSaveError = (error: unknown) => {
+    if (isUsernameConflict(error)) {
+      showUsernameTaken();
+      return true;
+    }
+    toast.error((error as { message?: string })?.message || 'Não foi possível guardar o perfil.');
+    return true;
+  };
+
+  useEffect(() => {
+    const trimmed = username.trim();
+    if (!trimmed) {
+      setUsernameStatus('idle');
+      setUsernameMessage('');
+      return;
+    }
+
+    if (!/^[a-z0-9_.]{3,}$/.test(trimmed)) {
+      setUsernameStatus('error');
+      setUsernameMessage('O nome de utilizador deve ter pelo menos 3 caracteres e só pode conter letras, números, _ e .');
+      return;
+    }
+
+    setUsernameStatus('checking');
+    setUsernameMessage('A verificar...');
+    const t = window.setTimeout(async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('user_id')
+        .eq('username', trimmed)
+        .maybeSingle();
+
+      if (error) {
+        setUsernameStatus('error');
+        setUsernameMessage('Não foi possível verificar o nome de utilizador. Tenta novamente.');
+        return;
+      }
+
+      if (data && data.user_id !== user?.id) {
+        setUsernameStatus('error');
+        setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+        return;
+      }
+
+      setUsernameStatus('available');
+      setUsernameMessage('Nome de utilizador disponível');
+    }, 600);
+
+    return () => clearTimeout(t);
+  }, [username, user?.id]);
 
   // Load districts when reaching school step
   useEffect(() => {
