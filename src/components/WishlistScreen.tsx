@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchBookByISBN } from '@/lib/isbn';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Heart, X, Loader2, Share2, HandCoins, CalendarDays } from 'lucide-react';
+import { Heart, X, Loader2, Share2, HandCoins, CalendarDays, MoreVertical } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
@@ -15,6 +15,9 @@ import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import HelpButton from '@/components/tutorial/HelpButton';
 import { resolveAvatarSrc } from '@/lib/avatars';
+import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
 
 interface WishlistItem {
   id: string;
@@ -51,6 +54,8 @@ export default function WishlistScreen() {
   const [dueDates, setDueDates] = useState<Record<string, Date | undefined>>({});
   const [dueDateEnabled, setDueDateEnabled] = useState<Record<string, boolean>>({});
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
+  const [showPlanSheet, setShowPlanSheet] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -148,6 +153,15 @@ export default function WishlistScreen() {
   const removeItem = async (id: string) => {
     await supabase.from('books').delete().eq('id', id);
     loadWishlist();
+  };
+
+  const openAddToPlan = (item: WishlistItem) => {
+    setPlanBook({ book_id: item.id, title: item.title, author: item.author, isbn: item.isbn, cover_url: item.cover_url });
+    setShowPlanSheet(true);
+  };
+
+  const goCreatePlan = () => {
+    window.dispatchEvent(new Event('folium-open-planos'));
   };
 
   const shareWishlist = () => {
@@ -252,14 +266,17 @@ export default function WishlistScreen() {
                 <p className="text-sm text-foreground truncate">{item.title}</p>
                 {item.author && <p className="text-xs text-muted-foreground truncate">{item.author}</p>}
               </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => removeItem(item.id)} className="text-muted-foreground hover:text-destructive transition-colors">
-                    <X size={14} />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="text-muted-foreground hover:text-foreground transition-colors">
+                    <MoreVertical size={15} />
                   </button>
-                </TooltipTrigger>
-                <TooltipContent>{t('wishlist.removeItem')}</TooltipContent>
-              </Tooltip>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => openAddToPlan(item)}>Adicionar ao plano</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => removeItem(item.id)}>{t('wishlist.removeItem')}</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ))}
         </div>
@@ -356,6 +373,12 @@ export default function WishlistScreen() {
           </div>
         </div>
       )}
+      <AddToPlanSheet
+        book={planBook}
+        open={showPlanSheet}
+        onOpenChange={setShowPlanSheet}
+        onNoActivePlan={() => toast('Não tens um plano activo.', { action: { label: 'Criar plano →', onClick: goCreatePlan } })}
+      />
     </div>
   );
 }
