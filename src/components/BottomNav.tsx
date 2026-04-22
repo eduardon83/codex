@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, Plus, User, Search, Heart } from 'lucide-react';
+import { BookOpen, User, Search, BookMarked, CalendarDays } from 'lucide-react';
 
-type Tab = 'library' | 'add' | 'profile' | 'find' | 'wishlist';
+type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile';
 
 interface BottomNavProps {
   active: Tab;
@@ -13,10 +13,10 @@ interface BottomNavProps {
 
 const tabConfig: { id: Tab; labelKey: string; icon: React.ElementType }[] = [
   { id: 'library', labelKey: 'nav.library', icon: BookOpen },
-  { id: 'add', labelKey: 'nav.addBook', icon: Plus },
+  { id: 'lists', labelKey: 'nav.lists', icon: BookMarked },
+  { id: 'find', labelKey: 'nav.search', icon: Search },
+  { id: 'events', labelKey: 'nav.events', icon: CalendarDays },
   { id: 'profile', labelKey: 'nav.profile', icon: User },
-  { id: 'find', labelKey: 'nav.find', icon: Search },
-  { id: 'wishlist', labelKey: 'nav.wishlist', icon: Heart },
 ];
 
 export default function BottomNav({ active, onChange }: BottomNavProps) {
@@ -61,7 +61,7 @@ export default function BottomNav({ active, onChange }: BottomNavProps) {
             }`}
           >
             <Icon size={20} strokeWidth={active === id ? 2 : 1.5} />
-            {id === 'wishlist' && requestCount > 0 && (
+            {id === 'lists' && requestCount > 0 && (
               <span className="absolute -top-0.5 right-0.5 min-w-[16px] h-4 px-1 rounded-full bg-destructive text-destructive-foreground text-[9px] font-medium flex items-center justify-center">
                 {requestCount}
               </span>

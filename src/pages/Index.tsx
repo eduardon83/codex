@@ -11,11 +11,12 @@ import AddBookScreen from '@/components/AddBookScreen';
 import BookDetail from '@/components/BookDetail';
 import ProfileScreen from '@/components/ProfileScreen';
 import ProcurarLivroScreen from '@/components/ProcurarLivroScreen';
-import WishlistScreen from '@/components/WishlistScreen';
+import ListasScreen from '@/components/ListasScreen';
+import EventsPlaceholder from '@/components/EventsPlaceholder';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
 
-type Tab = 'library' | 'add' | 'profile' | 'find' | 'wishlist';
+type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile';
 
 interface PublicLibraryView {
   libraryId: string;
@@ -123,12 +124,9 @@ export default function Index() {
         <LibraryScreen
           onBookSelect={setSelectedBookId}
           onAddBook={() => setActiveTab('add')}
-          onWishlist={() => setActiveTab('wishlist')}
+          onWishlist={() => setActiveTab('lists')}
           onGoToProfile={() => setActiveTab('profile')}
         />
-      )}
-      {activeTab === 'add' && (
-        <AddBookScreen onDone={() => setActiveTab('library')} />
       )}
       {activeTab === 'profile' && <ProfileScreen />}
       {activeTab === 'find' && (
@@ -137,9 +135,10 @@ export default function Index() {
           onOpenLibrary={(lib) => setPublicLibView(lib)}
         />
       )}
-      {activeTab === 'wishlist' && (
-        <WishlistScreen />
+      {activeTab === 'lists' && (
+        <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
       )}
+      {activeTab === 'events' && <EventsPlaceholder />}
       <BottomNav active={activeTab} onChange={setActiveTab} />
     </>
   );
