@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,14 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { useEffect } from 'react';
-import { Loader2, Search, ArrowLeft } from 'lucide-react';
+import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
 import { THEMES } from '@/hooks/useTheme';
 
 type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
 interface District { id: string; name: string; }
 interface School { id: string; name: string; concelho: string | null; me_code?: string | null; }
@@ -34,11 +35,14 @@ export default function ProfileSetup() {
   const { user, refreshProfile, signOut } = useAuth();
   const [step, setStep] = useState<Step>('basics');
   const [saving, setSaving] = useState(false);
+  const usernameInputRef = useRef<HTMLInputElement>(null);
 
   // Step 1: basics
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
+  const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
+  const [usernameMessage, setUsernameMessage] = useState('');
   const [dob, setDob] = useState('');
 
   // Step 3a: parental consent
@@ -58,6 +62,73 @@ export default function ProfileSetup() {
   const [themeId, setThemeId] = useState('claro');
 
   const age = useMemo(() => calculateAge(dob), [dob]);
+
+  const showUsernameTaken = () => {
+    setUsernameStatus('error');
+    setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+    setStep('basics');
+    window.setTimeout(() => {
+      usernameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      usernameInputRef.current?.focus();
+    }, 50);
+  };
+
+  const isUsernameConflict = (error: unknown) => {
+    const err = error as { code?: string; message?: string; details?: string; constraint?: string } | null;
+    const text = `${err?.constraint || ''} ${err?.message || ''} ${err?.details || ''}`.toLowerCase();
+    return err?.code === '23505' && text.includes('username');
+  };
+
+  const handleProfileSaveError = (error: unknown) => {
+    if (isUsernameConflict(error)) {
+      showUsernameTaken();
+      return true;
+    }
+    toast.error((error as { message?: string })?.message || 'Não foi possível guardar o perfil.');
+    return true;
+  };
+
+  useEffect(() => {
+    const trimmed = username.trim();
+    if (!trimmed) {
+      setUsernameStatus('idle');
+      setUsernameMessage('');
+      return;
+    }
+
+    if (!/^[a-z0-9_.]{3,}$/.test(trimmed)) {
+      setUsernameStatus('error');
+      setUsernameMessage('O nome de utilizador deve ter pelo menos 3 caracteres e só pode conter letras, números, _ e .');
+      return;
+    }
+
+    setUsernameStatus('checking');
+    setUsernameMessage('A verificar...');
+    const t = window.setTimeout(async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('user_id')
+        .eq('username', trimmed)
+        .maybeSingle();
+
+      if (error) {
+        setUsernameStatus('error');
+        setUsernameMessage('Não foi possível verificar o nome de utilizador. Tenta novamente.');
+        return;
+      }
+
+      if (data && data.user_id !== user?.id) {
+        setUsernameStatus('error');
+        setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+        return;
+      }
+
+      setUsernameStatus('available');
+      setUsernameMessage('Nome de utilizador disponível');
+    }, 600);
+
+    return () => clearTimeout(t);
+  }, [username, user?.id]);
 
   // Load districts when reaching school step
   useEffect(() => {
@@ -97,6 +168,10 @@ export default function ProfileSetup() {
       toast.error('Preenche todos os campos.');
       return;
     }
+    if (usernameStatus !== 'available') {
+      usernameInputRef.current?.focus();
+      return;
+    }
     if (age < 12) { setStep('underage_block'); return; }
     if (age < 18) { setStep('parental_consent'); return; }
     setStep('school');
@@ -111,19 +186,25 @@ export default function ProfileSetup() {
     }
     setSaving(true);
     const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
-    const { error } = await supabase.from('profiles').update({
-      first_name: firstName,
-      last_name: lastName,
-      username,
-      date_of_birth: dob,
-      parent_email: parentEmail.trim(),
-      parent_consent_token: token,
-      parent_consent_sent_at: new Date().toISOString(),
-      account_status: 'pending_parental_consent',
-      profile_completed: true,
-      age_group: 'under_18',
-    } as any).eq('user_id', user.id);
-    if (error) { toast.error(error.message); setSaving(false); return; }
+    try {
+      const { error } = await supabase.from('profiles').update({
+        first_name: firstName,
+        last_name: lastName,
+        username,
+        date_of_birth: dob,
+        parent_email: parentEmail.trim(),
+        parent_consent_token: token,
+        parent_consent_sent_at: new Date().toISOString(),
+        account_status: 'pending_parental_consent',
+        profile_completed: true,
+        age_group: 'under_18',
+      } as any).eq('user_id', user.id);
+      if (error) throw error;
+    } catch (error) {
+      handleProfileSaveError(error);
+      setSaving(false);
+      return;
+    }
 
     // Fire-and-forget consent email
     supabase.functions.invoke('send-parental-consent', {
@@ -153,18 +234,24 @@ export default function ProfileSetup() {
       }
     }
 
-    const { error } = await supabase.from('profiles').update({
-      first_name: firstName,
-      last_name: lastName,
-      username,
-      date_of_birth: dob,
-      country_code: 'PT',
-      district_id: districtId,
-      school_id: resolvedSchoolId,
-      age_group: age < 18 ? 'under_18' : 'over_18',
-    } as any).eq('user_id', user.id);
+    try {
+      const { error } = await supabase.from('profiles').update({
+        first_name: firstName,
+        last_name: lastName,
+        username,
+        date_of_birth: dob,
+        country_code: 'PT',
+        district_id: districtId,
+        school_id: resolvedSchoolId,
+        age_group: age < 18 ? 'under_18' : 'over_18',
+      } as any).eq('user_id', user.id);
+      if (error) throw error;
+    } catch (error) {
+      handleProfileSaveError(error);
+      setSaving(false);
+      return;
+    }
     setSaving(false);
-    if (error) { toast.error(error.message); return; }
     setStep('theme');
   };
 
@@ -329,15 +416,27 @@ export default function ProfileSetup() {
             <Input placeholder="Nome" value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
             <Input placeholder="Apelido" value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
           </div>
-          <Input placeholder="@utilizador" value={username}
-            onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
-            required className="h-11 text-sm" />
+          <div className="space-y-1">
+            <Input ref={usernameInputRef} placeholder="@utilizador" value={username}
+              onChange={e => setUsername(e.target.value.toLowerCase())}
+              required className="h-11 text-sm" />
+            {usernameMessage && (
+              <p className={`flex items-center gap-1.5 text-xs font-['Josefin_Sans'] ${
+                usernameStatus === 'available' ? 'text-green-600' : usernameStatus === 'error' ? 'text-destructive' : 'text-muted-foreground'
+              }`}>
+                {usernameStatus === 'checking' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                {usernameStatus === 'available' && <CheckCircle2 className="w-3.5 h-3.5" />}
+                {usernameStatus === 'error' && <XCircle className="w-3.5 h-3.5" />}
+                <span>{usernameMessage}</span>
+              </p>
+            )}
+          </div>
           <div className="space-y-1">
             <Label className="text-xs text-muted-foreground">Data de nascimento</Label>
             <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
               max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
           </div>
-          <Button type="submit" className="w-full h-11">Continuar</Button>
+          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">Continuar</Button>
         </form>
       </div>
     </div>
