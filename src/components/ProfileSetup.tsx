@@ -111,7 +111,7 @@ export default function ProfileSetup() {
 
     setUsernameStatus('checking');
     setUsernameMessage(t('profileSetup.usernameChecking'));
-    const t = window.setTimeout(async () => {
+    const debounceId = window.setTimeout(async () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('user_id')
@@ -134,7 +134,7 @@ export default function ProfileSetup() {
       setUsernameMessage(t('profileSetup.usernameAvailable'));
     }, 600);
 
-    return () => clearTimeout(t);
+    return () => clearTimeout(debounceId);
   }, [username, user?.id]);
 
   // Load districts when reaching school step
