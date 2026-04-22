@@ -122,6 +122,10 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     if (data && data.length > 0) {
       setLibraries(data as Library[]);
       if (!activeLibrary) setActiveLibrary(data[0].id);
+    } else {
+      setLibraries([]);
+      setActiveLibrary('');
+      setBooks([]);
     }
   };
 
