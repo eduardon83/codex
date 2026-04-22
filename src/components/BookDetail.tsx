@@ -79,6 +79,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const [showReturnConfirm, setShowReturnConfirm] = useState(false);
   const [showLostConfirm, setShowLostConfirm] = useState(false);
   const [showBorrowReturnConfirm, setShowBorrowReturnConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<Record<string, string>>({});
   const [editTags, setEditTags] = useState<string[]>([]);
@@ -86,6 +87,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const [editGenres, setEditGenres] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [showCoverMenu, setShowCoverMenu] = useState(false);
+  const [deletingBook, setDeletingBook] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const [allLibraries, setAllLibraries] = useState<{ id: string; name: string }[]>([]);
@@ -193,6 +195,30 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const returnBorrowedBook = async () => {
     await supabase.from('books').delete().eq('id', bookId);
     setShowBorrowReturnConfirm(false);
+    onBack();
+  };
+
+  const deleteBook = async () => {
+    if (!book) return;
+    setDeletingBook(true);
+
+    if (activeLoan) {
+      await supabase.from('loans').update({
+        is_active: false,
+        return_date: new Date().toISOString(),
+      }).eq('id', activeLoan.id);
+    }
+
+    await supabase.from('book_availability' as any).delete().eq('book_id', bookId);
+    if (book.isbn) {
+      await supabase.from('reading_list_books').delete().eq('isbn', book.isbn);
+    }
+    await supabase.from('user_favourites').delete().eq('source_book_id', bookId);
+    await supabase.from('books').delete().eq('id', bookId);
+
+    setDeletingBook(false);
+    setShowDeleteConfirm(false);
+    showToast(t('bookDetail.bookDeleted'));
     onBack();
   };
 
