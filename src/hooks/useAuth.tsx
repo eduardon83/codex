@@ -82,10 +82,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (data) {
       const p = data as Profile;
-      setProfile(p);
-      if (p.language && p.language !== i18n.language) {
+      if (p.language) {
         i18n.changeLanguage(p.language);
       }
+      setProfile(p);
     } else {
       setProfile(null);
     }
