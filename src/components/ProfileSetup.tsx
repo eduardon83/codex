@@ -107,6 +107,7 @@ export default function ProfileSetup() {
 
   useEffect(() => {
     const trimmed = username.trim();
+    if (step !== 'basics') return;
     if (!trimmed) {
       setUsernameStatus('idle');
       setUsernameMessage('');
@@ -145,7 +146,25 @@ export default function ProfileSetup() {
     }, 600);
 
     return () => clearTimeout(debounceId);
-  }, [username, user?.id]);
+  }, [step, username, user?.id]);
+
+  useEffect(() => {
+    if (step !== 'terms') return;
+    let active = true;
+    setLoadingLegal(true);
+    const language = profile?.language || 'pt';
+    Promise.all([
+      fetchCurrentLegalDocument('terms', language),
+      fetchCurrentLegalDocument('privacy', language),
+    ]).then(([terms, privacy]) => {
+      if (!active) return;
+      setTermsDocument(terms);
+      setPrivacyDocument(privacy);
+    }).finally(() => {
+      if (active) setLoadingLegal(false);
+    });
+    return () => { active = false; };
+  }, [step, profile?.language]);
 
   // Load districts when reaching school step
   useEffect(() => {
@@ -178,10 +197,33 @@ export default function ProfileSetup() {
     return () => { active = false; clearTimeout(t); };
   }, [step, districtId, schoolQuery, districts]);
 
-  // ---- Step 1 → next ----
+  const submitAgeGate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!dob) {
+      toast.error(t('profileSetup.requiredFields'));
+      return;
+    }
+    if (age < 12) { setStep('underage_block'); return; }
+    setStep(profile?.terms_accepted_at ? 'basics' : 'terms');
+  };
+
+  const submitTerms = async () => {
+    if (!user || !acceptedTerms || !acceptedPrivacy) return;
+    setSaving(true);
+    const { error } = await supabase.from('profiles').update({
+      terms_accepted_at: new Date().toISOString(),
+      terms_version: termsDocument?.version || 'pending',
+    } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    await refreshProfile();
+    setStep('basics');
+  };
+
+  // ---- Basics → next ----
   const submitBasics = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName.trim() || !username.trim() || !dob) {
+    if (!firstName.trim() || !username.trim()) {
       toast.error(t('profileSetup.requiredFields'));
       return;
     }
@@ -189,7 +231,6 @@ export default function ProfileSetup() {
       usernameInputRef.current?.focus();
       return;
     }
-    if (age < 12) { setStep('underage_block'); return; }
     if (age < 18) { setStep('parental_consent'); return; }
     setStep('school');
   };
