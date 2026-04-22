@@ -11,6 +11,7 @@ interface Profile {
   username: string | null;
   location: string | null;
   bio: string | null;
+  avatar_url?: string | null;
   profile_completed: boolean;
   language: string;
   suspended: boolean;
