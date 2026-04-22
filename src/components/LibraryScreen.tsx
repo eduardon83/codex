@@ -2,12 +2,22 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays, Trash2 } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
@@ -74,6 +84,8 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [loansFromOthers, setLoansFromOthers] = useState<Loan[]>([]);
   const [editingName, setEditingName] = useState(false);
   const [editName, setEditName] = useState('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deletingLibrary, setDeletingLibrary] = useState(false);
   const [dismissedBanner, setDismissedBanner] = useState(false);
   const [dismissedBorrowBanner, setDismissedBorrowBanner] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
