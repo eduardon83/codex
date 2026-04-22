@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import { supabase } from '@/integrations/supabase/client';
-import { uploadFileToStorage } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { LogOut, Check, Camera, User, BookOpen, CalendarDays, History } from 'lucide-react';
+import { LogOut, Check, User, BookOpen, CalendarDays, History } from 'lucide-react';
 import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
@@ -35,6 +34,8 @@ import PendingRequestsSection from '@/components/profile/PendingRequestsSection'
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
 import { fetchCurrentLegalDocument, LegalDocumentRecord, LegalDocumentType } from '@/lib/legalDocuments';
+import AvatarPickerDialog from '@/components/AvatarPickerDialog';
+import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export default function ProfileScreen() {
   const [deleteError, setDeleteError] = useState('');
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [activeLoanCount, setActiveLoanCount] = useState(0);
-  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const hasPasswordProvider = Boolean(
     (user as any)?.identities?.some((identity: any) => identity.provider === 'email') ||
     (user as any)?.app_metadata?.provider === 'email'
@@ -110,16 +111,11 @@ export default function ProfileScreen() {
     }
   };
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    const ext = file.name.split('.').pop() || 'jpg';
-    const path = `${user.id}/avatar.${ext}`;
-    const url = await uploadFileToStorage('profile-photos', path, file);
-    if (url) {
-      await supabase.from('profiles').update({ avatar_url: url } as any).eq('user_id', user.id);
-      await refreshProfile();
-    }
+  const saveAvatar = async (avatarId: AvatarId) => {
+    if (!user) return;
+    await supabase.from('profiles').update({ avatar_url: avatarId } as any).eq('user_id', user.id);
+    await refreshProfile();
+    setAvatarPickerOpen(false);
   };
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
