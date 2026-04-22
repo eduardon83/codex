@@ -325,6 +325,8 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   }, [books, searchQuery, filterGenres, filterFormats, filterStatuses, sortBy]);
 
   const currentLib = libraries.find(l => l.id === activeLibrary);
+  const canDeleteLibrary = libraries.length > 1;
+  const currentLibraryHasActiveLoans = books.some(book => onLoanBookIds.has(book.id));
 
   const formatLabel = (f: string) => t(`addBook.${f.toLowerCase()}`);
   const statusLabel = (s: string) => {
@@ -380,21 +382,38 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1">
             {editingName ? (
-              <div className="flex items-center gap-2 flex-1">
-                <Input
-                  value={editName}
-                  onChange={e => setEditName(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && saveEditName()}
-                  className="bg-background border-border text-lg font-serif h-9"
-                  autoFocus
-                />
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  <Input
+                    value={editName}
+                    onChange={e => setEditName(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && saveEditName()}
+                    className="bg-background border-border text-lg font-serif h-9"
+                    autoFocus
+                  />
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button onClick={saveEditName} className="text-foreground hover:opacity-70 transition-opacity">
+                        <Check size={18} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{t('library.confirmName')}</TooltipContent>
+                  </Tooltip>
+                </div>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button onClick={saveEditName} className="text-foreground hover:opacity-70 transition-opacity">
-                      <Check size={18} />
-                    </button>
+                    <span className="inline-block mt-2">
+                      <button
+                        onClick={() => canDeleteLibrary && setDeleteDialogOpen(true)}
+                        disabled={!canDeleteLibrary}
+                        className="inline-flex items-center gap-1.5 text-xs text-destructive hover:opacity-75 disabled:cursor-not-allowed disabled:opacity-40 transition-opacity"
+                      >
+                        <Trash2 size={13} />
+                        {t('library.deleteLibrary')}
+                      </button>
+                    </span>
                   </TooltipTrigger>
-                  <TooltipContent>{t('library.confirmName')}</TooltipContent>
+                  {!canDeleteLibrary && <TooltipContent>{t('library.cannotDeleteOnlyLibrary')}</TooltipContent>}
                 </Tooltip>
               </div>
             ) : (
