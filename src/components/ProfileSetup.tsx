@@ -19,8 +19,10 @@ import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
+import AvatarPickerDialog from '@/components/AvatarPickerDialog';
+import { AVATARS, AvatarId, getAvatarById, resolveAvatarSrc } from '@/lib/avatars';
 
-type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'avatar' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
 interface District { id: string; name: string; }
@@ -75,6 +77,8 @@ export default function ProfileSetup() {
 
   // Step 5: theme
   const [themeId, setThemeId] = useState(currentTheme.id);
+  const [avatarId, setAvatarId] = useState<AvatarId>((profile?.avatar_url as AvatarId) || AVATARS[0].id);
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
   const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
@@ -319,7 +323,18 @@ export default function ProfileSetup() {
       return;
     }
     setSaving(false);
-    setStep('theme');
+    setStep('avatar');
+  };
+
+  const saveSetupAvatar = async (nextAvatarId: AvatarId) => {
+    if (!user) return;
+    setSaving(true);
+    const { error } = await supabase.from('profiles').update({ avatar_url: nextAvatarId } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    setAvatarId(nextAvatarId);
+    setAvatarPickerOpen(false);
+    await refreshProfile();
   };
 
   // ---- Step 5 → finalize ----
