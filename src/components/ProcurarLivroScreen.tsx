@@ -6,12 +6,15 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft } from 'lucide-react';
+import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, MoreVertical } from 'lucide-react';
 import LoanRequestModal, { RequestableBook } from '@/components/LoanRequestModal';
 import HelpButton from '@/components/tutorial/HelpButton';
 import OwlLoader from '@/components/OwlLoader';
 import { fetchPublicReputations } from '@/lib/loanReputation';
 import { resolveAvatarSrc } from '@/lib/avatars';
+import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { toast } from 'sonner';
 
 interface AvailRow {
   id: string;
@@ -75,6 +78,8 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
   const [reputations, setReputations] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const [requestTarget, setRequestTarget] = useState<RequestableBook | null>(null);
+  const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
+  const [showPlanSheet, setShowPlanSheet] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(TAB_STORAGE_KEY, tab);
@@ -128,6 +133,16 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
 
   const needsSchool = !schoolId || !districtId;
 
+  const openAddToPlan = (book: AvailRow) => {
+    setPlanBook({ book_id: book.book_id, title: book.title, author: book.author, isbn: book.isbn, cover_url: book.cover_url });
+    setShowPlanSheet(true);
+  };
+
+  const goCreatePlan = () => {
+    localStorage.setItem('folium_listas_tab', 'planos');
+    window.dispatchEvent(new Event('folium-open-planos'));
+  };
+
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
@@ -167,9 +182,21 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
                           <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
                             <img src={resolveAvatarSrc(owner?.avatar_url)} alt="" className="h-4 w-4 rounded-full border border-border object-cover" /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}{reputations[r.owner_user_id] !== undefined ? ` · ${t('search.books.returnRate', { rate: reputations[r.owner_user_id] })}` : ''}
                           </p>
-                          <Button size="sm" variant="outline" className="mt-2 h-7 text-xs" onClick={() => setRequestTarget({ availability_id: r.id, book_id: r.book_id, owner_user_id: r.owner_user_id, title: r.title, author: r.author, cover_url: r.cover_url, isbn: r.isbn })}>
-                            {t('search.books.requestLoan')}
-                          </Button>
+                          <div className="mt-2 flex items-center gap-2">
+                            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setRequestTarget({ availability_id: r.id, book_id: r.book_id, owner_user_id: r.owner_user_id, title: r.title, author: r.author, cover_url: r.cover_url, isbn: r.isbn })}>
+                              {t('search.books.requestLoan')}
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="h-7 w-7 grid place-items-center rounded-full border border-border text-muted-foreground">
+                                  <MoreVertical size={14} />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => openAddToPlan(r)}>Adicionar ao plano</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
                         </div>
                       </div>
                     );
@@ -190,6 +217,12 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
       </Tabs>
 
       <LoanRequestModal book={requestTarget} open={!!requestTarget} onOpenChange={(open) => !open && setRequestTarget(null)} />
+      <AddToPlanSheet
+        book={planBook}
+        open={showPlanSheet}
+        onOpenChange={setShowPlanSheet}
+        onNoActivePlan={() => toast('Não tens um plano activo.', { action: { label: 'Criar plano →', onClick: goCreatePlan } })}
+      />
     </div>
   );
 }
