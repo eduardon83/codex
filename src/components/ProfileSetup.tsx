@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,7 @@ function calculateAge(dob: string): number {
 }
 
 export default function ProfileSetup() {
+  const { t } = useTranslation();
   const { user, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
   const [step, setStep] = useState<Step>('basics');
@@ -70,7 +72,7 @@ export default function ProfileSetup() {
 
   const showUsernameTaken = () => {
     setUsernameStatus('error');
-    setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+    setUsernameMessage(t('profileSetup.usernameTaken'));
     setStep('basics');
     window.setTimeout(() => {
       usernameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -89,7 +91,7 @@ export default function ProfileSetup() {
       showUsernameTaken();
       return true;
     }
-    toast.error((error as { message?: string })?.message || 'Não foi possível guardar o perfil.');
+    toast.error((error as { message?: string })?.message || t('profileSetup.saveError'));
     return true;
   };
 
@@ -103,12 +105,12 @@ export default function ProfileSetup() {
 
     if (!/^[a-z0-9_.]{3,}$/.test(trimmed)) {
       setUsernameStatus('error');
-      setUsernameMessage('O nome de utilizador deve ter pelo menos 3 caracteres e só pode conter letras, números, _ e .');
+      setUsernameMessage(t('profileSetup.usernameInvalid'));
       return;
     }
 
     setUsernameStatus('checking');
-    setUsernameMessage('A verificar...');
+    setUsernameMessage(t('profileSetup.usernameChecking'));
     const t = window.setTimeout(async () => {
       const { data, error } = await supabase
         .from('profiles')
@@ -118,18 +120,18 @@ export default function ProfileSetup() {
 
       if (error) {
         setUsernameStatus('error');
-        setUsernameMessage('Não foi possível verificar o nome de utilizador. Tenta novamente.');
+        setUsernameMessage(t('profileSetup.usernameCheckError'));
         return;
       }
 
       if (data && data.user_id !== user?.id) {
         setUsernameStatus('error');
-        setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+        setUsernameMessage(t('profileSetup.usernameTaken'));
         return;
       }
 
       setUsernameStatus('available');
-      setUsernameMessage('Nome de utilizador disponível');
+      setUsernameMessage(t('profileSetup.usernameAvailable'));
     }, 600);
 
     return () => clearTimeout(t);
