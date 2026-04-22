@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#3C3020"/>
+
+  <!-- Very long ears — most distinctive feature -->
+  <ellipse cx="72" cy="52" rx="14" ry="34" fill="#8A8070" transform="rotate(-10 72 52)"/>
+  <ellipse cx="128" cy="52" rx="14" ry="34" fill="#8A8070" transform="rotate(10 128 52)"/>
+  <!-- Inner ears pink -->
+  <ellipse cx="72" cy="52" rx="8" ry="26" fill="#D4A0A0" transform="rotate(-10 72 52)"/>
+  <ellipse cx="128" cy="52" rx="8" ry="26" fill="#D4A0A0" transform="rotate(10 128 52)"/>
+
+  <!-- Head - longer/rectangular for donkey -->
+  <ellipse cx="100" cy="108" rx="50" ry="52" fill="#9A9080"/>
+
+  <!-- Mane stripe down forehead -->
+  <ellipse cx="100" cy="78" rx="10" ry="22" fill="#6A6258"/>
+
+  <!-- Muzzle - big, pale -->
+  <ellipse cx="100" cy="134" rx="34" ry="26" fill="#C8C0A0"/>
+
+  <!-- Nostrils - large donkey nostrils -->
+  <ellipse cx="90" cy="130" rx="7" ry="5" fill="#5A4840"/>
+  <ellipse cx="110" cy="130" rx="7" ry="5" fill="#5A4840"/>
+  <ellipse cx="90" cy="129" rx="4" ry="2.5" fill="#3A2820" opacity="0.7"/>
+  <ellipse cx="110" cy="129" rx="4" ry="2.5" fill="#3A2820" opacity="0.7"/>
+
+  <!-- Eyes - kind, large -->
+  <ellipse cx="78" cy="100" rx="13" ry="12" fill="#2A2018"/>
+  <ellipse cx="122" cy="100" rx="13" ry="12" fill="#2A2018"/>
+  <!-- Iris -->
+  <ellipse cx="79" cy="101" rx="9" ry="9" fill="#5A3810"/>
+  <ellipse cx="123" cy="101" rx="9" ry="9" fill="#5A3810"/>
+  <!-- Pupil -->
+  <ellipse cx="79" cy="101" rx="5" ry="6" fill="#1A1008"/>
+  <ellipse cx="123" cy="101" rx="5" ry="6" fill="#1A1008"/>
+  <circle cx="76" cy="98" r="2.5" fill="white" opacity="0.9"/>
+  <circle cx="120" cy="98" r="2.5" fill="white" opacity="0.9"/>
+
+  <!-- Long lashes - endearing feature -->
+  <path d="M66,94 Q70,89 74,91" fill="none" stroke="#2A1A10" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M70,91 Q73,85 77,88" fill="none" stroke="#2A1A10" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M134,94 Q130,89 126,91" fill="none" stroke="#2A1A10" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M130,91 Q127,85 123,88" fill="none" stroke="#2A1A10" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Mouth - gentle smile -->
+  <path d="M86,144 Q100,154 114,144" fill="none" stroke="#7A6A58" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Neck -->
+  <ellipse cx="100" cy="158" rx="36" ry="18" fill="#8A8070"/>
+
+  <!-- Cross marking on back (Portuguese donkeys often have dorsal cross) -->
+  <path d="M100,64 L100,80" stroke="#6A6258" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+</svg>

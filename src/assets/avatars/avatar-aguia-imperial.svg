@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#1A2030"/>
+
+  <!-- Body / wing shape -->
+  <ellipse cx="100" cy="140" rx="60" ry="42" fill="#2A2018"/>
+
+  <!-- White shoulder patches — distinctive imperial eagle feature -->
+  <ellipse cx="65" cy="128" rx="18" ry="10" fill="#E8E0D0" opacity="0.9"/>
+  <ellipse cx="135" cy="128" rx="18" ry="10" fill="#E8E0D0" opacity="0.9"/>
+
+  <!-- Wing feather hints -->
+  <path d="M42,140 Q55,148 68,144 Q72,152 58,156" fill="#1E1810" stroke="#2A2018" stroke-width="0.5"/>
+  <path d="M158,140 Q145,148 132,144 Q128,152 142,156" fill="#1E1810" stroke="#2A2018" stroke-width="0.5"/>
+
+  <!-- Neck -->
+  <ellipse cx="100" cy="112" rx="28" ry="20" fill="#2A2018"/>
+
+  <!-- Head - eagle head shape -->
+  <ellipse cx="100" cy="86" rx="38" ry="35" fill="#3A3020"/>
+
+  <!-- Dark crown -->
+  <ellipse cx="100" cy="68" rx="28" ry="18" fill="#1A1810"/>
+
+  <!-- Eyes - fierce yellow -->
+  <ellipse cx="82" cy="86" rx="12" ry="11" fill="#F0C020"/>
+  <ellipse cx="118" cy="86" rx="12" ry="11" fill="#F0C020"/>
+  <circle cx="83" cy="87" r="7" fill="#1A1410"/>
+  <circle cx="119" cy="87" r="7" fill="#1A1410"/>
+  <circle cx="80" cy="84" r="2.5" fill="white" opacity="0.9"/>
+  <circle cx="116" cy="84" r="2.5" fill="white" opacity="0.9"/>
+
+  <!-- Supraorbital ridge - gives eagle stern look -->
+  <path d="M70,80 Q82,74 94,78" fill="none" stroke="#1A1410" stroke-width="3" stroke-linecap="round"/>
+  <path d="M106,78 Q118,74 130,80" fill="none" stroke="#1A1410" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Hooked beak - top -->
+  <path d="M88,98 Q100,96 112,98 Q108,108 100,114 Q92,108 88,98 Z" fill="#D4A820"/>
+  <!-- Beak hook -->
+  <path d="M100,114 Q106,118 104,122 Q98,120 100,114" fill="#C09018"/>
+  <!-- Nostril -->
+  <ellipse cx="100" cy="102" rx="5" ry="3" fill="#B08018" opacity="0.6"/>
+  <!-- Beak line -->
+  <path d="M88,98 Q100,105 112,98" fill="none" stroke="#A07010" stroke-width="1" opacity="0.6"/>
+
+  <!-- Pale nape patch -->
+  <ellipse cx="100" cy="72" rx="14" ry="8" fill="#6A6050" opacity="0.5"/>
+</svg>
