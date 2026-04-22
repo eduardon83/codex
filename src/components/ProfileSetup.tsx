@@ -203,7 +203,7 @@ export default function ProfileSetup() {
       toast.error(t('profileSetup.requiredFields'));
       return;
     }
-    if (age < 12) { setStep('underage_block'); return; }
+    if (age < 13) { setStep('underage_block'); return; }
     setStep(profile?.terms_accepted_at ? 'basics' : 'terms');
   };
 
@@ -231,7 +231,7 @@ export default function ProfileSetup() {
       usernameInputRef.current?.focus();
       return;
     }
-    if (age < 18) { setStep('parental_consent'); return; }
+    if (age >= 13 && age < 18) { setStep('parental_consent'); return; }
     setStep('school');
   };
 
@@ -244,6 +244,7 @@ export default function ProfileSetup() {
     }
     setSaving(true);
     const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
     try {
       const { error } = await supabase.from('profiles').update({
         first_name: firstName,
@@ -252,22 +253,30 @@ export default function ProfileSetup() {
         date_of_birth: dob,
         parent_email: parentEmail.trim(),
         parent_consent_token: token,
+        parent_consent_expires_at: expiresAt,
         parent_consent_sent_at: new Date().toISOString(),
         account_status: 'pending_parental_consent',
         profile_completed: true,
         age_group: 'under_18',
       } as any).eq('user_id', user.id);
       if (error) throw error;
+
+      const { error: emailError } = await supabase.functions.invoke('send-parental-consent-email', {
+        body: {
+          parent_email: parentEmail.trim(),
+          child_name: firstName,
+          child_age: age,
+          child_language: profile?.language || 'pt',
+          consent_token: token,
+          consent_expires_at: expiresAt,
+        },
+      });
+      if (emailError) throw emailError;
     } catch (error) {
       handleProfileSaveError(error);
       setSaving(false);
       return;
     }
-
-    // Fire-and-forget consent email
-    supabase.functions.invoke('send-parental-consent', {
-      body: { token, parentEmail: parentEmail.trim(), childName: firstName, childUserId: user.id },
-    }).catch(() => {});
 
     setSaving(false);
     await refreshProfile();
