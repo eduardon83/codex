@@ -541,5 +541,34 @@
     "verify": "Verificar",
     "setupFailed": "No se pudo configurar 2FA",
     "qrAlt": "Código QR para configurar 2FA"
+  },
+  "search": {
+    "title": "Buscar",
+    "tabs": {
+      "books": "Libros",
+      "libraries": "Bibliotecas",
+      "readingLists": "Listas de lectura"
+    },
+    "schoolPrompt": "Define tu escuela en el perfil para ver libros y listas de tu escuela y distrito.",
+    "goToProfile": "Ir al perfil",
+    "books": {
+      "placeholder": "Título, autor o ISBN…",
+      "empty": "No hay libros disponibles en tu distrito.",
+      "userFallback": "usuario",
+      "returnRate": "{{rate}}% devoluciones a tiempo",
+      "requestLoan": "Pedir prestado"
+    },
+    "libraries": {
+      "libraryFallback": "Biblioteca"
+    },
+    "readingLists": {
+      "empty": "Aún no hay listas de lectura publicadas para ti.",
+      "official": "Oficial",
+      "creatorFallback": "Plan Nacional de Lectura",
+      "bookCount": "{{count}} libros",
+      "viewList": "Ver lista",
+      "subscribe": "Suscribirse",
+      "subscribed": "Suscrito"
+    }
   }
 }

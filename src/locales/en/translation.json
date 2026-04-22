@@ -11,7 +11,7 @@
     "library": "Library",
     "addBook": "Add Book",
     "profile": "Profile",
-    "find": "Find",
+    "find": "Search",
     "wishlist": "Wishlist"
   },
   "auth": {
@@ -541,5 +541,34 @@
     "verify": "Verify",
     "setupFailed": "Failed to set up 2FA",
     "qrAlt": "QR Code for 2FA setup"
+  },
+  "search": {
+    "title": "Search",
+    "tabs": {
+      "books": "Books",
+      "libraries": "Libraries",
+      "readingLists": "Reading Lists"
+    },
+    "schoolPrompt": "Set your school in your profile to see books and lists from your school and district.",
+    "goToProfile": "Go to profile",
+    "books": {
+      "placeholder": "Title, author or ISBN…",
+      "empty": "No books available in your district.",
+      "userFallback": "user",
+      "returnRate": "{{rate}}% on-time returns",
+      "requestLoan": "Request loan"
+    },
+    "libraries": {
+      "libraryFallback": "Library"
+    },
+    "readingLists": {
+      "empty": "No published reading lists are available for you yet.",
+      "official": "Official",
+      "creatorFallback": "National Reading Plan",
+      "bookCount": "{{count}} books",
+      "viewList": "View list",
+      "subscribe": "Subscribe",
+      "subscribed": "Subscribed"
+    }
   }
 }
