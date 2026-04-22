@@ -16,7 +16,7 @@ import EventsPlaceholder from '@/components/EventsPlaceholder';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
 
-type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile';
+type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile' | 'add';
 
 interface PublicLibraryView {
   libraryId: string;
@@ -102,7 +102,7 @@ export default function Index() {
           ownerUsername={publicLibView.ownerUsername}
           onBack={() => setPublicLibView(null)}
         />
-        <BottomNav active={activeTab} onChange={(tab) => { setPublicLibView(null); setActiveTab(tab); }} />
+        <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={(tab) => { setPublicLibView(null); setActiveTab(tab); }} />
       </>
     );
   }
@@ -112,7 +112,7 @@ export default function Index() {
     return (
       <>
         <BookDetail bookId={selectedBookId} onBack={() => setSelectedBookId(null)} />
-        <BottomNav active={activeTab} onChange={(tab) => { setSelectedBookId(null); setActiveTab(tab); }} />
+        <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={(tab) => { setSelectedBookId(null); setActiveTab(tab); }} />
       </>
     );
   }
@@ -128,6 +128,9 @@ export default function Index() {
           onGoToProfile={() => setActiveTab('profile')}
         />
       )}
+      {activeTab === 'add' && (
+        <AddBookScreen onDone={() => setActiveTab('library')} />
+      )}
       {activeTab === 'profile' && <ProfileScreen />}
       {activeTab === 'find' && (
         <ProcurarLivroScreen
@@ -139,7 +142,7 @@ export default function Index() {
         <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
       )}
       {activeTab === 'events' && <EventsPlaceholder />}
-      <BottomNav active={activeTab} onChange={setActiveTab} />
+      <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={setActiveTab} />
     </>
   );
 }
