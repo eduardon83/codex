@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import OwlLoader from '@/components/OwlLoader';
 import ReadingListsTab from '@/components/ReadingListsTab';
 import HelpButton from '@/components/tutorial/HelpButton';
+import { resolveAvatarSrc } from '@/lib/avatars';
 
 interface PublicLibrary {
   id: string;
@@ -18,6 +19,7 @@ interface PublicLibrary {
     last_name: string | null;
     username: string | null;
     location: string | null;
+    avatar_url: string | null;
   } | null;
   book_count: number;
 }
@@ -184,7 +186,7 @@ export default function FindLibrariesScreen({ onGoToProfile, onOpenLibrary }: Fi
       const ownerIds = [...new Set((libs as any[]).map((l: any) => l.user_id))];
       const { data: profiles } = await supabase
         .from('public_profiles' as any)
-        .select('user_id, first_name, last_name, username, location')
+        .select('user_id, first_name, last_name, username, location, avatar_url')
         .in('user_id', ownerIds);
       const profileMap = new Map((profiles || []).map((p: any) => [p.user_id, p]));
       data = (libs as any[]).map((lib: any) => ({ ...lib, profiles: profileMap.get(lib.user_id) || null }));
@@ -413,9 +415,7 @@ function LibraryCard({ lib, isSaved, onToggleSave, booksLabel, onOpen, tutorialA
   return (
     <div className="flex items-center gap-3 py-3 border-b border-border">
       <button onClick={handleClick} className="flex items-center gap-3 flex-1 min-w-0 text-left">
-        <div className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center">
-          <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
-        </div>
+        <img src={resolveAvatarSrc(profile?.avatar_url)} alt="" className="h-9 w-9 rounded-full border border-border object-cover" />
         <div className="flex-1 min-w-0">
           <p className="text-sm text-foreground truncate">
             {profile?.first_name} {profile?.last_name}

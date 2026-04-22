@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/hooks/useTheme';
 import { supabase } from '@/integrations/supabase/client';
-import { uploadFileToStorage } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { LogOut, Check, Camera, User, BookOpen, CalendarDays, History } from 'lucide-react';
+import { LogOut, Check, BookOpen, CalendarDays, History } from 'lucide-react';
 import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
@@ -35,6 +34,8 @@ import PendingRequestsSection from '@/components/profile/PendingRequestsSection'
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
 import { fetchCurrentLegalDocument, LegalDocumentRecord, LegalDocumentType } from '@/lib/legalDocuments';
+import AvatarPickerDialog from '@/components/AvatarPickerDialog';
+import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export default function ProfileScreen() {
   const [deleteError, setDeleteError] = useState('');
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [activeLoanCount, setActiveLoanCount] = useState(0);
-  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const hasPasswordProvider = Boolean(
     (user as any)?.identities?.some((identity: any) => identity.provider === 'email') ||
     (user as any)?.app_metadata?.provider === 'email'
@@ -110,16 +111,11 @@ export default function ProfileScreen() {
     }
   };
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-    const ext = file.name.split('.').pop() || 'jpg';
-    const path = `${user.id}/avatar.${ext}`;
-    const url = await uploadFileToStorage('profile-photos', path, file);
-    if (url) {
-      await supabase.from('profiles').update({ avatar_url: url } as any).eq('user_id', user.id);
-      await refreshProfile();
-    }
+  const saveAvatar = async (avatarId: AvatarId) => {
+    if (!user) return;
+    await supabase.from('profiles').update({ avatar_url: avatarId } as any).eq('user_id', user.id);
+    await refreshProfile();
+    setAvatarPickerOpen(false);
   };
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
@@ -180,19 +176,16 @@ export default function ProfileScreen() {
 
       {/* 1. Header block */}
       <div className="flex items-start gap-4 mb-6">
-        <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
-        <button onClick={() => avatarInputRef.current?.click()} className="relative group flex-shrink-0">
-          {(profile as any)?.avatar_url ? (
-            <img src={(profile as any).avatar_url} alt="" className="w-20 h-20 rounded-full object-cover group-hover:opacity-80 transition-opacity" />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center group-hover:bg-secondary/70 transition-colors">
-              <User size={28} className="text-muted-foreground" />
-            </div>
-          )}
-          <div className="absolute bottom-0 right-0 bg-accent text-accent-foreground rounded-full p-1">
-            <Camera size={12} />
-          </div>
-        </button>
+        <div className="flex-shrink-0 space-y-2 text-center">
+          <img
+            src={resolveAvatarSrc((profile as any)?.avatar_url)}
+            alt={getAvatarById((profile as any)?.avatar_url)?.name || t('avatars.defaultAlt')}
+            className="h-20 w-20 rounded-full border border-border object-cover"
+          />
+          <Button type="button" variant="outline" size="sm" className="h-7 px-2 text-[11px]" onClick={() => setAvatarPickerOpen(true)}>
+            {t('avatars.choose')}
+          </Button>
+        </div>
 
         {!editing ? (
           <div className="flex-1 min-w-0">
@@ -440,6 +433,13 @@ export default function ProfileScreen() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <AvatarPickerDialog
+        open={avatarPickerOpen}
+        value={(profile as any)?.avatar_url}
+        onOpenChange={setAvatarPickerOpen}
+        onConfirm={saveAvatar}
+      />
 
       <button
         onClick={() => setShowAbout(true)}

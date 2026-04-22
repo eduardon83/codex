@@ -11,6 +11,7 @@ import LoanRequestModal, { RequestableBook } from '@/components/LoanRequestModal
 import HelpButton from '@/components/tutorial/HelpButton';
 import OwlLoader from '@/components/OwlLoader';
 import { fetchPublicReputations } from '@/lib/loanReputation';
+import { resolveAvatarSrc } from '@/lib/avatars';
 
 interface AvailRow {
   id: string;
@@ -24,7 +25,7 @@ interface AvailRow {
   school_id: string | null;
 }
 
-interface OwnerInfo { username: string | null; first_name: string | null; school_name: string | null; }
+interface OwnerInfo { username: string | null; first_name: string | null; school_name: string | null; avatar_url: string | null; }
 interface OSMLibrary { id: number; name: string; address: string | null; distance: number; openingHours: string | null; website: string | null; }
 type ProcurarTab = 'books' | 'libraries' | 'readingLists';
 
@@ -103,19 +104,19 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
       const ownerIds = Array.from(new Set(rows.map(r => r.owner_user_id)));
       const schoolIds = Array.from(new Set(rows.map(r => r.school_id).filter(Boolean) as string[]));
       const [profsRes, schoolsRes] = await Promise.all([
-        ownerIds.length ? supabase.from('public_profiles').select('user_id, username, first_name').in('user_id', ownerIds) : Promise.resolve({ data: [] as any[] }),
+        ownerIds.length ? supabase.from('public_profiles').select('user_id, username, first_name, avatar_url').in('user_id', ownerIds) : Promise.resolve({ data: [] as any[] }),
         schoolIds.length ? supabase.from('schools').select('id, name').in('id', schoolIds) : Promise.resolve({ data: [] as any[] }),
       ]);
 
       const schoolMap = new Map<string, string>();
       (schoolsRes.data || []).forEach((s: any) => schoolMap.set(s.id, s.name));
-      const profMap = new Map<string, { username: string | null; first_name: string | null }>();
+      const profMap = new Map<string, { username: string | null; first_name: string | null; avatar_url: string | null }>();
       (profsRes.data || []).forEach((p: any) => p.user_id && profMap.set(p.user_id, p));
 
       const map: Record<string, OwnerInfo> = {};
       rows.forEach((r) => {
         const p = profMap.get(r.owner_user_id);
-        map[r.owner_user_id] = { username: p?.username ?? null, first_name: p?.first_name ?? null, school_name: r.school_id ? schoolMap.get(r.school_id) ?? null : null };
+        map[r.owner_user_id] = { username: p?.username ?? null, first_name: p?.first_name ?? null, avatar_url: p?.avatar_url ?? null, school_name: r.school_id ? schoolMap.get(r.school_id) ?? null : null };
       });
       setOwners(map);
       const reps = await fetchPublicReputations(ownerIds);
@@ -164,7 +165,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
                           <p className="text-sm font-medium text-foreground line-clamp-2">{r.title}</p>
                           {r.author && <p className="text-xs text-muted-foreground line-clamp-1">{r.author}</p>}
                           <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                            <MapPin size={10} /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}{reputations[r.owner_user_id] !== undefined ? ` · ${t('search.books.returnRate', { rate: reputations[r.owner_user_id] })}` : ''}
+                            <img src={resolveAvatarSrc(owner?.avatar_url)} alt="" className="h-4 w-4 rounded-full border border-border object-cover" /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}{reputations[r.owner_user_id] !== undefined ? ` · ${t('search.books.returnRate', { rate: reputations[r.owner_user_id] })}` : ''}
                           </p>
                           <Button size="sm" variant="outline" className="mt-2 h-7 text-xs" onClick={() => setRequestTarget({ availability_id: r.id, book_id: r.book_id, owner_user_id: r.owner_user_id, title: r.title, author: r.author, cover_url: r.cover_url, isbn: r.isbn })}>
                             {t('search.books.requestLoan')}

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { BookOpen, Inbox } from 'lucide-react';
 import { toast } from 'sonner';
 import { fetchPublicReputations } from '@/lib/loanReputation';
+import { resolveAvatarSrc } from '@/lib/avatars';
 
 interface PendingRequest {
   id: string;
@@ -17,7 +18,7 @@ interface PendingRequest {
   requested_at: string;
 }
 
-interface RequesterInfo { username: string | null; first_name: string | null; school_name: string | null; }
+interface RequesterInfo { username: string | null; first_name: string | null; school_name: string | null; avatar_url: string | null; }
 
 export default function PendingRequestsSection() {
   const { user } = useAuth();
@@ -42,7 +43,7 @@ export default function PendingRequestsSection() {
     if (ids.length) {
       const { data: profs } = await supabase
         .from('profiles')
-        .select('user_id, username, first_name, school_id')
+        .select('user_id, username, first_name, school_id, avatar_url')
         .in('user_id', ids);
       const schoolIds = Array.from(new Set((profs || []).map((p: any) => p.school_id).filter(Boolean)));
       const schoolMap = new Map<string, string>();
@@ -55,6 +56,7 @@ export default function PendingRequestsSection() {
         map[p.user_id] = {
           username: p.username,
           first_name: p.first_name,
+          avatar_url: p.avatar_url,
           school_name: p.school_id ? schoolMap.get(p.school_id) ?? null : null,
         };
       });
@@ -158,7 +160,7 @@ export default function PendingRequestsSection() {
               <div className="flex-1 min-w-0 space-y-1">
                 <p className="text-sm font-medium text-foreground line-clamp-1">{r.book_title}</p>
                 <p className="text-[11px] text-muted-foreground">
-                  @{requesterLabel}{meta?.school_name ? ` · ${meta.school_name}` : ''}{reputations[r.requester_user_id] !== undefined ? ` · ${reputations[r.requester_user_id]}% devoluções a tempo` : ''}
+                  <img src={resolveAvatarSrc(meta?.avatar_url)} alt="" className="mr-1 inline h-4 w-4 rounded-full border border-border object-cover align-middle" />@{requesterLabel}{meta?.school_name ? ` · ${meta.school_name}` : ''}{reputations[r.requester_user_id] !== undefined ? ` · ${reputations[r.requester_user_id]}% devoluções a tempo` : ''}
                 </p>
                 {r.message && (
                   <p className="text-xs text-foreground italic border-l-2 border-border pl-2">"{r.message}"</p>

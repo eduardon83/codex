@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#1A1820"/>
+
+  <!-- Massive wing shoulders - most distinctive vulture feature -->
+  <ellipse cx="100" cy="148" rx="72" ry="36" fill="#1E1C20"/>
+
+  <!-- Feather ruff around neck -->
+  <path d="M56,118 Q64,108 72,116 Q78,104 86,114 Q92,102 100,112 Q108,102 114,114 Q122,104 128,116 Q136,108 144,118" fill="none" stroke="#2A2830" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Neck - bare skin, slightly wrinkled -->
+  <ellipse cx="100" cy="108" rx="22" ry="24" fill="#8A6858"/>
+
+  <!-- Wrinkle lines on bare neck -->
+  <path d="M84,100 Q100,97 116,100" fill="none" stroke="#6A5040" stroke-width="1" opacity="0.6"/>
+  <path d="M82,106 Q100,103 118,106" fill="none" stroke="#6A5040" stroke-width="1" opacity="0.5"/>
+  <path d="M84,112 Q100,109 116,112" fill="none" stroke="#6A5040" stroke-width="1" opacity="0.5"/>
+
+  <!-- Head - bare, small relative to body -->
+  <ellipse cx="100" cy="78" rx="28" ry="26" fill="#9A7868"/>
+
+  <!-- Head darker top -->
+  <ellipse cx="100" cy="66" rx="22" ry="16" fill="#7A5848"/>
+
+  <!-- Eyes - small but intense amber/yellow -->
+  <ellipse cx="84" cy="76" rx="10" ry="9" fill="#D4C040"/>
+  <ellipse cx="116" cy="76" rx="10" ry="9" fill="#D4C040"/>
+  <circle cx="84" cy="76" r="6" fill="#1A1410"/>
+  <circle cx="116" cy="76" r="6" fill="#1A1410"/>
+  <circle cx="82" cy="73" r="2" fill="white" opacity="0.8"/>
+  <circle cx="114" cy="73" r="2" fill="white" opacity="0.8"/>
+
+  <!-- Heavy brow ridge -->
+  <path d="M74,70 Q84,65 94,68" fill="none" stroke="#4A3A30" stroke-width="3" stroke-linecap="round"/>
+  <path d="M106,68 Q116,65 126,70" fill="none" stroke="#4A3A30" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Massive hooked beak - very large -->
+  <path d="M82,88 Q100,84 118,88 L114,104 Q100,116 86,104 Z" fill="#D4B040"/>
+  <!-- Beak hook tip -->
+  <path d="M100,116 Q110,120 108,128 Q100,125 96,118 Z" fill="#B89030"/>
+  <!-- Cere (fleshy base of beak) -->
+  <ellipse cx="100" cy="90" rx="12" ry="5" fill="#C09838" opacity="0.7"/>
+  <!-- Beak division line -->
+  <path d="M82,88 Q100,96 118,88" fill="none" stroke="#A08020" stroke-width="1.2" opacity="0.6"/>
+
+  <!-- Nostril -->
+  <ellipse cx="95" cy="92" rx="4" ry="2.5" fill="#A07820" opacity="0.6"/>
+
+  <!-- Wing feather texture hints -->
+  <path d="M38,148 Q52,156 66,150 Q70,160 52,164" fill="#181618" stroke="#222028" stroke-width="0.5"/>
+  <path d="M162,148 Q148,156 134,150 Q130,160 148,164" fill="#181618" stroke="#222028" stroke-width="0.5"/>
+  <path d="M42,158 Q56,164 70,158" fill="none" stroke="#2A2830" stroke-width="2" opacity="0.4"/>
+  <path d="M158,158 Q144,164 130,158" fill="none" stroke="#2A2830" stroke-width="2" opacity="0.4"/>
+</svg>

@@ -19,8 +19,10 @@ import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
+import AvatarPickerDialog from '@/components/AvatarPickerDialog';
+import { AVATARS, AvatarId, getAvatarById, resolveAvatarSrc } from '@/lib/avatars';
 
-type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'avatar' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
 interface District { id: string; name: string; }
@@ -75,6 +77,8 @@ export default function ProfileSetup() {
 
   // Step 5: theme
   const [themeId, setThemeId] = useState(currentTheme.id);
+  const [avatarId, setAvatarId] = useState<AvatarId>((profile?.avatar_url as AvatarId) || AVATARS[0].id);
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
   const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
@@ -231,7 +235,7 @@ export default function ProfileSetup() {
       usernameInputRef.current?.focus();
       return;
     }
-    if (age >= 13 && age < 18) { setStep('parental_consent'); return; }
+    if (age >= 13 && age < 18) { setStep('avatar'); return; }
     setStep('school');
   };
 
@@ -319,7 +323,23 @@ export default function ProfileSetup() {
       return;
     }
     setSaving(false);
-    setStep('theme');
+    setStep('avatar');
+  };
+
+  const saveSetupAvatar = async (nextAvatarId: AvatarId) => {
+    if (!user) return;
+    setSaving(true);
+    const { error } = await supabase.from('profiles').update({ avatar_url: nextAvatarId } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    setAvatarId(nextAvatarId);
+    setAvatarPickerOpen(false);
+    await refreshProfile();
+  };
+
+  const continueFromAvatar = async () => {
+    if (!profile?.avatar_url) await saveSetupAvatar(avatarId);
+    setStep(age >= 13 && age < 18 ? 'parental_consent' : 'theme');
   };
 
   // ---- Step 5 → finalize ----
@@ -545,6 +565,38 @@ export default function ProfileSetup() {
           <Button onClick={finalize} disabled={saving} className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90">
             {saving ? t('profileSetup.finishing') : t('profileSetup.enterFolium')}
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'avatar') {
+    const selectedAvatar = getAvatarById(avatarId);
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header onBack={() => setStep(age >= 13 && age < 18 ? 'basics' : 'school')} />
+          <div className="space-y-4 text-center">
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('avatars.setupIntro')}</p>
+            <img
+              src={resolveAvatarSrc(avatarId)}
+              alt={selectedAvatar?.name || t('avatars.defaultAlt')}
+              className="mx-auto h-28 w-28 rounded-full border border-border object-cover"
+            />
+            <p className="text-sm text-foreground">{selectedAvatar?.name}</p>
+            <Button type="button" variant="outline" onClick={() => setAvatarPickerOpen(true)} className="w-full h-11">
+              {t('avatars.choose')}
+            </Button>
+            <Button onClick={continueFromAvatar} disabled={saving} className="w-full h-11">
+              {t('profileSetup.continue')}
+            </Button>
+          </div>
+          <AvatarPickerDialog
+            open={avatarPickerOpen}
+            value={avatarId}
+            onOpenChange={setAvatarPickerOpen}
+            onConfirm={saveSetupAvatar}
+          />
         </div>
       </div>
     );

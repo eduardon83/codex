@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <circle cx="100" cy="100" r="100" fill="#2E2818"/>
+
+  <!-- Ears with black tufts -->
+  <polygon points="56,72 46,28 78,60" fill="#C4843C"/>
+  <polygon points="144,72 154,28 122,60" fill="#C4843C"/>
+  <!-- Ear inner -->
+  <polygon points="58,68 50,38 74,62" fill="#F0C090"/>
+  <polygon points="142,68 150,38 126,62" fill="#F0C090"/>
+  <!-- Ear tufts (black tips) -->
+  <polygon points="52,44 46,28 60,38" fill="#1A1410"/>
+  <polygon points="148,44 154,28 140,38" fill="#1A1410"/>
+
+  <!-- Head - rounder than wolf -->
+  <ellipse cx="100" cy="108" rx="56" ry="52" fill="#C8843C"/>
+
+  <!-- Spots on forehead -->
+  <ellipse cx="88" cy="84" rx="5" ry="4" fill="#8A5018" opacity="0.6"/>
+  <ellipse cx="112" cy="84" rx="5" ry="4" fill="#8A5018" opacity="0.6"/>
+  <ellipse cx="100" cy="80" rx="4" ry="3" fill="#8A5018" opacity="0.5"/>
+
+  <!-- White cheek ruffs - distinctive lynx feature -->
+  <ellipse cx="62" cy="118" rx="20" ry="16" fill="#F0E0C0"/>
+  <ellipse cx="138" cy="118" rx="20" ry="16" fill="#F0E0C0"/>
+  <!-- Cheek spots -->
+  <ellipse cx="56" cy="114" rx="4" ry="3" fill="#8A5018" opacity="0.4"/>
+  <ellipse cx="144" cy="114" rx="4" ry="3" fill="#8A5018" opacity="0.4"/>
+
+  <!-- Muzzle -->
+  <ellipse cx="100" cy="126" rx="26" ry="20" fill="#F0D8A8"/>
+
+  <!-- Eyes - large amber -->
+  <ellipse cx="82" cy="98" rx="13" ry="12" fill="#F5F0E0"/>
+  <ellipse cx="118" cy="98" rx="13" ry="12" fill="#F5F0E0"/>
+  <ellipse cx="83" cy="99" rx="9" ry="9" fill="#D4840C"/>
+  <ellipse cx="119" cy="99" rx="9" ry="9" fill="#D4840C"/>
+  <!-- Slit pupils -->
+  <ellipse cx="83" cy="99" rx="3" ry="7" fill="#1A1008"/>
+  <ellipse cx="119" cy="99" rx="3" ry="7" fill="#1A1008"/>
+  <circle cx="86" cy="96" r="2" fill="white" opacity="0.8"/>
+  <circle cx="122" cy="96" r="2" fill="white" opacity="0.8"/>
+
+  <!-- Nose - small pink -->
+  <ellipse cx="100" cy="116" rx="7" ry="5" fill="#E07060"/>
+  <!-- Nostril marks -->
+  <ellipse cx="97" cy="115" rx="2" ry="1.5" fill="#B04840" opacity="0.6"/>
+  <ellipse cx="103" cy="115" rx="2" ry="1.5" fill="#B04840" opacity="0.6"/>
+
+  <!-- Mouth + whisker lines -->
+  <path d="M93,122 Q100,130 107,122" fill="none" stroke="#8A6040" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="100" y1="121" x2="100" y2="124" stroke="#8A6040" stroke-width="1.5"/>
+
+  <!-- Whisker dots -->
+  <circle cx="78" cy="122" r="1.5" fill="#8A6040"/>
+  <circle cx="72" cy="125" r="1.5" fill="#8A6040"/>
+  <circle cx="122" cy="122" r="1.5" fill="#8A6040"/>
+  <circle cx="128" cy="125" r="1.5" fill="#8A6040"/>
+
+  <!-- Neck / chest -->
+  <ellipse cx="100" cy="156" rx="40" ry="20" fill="#B07030"/>
+</svg>
