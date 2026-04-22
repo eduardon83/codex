@@ -214,6 +214,34 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
     loadLibraries();
   };
 
+  const deleteCurrentLibrary = async () => {
+    if (!activeLibrary || libraries.length <= 1) return;
+    setDeletingLibrary(true);
+
+    const libraryId = activeLibrary;
+    const nextLibrary = libraries.find(l => l.id !== libraryId);
+
+    const { data: libraryBooks } = await supabase
+      .from('books')
+      .select('id')
+      .eq('library_id', libraryId);
+    const bookIds = ((libraryBooks as { id: string }[] | null) || []).map(b => b.id);
+
+    if (bookIds.length > 0) {
+      await supabase.from('book_availability' as any).delete().in('book_id', bookIds);
+    }
+    await supabase.from('books').delete().eq('library_id', libraryId);
+    await supabase.from('libraries').delete().eq('id', libraryId);
+
+    setDeleteDialogOpen(false);
+    setEditingName(false);
+    setActiveLibrary(nextLibrary?.id || '');
+    setBooks([]);
+    setDeletingLibrary(false);
+    showToast(t('library.libraryDeleted'));
+    loadLibraries();
+  };
+
   const hasActiveFilters = filterGenres.length > 0 || filterFormats.length > 0 || filterStatuses.length > 0 || sortBy !== 'date_newest';
 
   const clearFilters = () => {
