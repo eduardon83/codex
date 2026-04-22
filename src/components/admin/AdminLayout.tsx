@@ -1,16 +1,17 @@
 import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database, School } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { path: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { path: '/admin/users', label: 'Users', icon: Users },
-  { path: '/admin/content', label: 'Conteúdo', icon: FileText },
-  { path: '/admin/schools', label: 'Escolas', icon: School },
-  { path: '/admin/backups', label: 'Backups', icon: Database },
-  { path: '/admin/export', label: 'Export', icon: Download },
-  { path: '/admin/audit', label: 'Audit Log', icon: ScrollText },
+  { path: '/admin', labelKey: 'admin.dashboard', icon: LayoutDashboard, exact: true },
+  { path: '/admin/users', labelKey: 'admin.users', icon: Users },
+  { path: '/admin/content', labelKey: 'admin.content', icon: FileText },
+  { path: '/admin/schools', labelKey: 'admin.schools', icon: School },
+  { path: '/admin/backups', labelKey: 'admin.backups', icon: Database },
+  { path: '/admin/export', labelKey: 'admin.export', icon: Download },
+  { path: '/admin/audit', labelKey: 'admin.auditLog', icon: ScrollText },
 ];
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export default function AdminLayout({ children }: Props) {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -33,7 +35,7 @@ export default function AdminLayout({ children }: Props) {
             Bibliotheca
           </h1>
           <p className="text-xs text-muted-foreground font-['Josefin_Sans'] uppercase tracking-wider mt-1">
-            Admin
+            {t('admin.admin')}
           </p>
         </div>
 
@@ -50,7 +52,7 @@ export default function AdminLayout({ children }: Props) {
               )}
             >
               <item.icon className="w-4 h-4" />
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           ))}
         </nav>
@@ -61,7 +63,7 @@ export default function AdminLayout({ children }: Props) {
             className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-['Josefin_Sans'] text-muted-foreground hover:text-foreground hover:bg-muted/50 w-full transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to App
+            {t('admin.backToApp')}
           </button>
         </div>
       </aside>

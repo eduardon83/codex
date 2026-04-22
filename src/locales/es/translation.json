@@ -2,7 +2,10 @@
   "app": {
     "name": "Bibliotheca",
     "tagline": "Tu catálogo personal de libros",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "accountSuspended": "Cuenta suspendida",
+    "accountSuspendedDesc": "Tu cuenta ha sido suspendida. Contacta con soporte para más información.",
+    "underageBlocked": "Lo sentimos, Folium es para mayores de 12 años."
   },
   "nav": {
     "library": "Biblioteca",
@@ -27,7 +30,7 @@
     "googleSignIn": "Continuar con Google"
   },
   "profileSetup": {
-    "welcome": "Bienvenido a Bibliotheca",
+    "welcome": "Bienvenido a Folium",
     "tellUs": "Cuéntanos un poco sobre ti",
     "firstName": "Nombre",
     "lastName": "Apellido",
@@ -35,7 +38,37 @@
     "locationPlaceholder": "Ubicación (ej: Madrid, España)",
     "bioPlaceholder": "Una breve bio sobre ti y tus hábitos de lectura...",
     "saving": "Guardando...",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "welcomeFolium": "Bienvenido a Folium",
+    "back": "Volver",
+    "dateOfBirth": "Fecha de nacimiento",
+    "underageTitle": "Lo sentimos, Folium es para mayores de 12 años.",
+    "underageSubtitle": "¡Vuelve cuando cumplas 12 años!",
+    "parentalIntro": "Como tienes menos de 18 años, necesitamos el consentimiento de tu padre, madre o tutor.",
+    "parentEmail": "Email del padre, madre o tutor",
+    "confirmAge": "Confirmo que tengo entre 12 y 17 años.",
+    "confirmConsentEmail": "Mi padre, madre o tutor recibirá un email para autorizar mi cuenta.",
+    "sending": "Enviando…",
+    "sendConsent": "Enviar solicitud de consentimiento",
+    "yourSchool": "Tu escuela",
+    "district": "Distrito",
+    "selectDistrict": "Selecciona distrito…",
+    "school": "Escuela",
+    "searchSchool": "Buscar escuela…",
+    "selectDistrictFirst": "Selecciona primero el distrito",
+    "noResults": "Sin resultados.",
+    "chooseTheme": "Elige tu tema",
+    "finishing": "Finalizando…",
+    "enterFolium": "Entrar en Folium",
+    "usernameChecking": "Comprobando...",
+    "usernameAvailable": "Nombre de usuario disponible",
+    "usernameTaken": "Este nombre de usuario ya está en uso. Prueba otro.",
+    "usernameInvalid": "El nombre de usuario debe tener al menos 3 caracteres y solo puede contener letras, números, _ y .",
+    "usernameCheckError": "No se pudo comprobar el nombre de usuario. Inténtalo de nuevo.",
+    "saveError": "No se pudo guardar el perfil.",
+    "requiredFields": "Rellena todos los campos.",
+    "consentRequired": "Introduce el email y acepta las condiciones.",
+    "schoolRequired": "Selecciona distrito y escuela."
   },
   "profile": {
     "title": "Perfil",
@@ -97,9 +130,34 @@
     "legendLoan": "Préstamo",
     "legendBorrow": "Devolución",
     "legendCard": "Carné",
-    "type": { "loan": "Préstamo", "borrow": "Devolución", "card": "Carné" },
-    "month": { "jan": "Enero", "feb": "Febrero", "mar": "Marzo", "apr": "Abril", "may": "Mayo", "jun": "Junio", "jul": "Julio", "aug": "Agosto", "sep": "Septiembre", "oct": "Octubre", "nov": "Noviembre", "dec": "Diciembre" },
-    "dow": { "sun": "Dom", "mon": "Lun", "tue": "Mar", "wed": "Mié", "thu": "Jue", "fri": "Vie", "sat": "Sáb" }
+    "type": {
+      "loan": "Préstamo",
+      "borrow": "Devolución",
+      "card": "Carné"
+    },
+    "month": {
+      "jan": "Enero",
+      "feb": "Febrero",
+      "mar": "Marzo",
+      "apr": "Abril",
+      "may": "Mayo",
+      "jun": "Junio",
+      "jul": "Julio",
+      "aug": "Agosto",
+      "sep": "Septiembre",
+      "oct": "Octubre",
+      "nov": "Noviembre",
+      "dec": "Diciembre"
+    },
+    "dow": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    }
   },
   "library": {
     "books": "libros",
@@ -382,32 +440,106 @@
     "close": "Cerrar",
     "notVisibleHint": "Este elemento no está visible ahora mismo.",
     "library": {
-      "tabs": { "title": "Tus bibliotecas", "desc": "Cambia entre tus distintas bibliotecas. Cada una guarda sus propios libros." },
-      "search": { "title": "Buscar", "desc": "Filtra rápidamente la biblioteca actual por título o autor." },
-      "filter": { "title": "Filtros", "desc": "Filtra por género, formato o estado de lectura, y elige cómo ordenar." },
-      "add": { "title": "Añadir libro", "desc": "Toca para añadir un libro nuevo por ISBN, foto o manualmente." },
-      "book": { "title": "Detalles del libro", "desc": "Toca un libro para ver detalles, editar, prestar o actualizar el estado de lectura." }
+      "tabs": {
+        "title": "Tus bibliotecas",
+        "desc": "Cambia entre tus distintas bibliotecas. Cada una guarda sus propios libros."
+      },
+      "search": {
+        "title": "Buscar",
+        "desc": "Filtra rápidamente la biblioteca actual por título o autor."
+      },
+      "filter": {
+        "title": "Filtros",
+        "desc": "Filtra por género, formato o estado de lectura, y elige cómo ordenar."
+      },
+      "add": {
+        "title": "Añadir libro",
+        "desc": "Toca para añadir un libro nuevo por ISBN, foto o manualmente."
+      },
+      "book": {
+        "title": "Detalles del libro",
+        "desc": "Toca un libro para ver detalles, editar, prestar o actualizar el estado de lectura."
+      }
     },
     "addBook": {
-      "mode": { "title": "ISBN o manual", "desc": "Busca por ISBN para autocompletar, o cambia a entrada manual abajo." },
-      "fields": { "title": "Campos autocompletados", "desc": "Cuando se encuentra, los datos se rellenan. Puedes editar todo antes de guardar." },
-      "tags": { "title": "Etiquetas", "desc": "Añade hasta 5 etiquetas personales para encontrar el libro más tarde." },
-      "save": { "title": "Guardar", "desc": "Guarda el libro en la biblioteca elegida y actualiza tu historial de lectura." }
+      "mode": {
+        "title": "ISBN o manual",
+        "desc": "Busca por ISBN para autocompletar, o cambia a entrada manual abajo."
+      },
+      "fields": {
+        "title": "Campos autocompletados",
+        "desc": "Cuando se encuentra, los datos se rellenan. Puedes editar todo antes de guardar."
+      },
+      "tags": {
+        "title": "Etiquetas",
+        "desc": "Añade hasta 5 etiquetas personales para encontrar el libro más tarde."
+      },
+      "save": {
+        "title": "Guardar",
+        "desc": "Guarda el libro en la biblioteca elegida y actualiza tu historial de lectura."
+      }
     },
     "profile": {
-      "stats": { "title": "Tus estadísticas", "desc": "Un vistazo a cuántos libros tienes y en cuántas bibliotecas." },
-      "reading": { "title": "Lista de lectura", "desc": "Tu historial completo: libros leídos, leyendo o por leer." },
-      "favourites": { "title": "Estadísticas detalladas", "desc": "Géneros, nota media, libros prestados y más — todo en tiempo real." },
-      "theme": { "title": "Tema", "desc": "Elige el aspecto que prefieras. Cada tema cambia también el árbol de fondo." }
+      "stats": {
+        "title": "Tus estadísticas",
+        "desc": "Un vistazo a cuántos libros tienes y en cuántas bibliotecas."
+      },
+      "reading": {
+        "title": "Lista de lectura",
+        "desc": "Tu historial completo: libros leídos, leyendo o por leer."
+      },
+      "favourites": {
+        "title": "Estadísticas detalladas",
+        "desc": "Géneros, nota media, libros prestados y más — todo en tiempo real."
+      },
+      "theme": {
+        "title": "Tema",
+        "desc": "Elige el aspecto que prefieras. Cada tema cambia también el árbol de fondo."
+      }
     },
     "discover": {
-      "tabs": { "title": "Tres secciones", "desc": "Estanterías son bibliotecas públicas de personas; Bibliotecas son públicas cercanas; Listas de lectura son listas curadas." },
-      "distance": { "title": "Radio de búsqueda", "desc": "Elige la distancia para buscar bibliotecas públicas: 5, 15 o 50 km." },
-      "save": { "title": "Guardar una estantería", "desc": "Toca el corazón para guardar una estantería y volver a ella cuando quieras." }
+      "tabs": {
+        "title": "Tres secciones",
+        "desc": "Estanterías son bibliotecas públicas de personas; Bibliotecas son públicas cercanas; Listas de lectura son listas curadas."
+      },
+      "distance": {
+        "title": "Radio de búsqueda",
+        "desc": "Elige la distancia para buscar bibliotecas públicas: 5, 15 o 50 km."
+      },
+      "save": {
+        "title": "Guardar una estantería",
+        "desc": "Toca el corazón para guardar una estantería y volver a ella cuando quieras."
+      }
     },
     "wishlist": {
-      "add": { "title": "Añadir libro", "desc": "Añade por ISBN (manual o escaneo), o escribiendo título, autor e ISBN manualmente." },
-      "share": { "title": "Compartir la lista", "desc": "Envía tu lista de deseos a amigos y familia desde el menú de compartir del dispositivo." }
+      "add": {
+        "title": "Añadir libro",
+        "desc": "Añade por ISBN (manual o escaneo), o escribiendo título, autor e ISBN manualmente."
+      },
+      "share": {
+        "title": "Compartir la lista",
+        "desc": "Envía tu lista de deseos a amigos y familia desde el menú de compartir del dispositivo."
+      }
     }
+  },
+  "admin": {
+    "dashboard": "Panel",
+    "users": "Usuarios",
+    "content": "Contenido",
+    "schools": "Escuelas",
+    "backups": "Backups",
+    "export": "Exportar",
+    "auditLog": "Registro de auditoría",
+    "backToApp": "Volver a la app",
+    "admin": "Admin",
+    "settingUpSecurity": "Configurando seguridad…",
+    "setup2fa": "Configurar autenticación de dos factores",
+    "twoFactor": "Autenticación de dos factores",
+    "scanQr": "Escanea este código QR con Google Authenticator o Authy",
+    "enterCode": "Introduce el código de 6 dígitos de tu app autenticadora",
+    "invalidCode": "Código inválido. Inténtalo de nuevo.",
+    "verify": "Verificar",
+    "setupFailed": "No se pudo configurar 2FA",
+    "qrAlt": "Código QR para configurar 2FA"
   }
 }

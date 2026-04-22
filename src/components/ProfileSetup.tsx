@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,7 @@ function calculateAge(dob: string): number {
 }
 
 export default function ProfileSetup() {
+  const { t } = useTranslation();
   const { user, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
   const [step, setStep] = useState<Step>('basics');
@@ -70,7 +72,7 @@ export default function ProfileSetup() {
 
   const showUsernameTaken = () => {
     setUsernameStatus('error');
-    setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+    setUsernameMessage(t('profileSetup.usernameTaken'));
     setStep('basics');
     window.setTimeout(() => {
       usernameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -89,7 +91,7 @@ export default function ProfileSetup() {
       showUsernameTaken();
       return true;
     }
-    toast.error((error as { message?: string })?.message || 'Não foi possível guardar o perfil.');
+    toast.error((error as { message?: string })?.message || t('profileSetup.saveError'));
     return true;
   };
 
@@ -103,13 +105,13 @@ export default function ProfileSetup() {
 
     if (!/^[a-z0-9_.]{3,}$/.test(trimmed)) {
       setUsernameStatus('error');
-      setUsernameMessage('O nome de utilizador deve ter pelo menos 3 caracteres e só pode conter letras, números, _ e .');
+      setUsernameMessage(t('profileSetup.usernameInvalid'));
       return;
     }
 
     setUsernameStatus('checking');
-    setUsernameMessage('A verificar...');
-    const t = window.setTimeout(async () => {
+    setUsernameMessage(t('profileSetup.usernameChecking'));
+    const debounceId = window.setTimeout(async () => {
       const { data, error } = await supabase
         .from('profiles')
         .select('user_id')
@@ -118,21 +120,21 @@ export default function ProfileSetup() {
 
       if (error) {
         setUsernameStatus('error');
-        setUsernameMessage('Não foi possível verificar o nome de utilizador. Tenta novamente.');
+        setUsernameMessage(t('profileSetup.usernameCheckError'));
         return;
       }
 
       if (data && data.user_id !== user?.id) {
         setUsernameStatus('error');
-        setUsernameMessage('Este nome de utilizador já está a ser utilizado. Tenta outro.');
+        setUsernameMessage(t('profileSetup.usernameTaken'));
         return;
       }
 
       setUsernameStatus('available');
-      setUsernameMessage('Nome de utilizador disponível');
+      setUsernameMessage(t('profileSetup.usernameAvailable'));
     }, 600);
 
-    return () => clearTimeout(t);
+    return () => clearTimeout(debounceId);
   }, [username, user?.id]);
 
   // Load districts when reaching school step
@@ -170,7 +172,7 @@ export default function ProfileSetup() {
   const submitBasics = (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName.trim() || !username.trim() || !dob) {
-      toast.error('Preenche todos os campos.');
+      toast.error(t('profileSetup.requiredFields'));
       return;
     }
     if (usernameStatus !== 'available') {
@@ -186,7 +188,7 @@ export default function ProfileSetup() {
   const submitConsent = async () => {
     if (!user) return;
     if (!parentEmail.trim() || !consentAge || !consentTerms) {
-      toast.error('Preenche o email e aceita as condições.');
+      toast.error(t('profileSetup.consentRequired'));
       return;
     }
     setSaving(true);
@@ -222,7 +224,7 @@ export default function ProfileSetup() {
 
   // ---- Step 4 → next ----
   const submitSchool = async () => {
-    if (!user || !districtId || !schoolId) { toast.error('Selecciona distrito e escola.'); return; }
+    if (!user || !districtId || !schoolId) { toast.error(t('profileSetup.schoolRequired')); return; }
     setSaving(true);
 
     let resolvedSchoolId = schoolId;
@@ -285,12 +287,12 @@ export default function ProfileSetup() {
     <div className="flex flex-col items-center mb-6">
       {onBack && (
         <button onClick={onBack} className="self-start text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2">
-          <ArrowLeft className="w-3 h-3" /> Voltar
+          <ArrowLeft className="w-3 h-3" /> {t('profileSetup.back')}
         </button>
       )}
       <img src={logo} alt="Folium" className="w-40 mb-4" />
-      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">Bem-vindo ao Folium</h1>
-      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">Conta-nos um pouco sobre ti</p>
+      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeFolium')}</h1>
+      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">{t('profileSetup.tellUs')}</p>
     </div>
   );
 
@@ -302,12 +304,12 @@ export default function ProfileSetup() {
         <div className="w-full max-w-sm text-center">
           <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
           <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-3">
-            Desculpa, o Folium é para maiores de 12 anos.
+            {t('profileSetup.underageTitle')}
           </h1>
           <p className="text-sm text-muted-foreground mb-6">
-            Volta a visitar-nos quando fizeres 12 anos!
+            {t('profileSetup.underageSubtitle')}
           </p>
-          <Button onClick={signOut} variant="outline" className="w-full h-11">Sair</Button>
+          <Button onClick={signOut} variant="outline" className="w-full h-11">{t('profile.signOut')}</Button>
         </div>
       </div>
     );
@@ -320,23 +322,23 @@ export default function ProfileSetup() {
           <Header onBack={() => setStep('basics')} />
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground font-['Josefin_Sans']">
-              Como tens menos de 18 anos, precisamos do consentimento do teu encarregado de educação.
+              {t('profileSetup.parentalIntro')}
             </p>
             <div className="space-y-1">
-              <Label className="text-xs">Email do encarregado de educação</Label>
+              <Label className="text-xs">{t('profileSetup.parentEmail')}</Label>
               <Input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)}
                 placeholder="email@exemplo.pt" className="h-11 text-sm" />
             </div>
             <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
               <Checkbox checked={consentAge} onCheckedChange={v => setConsentAge(!!v)} className="mt-0.5" />
-              <span>Confirmo que tenho entre 12 e 17 anos.</span>
+              <span>{t('profileSetup.confirmAge')}</span>
             </label>
             <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
               <Checkbox checked={consentTerms} onCheckedChange={v => setConsentTerms(!!v)} className="mt-0.5" />
-              <span>O meu encarregado de educação irá receber um email para autorizar a minha conta.</span>
+              <span>{t('profileSetup.confirmConsentEmail')}</span>
             </label>
             <Button onClick={submitConsent} disabled={saving} className="w-full h-11">
-              {saving ? 'A enviar…' : 'Enviar pedido de consentimento'}
+              {saving ? t('profileSetup.sending') : t('profileSetup.sendConsent')}
             </Button>
           </div>
         </div>
@@ -350,22 +352,22 @@ export default function ProfileSetup() {
         <div className="w-full max-w-sm">
           <Header onBack={() => setStep('basics')} />
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">A tua escola</p>
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('profileSetup.yourSchool')}</p>
             <div className="space-y-1">
-              <Label className="text-xs">Distrito</Label>
+              <Label className="text-xs">{t('profileSetup.district')}</Label>
               <Select value={districtId} onValueChange={v => { setDistrictId(v); setSchoolId(''); setSchoolQuery(''); }}>
-                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder="Selecciona distrito…" /></SelectTrigger>
+                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder={t('profileSetup.selectDistrict')} /></SelectTrigger>
                 <SelectContent>
                   {districts.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">Escola</Label>
+              <Label className="text-xs">{t('profileSetup.school')}</Label>
               <div className="relative">
                 <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <Input value={schoolQuery} onChange={e => { setSchoolQuery(e.target.value); setSchoolId(''); }}
-                  placeholder={districtId ? 'Procurar escola…' : 'Selecciona primeiro o distrito'}
+                  placeholder={districtId ? t('profileSetup.searchSchool') : t('profileSetup.selectDistrictFirst')}
                   disabled={!districtId} className="h-11 text-sm pl-7" />
               </div>
               {districtId && (
@@ -373,7 +375,7 @@ export default function ProfileSetup() {
                   {searching ? (
                     <div className="flex justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
                   ) : schoolResults.length === 0 ? (
-                    <p className="text-xs text-muted-foreground text-center py-3">Sem resultados.</p>
+                    <p className="text-xs text-muted-foreground text-center py-3">{t('profileSetup.noResults')}</p>
                   ) : schoolResults.map(s => (
                     <button key={s.id} type="button" onClick={() => { setSchoolId(s.id); setSchoolQuery(s.name); }}
                       className={`w-full text-left px-3 py-2 text-sm hover:bg-muted/50 border-b border-border last:border-0 ${schoolId === s.id ? 'bg-muted/40' : ''}`}>
@@ -385,7 +387,7 @@ export default function ProfileSetup() {
               )}
             </div>
             <Button onClick={submitSchool} disabled={saving || !districtId || !schoolId} className="w-full h-11">
-              {saving ? 'A guardar…' : 'Continuar'}
+              {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
             </Button>
           </div>
         </div>
@@ -398,7 +400,7 @@ export default function ProfileSetup() {
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md">
           <Header />
-          <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">Escolhe o teu tema</p>
+          <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
           <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
             {THEMES.map(th => {
               const isSelected = themeId === th.id;
@@ -421,7 +423,7 @@ export default function ProfileSetup() {
             })}
           </div>
           <Button onClick={finalize} disabled={saving} className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90">
-            {saving ? 'A finalizar…' : 'Entrar no Folium'}
+            {saving ? t('profileSetup.finishing') : t('profileSetup.enterFolium')}
           </Button>
         </div>
       </div>
@@ -435,11 +437,11 @@ export default function ProfileSetup() {
         <Header />
         <form onSubmit={submitBasics} className="space-y-3">
           <div className="flex gap-2">
-            <Input placeholder="Nome" value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
-            <Input placeholder="Apelido" value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
+            <Input placeholder={t('profileSetup.firstName')} value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
+            <Input placeholder={t('profileSetup.lastName')} value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
           </div>
           <div className="space-y-1">
-            <Input ref={usernameInputRef} placeholder="@utilizador" value={username}
+            <Input ref={usernameInputRef} placeholder={t('profileSetup.username')} value={username}
               onChange={e => setUsername(e.target.value.toLowerCase())}
               required className="h-11 text-sm" />
             {usernameMessage && (
@@ -454,11 +456,11 @@ export default function ProfileSetup() {
             )}
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-muted-foreground">Data de nascimento</Label>
+            <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
             <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
               max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
           </div>
-          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">Continuar</Button>
+          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">{t('profileSetup.continue')}</Button>
         </form>
       </div>
     </div>
