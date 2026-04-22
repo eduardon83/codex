@@ -17,7 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { LogOut, Check, User, BookOpen, CalendarDays, History } from 'lucide-react';
+import { LogOut, Check, BookOpen, CalendarDays, History } from 'lucide-react';
 import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
