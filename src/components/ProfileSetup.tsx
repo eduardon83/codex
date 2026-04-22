@@ -337,6 +337,11 @@ export default function ProfileSetup() {
     await refreshProfile();
   };
 
+  const continueFromAvatar = async () => {
+    if (!profile?.avatar_url) await saveSetupAvatar(avatarId);
+    setStep('theme');
+  };
+
   // ---- Step 5 → finalize ----
   const finalize = async () => {
     if (!user) return;
@@ -582,7 +587,7 @@ export default function ProfileSetup() {
             <Button type="button" variant="outline" onClick={() => setAvatarPickerOpen(true)} className="w-full h-11">
               {t('avatars.choose')}
             </Button>
-            <Button onClick={() => setStep('theme')} className="w-full h-11">
+            <Button onClick={continueFromAvatar} disabled={saving} className="w-full h-11">
               {t('profileSetup.continue')}
             </Button>
           </div>
