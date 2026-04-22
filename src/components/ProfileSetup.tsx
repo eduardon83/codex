@@ -13,7 +13,9 @@ import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle, Check } from 'lucide
 import { toast } from 'sonner';
 import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
-import { applyTheme, THEMES } from '@/hooks/useTheme';
+import foliumLogoGold from '@/assets/folium-logo-gold.png';
+import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
@@ -33,6 +35,7 @@ function calculateAge(dob: string): number {
 
 export default function ProfileSetup() {
   const { user, refreshProfile, signOut } = useAuth();
+  const { currentTheme } = useTheme();
   const [step, setStep] = useState<Step>('basics');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
@@ -59,8 +62,9 @@ export default function ProfileSetup() {
   const [searching, setSearching] = useState(false);
 
   // Step 5: theme
-  const [themeId, setThemeId] = useState('claro');
+  const [themeId, setThemeId] = useState(currentTheme.id);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
+  const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
   const age = useMemo(() => calculateAge(dob), [dob]);
 
@@ -284,7 +288,7 @@ export default function ProfileSetup() {
           <ArrowLeft className="w-3 h-3" /> Voltar
         </button>
       )}
-      <img src={foliumLogo} alt="Folium" className="w-40 mb-4" />
+      <img src={logo} alt="Folium" className="w-40 mb-4" />
       <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">Bem-vindo ao Folium</h1>
       <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">Conta-nos um pouco sobre ti</p>
     </div>
@@ -296,7 +300,7 @@ export default function ProfileSetup() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
-          <img src={foliumLogo} alt="Folium" className="w-40 mx-auto mb-6" />
+          <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
           <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-3">
             Desculpa, o Folium é para maiores de 12 anos.
           </h1>
