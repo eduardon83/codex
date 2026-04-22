@@ -352,22 +352,22 @@ export default function ProfileSetup() {
         <div className="w-full max-w-sm">
           <Header onBack={() => setStep('basics')} />
           <div className="space-y-4">
-            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">A tua escola</p>
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('profileSetup.yourSchool')}</p>
             <div className="space-y-1">
-              <Label className="text-xs">Distrito</Label>
+              <Label className="text-xs">{t('profileSetup.district')}</Label>
               <Select value={districtId} onValueChange={v => { setDistrictId(v); setSchoolId(''); setSchoolQuery(''); }}>
-                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder="Selecciona distrito…" /></SelectTrigger>
+                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder={t('profileSetup.selectDistrict')} /></SelectTrigger>
                 <SelectContent>
                   {districts.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1">
-              <Label className="text-xs">Escola</Label>
+              <Label className="text-xs">{t('profileSetup.school')}</Label>
               <div className="relative">
                 <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <Input value={schoolQuery} onChange={e => { setSchoolQuery(e.target.value); setSchoolId(''); }}
-                  placeholder={districtId ? 'Procurar escola…' : 'Selecciona primeiro o distrito'}
+                  placeholder={districtId ? t('profileSetup.searchSchool') : t('profileSetup.selectDistrictFirst')}
                   disabled={!districtId} className="h-11 text-sm pl-7" />
               </div>
               {districtId && (
@@ -375,7 +375,7 @@ export default function ProfileSetup() {
                   {searching ? (
                     <div className="flex justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
                   ) : schoolResults.length === 0 ? (
-                    <p className="text-xs text-muted-foreground text-center py-3">Sem resultados.</p>
+                    <p className="text-xs text-muted-foreground text-center py-3">{t('profileSetup.noResults')}</p>
                   ) : schoolResults.map(s => (
                     <button key={s.id} type="button" onClick={() => { setSchoolId(s.id); setSchoolQuery(s.name); }}
                       className={`w-full text-left px-3 py-2 text-sm hover:bg-muted/50 border-b border-border last:border-0 ${schoolId === s.id ? 'bg-muted/40' : ''}`}>
@@ -387,7 +387,7 @@ export default function ProfileSetup() {
               )}
             </div>
             <Button onClick={submitSchool} disabled={saving || !districtId || !schoolId} className="w-full h-11">
-              {saving ? 'A guardar…' : 'Continuar'}
+              {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
             </Button>
           </div>
         </div>
@@ -400,7 +400,7 @@ export default function ProfileSetup() {
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md">
           <Header />
-          <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">Escolhe o teu tema</p>
+          <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
           <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
             {THEMES.map(th => {
               const isSelected = themeId === th.id;
@@ -423,7 +423,7 @@ export default function ProfileSetup() {
             })}
           </div>
           <Button onClick={finalize} disabled={saving} className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90">
-            {saving ? 'A finalizar…' : 'Entrar no Folium'}
+            {saving ? t('profileSetup.finishing') : t('profileSetup.enterFolium')}
           </Button>
         </div>
       </div>
@@ -437,11 +437,11 @@ export default function ProfileSetup() {
         <Header />
         <form onSubmit={submitBasics} className="space-y-3">
           <div className="flex gap-2">
-            <Input placeholder="Nome" value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
-            <Input placeholder="Apelido" value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
+            <Input placeholder={t('profileSetup.firstName')} value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
+            <Input placeholder={t('profileSetup.lastName')} value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
           </div>
           <div className="space-y-1">
-            <Input ref={usernameInputRef} placeholder="@utilizador" value={username}
+            <Input ref={usernameInputRef} placeholder={t('profileSetup.username')} value={username}
               onChange={e => setUsername(e.target.value.toLowerCase())}
               required className="h-11 text-sm" />
             {usernameMessage && (
@@ -456,11 +456,11 @@ export default function ProfileSetup() {
             )}
           </div>
           <div className="space-y-1">
-            <Label className="text-xs text-muted-foreground">Data de nascimento</Label>
+            <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
             <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
               max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
           </div>
-          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">Continuar</Button>
+          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">{t('profileSetup.continue')}</Button>
         </form>
       </div>
     </div>
