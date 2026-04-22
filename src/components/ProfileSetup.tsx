@@ -287,12 +287,12 @@ export default function ProfileSetup() {
     <div className="flex flex-col items-center mb-6">
       {onBack && (
         <button onClick={onBack} className="self-start text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2">
-          <ArrowLeft className="w-3 h-3" /> Voltar
+          <ArrowLeft className="w-3 h-3" /> {t('profileSetup.back')}
         </button>
       )}
       <img src={logo} alt="Folium" className="w-40 mb-4" />
-      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">Bem-vindo ao Folium</h1>
-      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">Conta-nos um pouco sobre ti</p>
+      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeFolium')}</h1>
+      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">{t('profileSetup.tellUs')}</p>
     </div>
   );
 
@@ -304,12 +304,12 @@ export default function ProfileSetup() {
         <div className="w-full max-w-sm text-center">
           <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
           <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-3">
-            Desculpa, o Folium é para maiores de 12 anos.
+            {t('profileSetup.underageTitle')}
           </h1>
           <p className="text-sm text-muted-foreground mb-6">
-            Volta a visitar-nos quando fizeres 12 anos!
+            {t('profileSetup.underageSubtitle')}
           </p>
-          <Button onClick={signOut} variant="outline" className="w-full h-11">Sair</Button>
+          <Button onClick={signOut} variant="outline" className="w-full h-11">{t('profile.signOut')}</Button>
         </div>
       </div>
     );
@@ -322,23 +322,23 @@ export default function ProfileSetup() {
           <Header onBack={() => setStep('basics')} />
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground font-['Josefin_Sans']">
-              Como tens menos de 18 anos, precisamos do consentimento do teu encarregado de educação.
+              {t('profileSetup.parentalIntro')}
             </p>
             <div className="space-y-1">
-              <Label className="text-xs">Email do encarregado de educação</Label>
+              <Label className="text-xs">{t('profileSetup.parentEmail')}</Label>
               <Input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)}
                 placeholder="email@exemplo.pt" className="h-11 text-sm" />
             </div>
             <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
               <Checkbox checked={consentAge} onCheckedChange={v => setConsentAge(!!v)} className="mt-0.5" />
-              <span>Confirmo que tenho entre 12 e 17 anos.</span>
+              <span>{t('profileSetup.confirmAge')}</span>
             </label>
             <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
               <Checkbox checked={consentTerms} onCheckedChange={v => setConsentTerms(!!v)} className="mt-0.5" />
-              <span>O meu encarregado de educação irá receber um email para autorizar a minha conta.</span>
+              <span>{t('profileSetup.confirmConsentEmail')}</span>
             </label>
             <Button onClick={submitConsent} disabled={saving} className="w-full h-11">
-              {saving ? 'A enviar…' : 'Enviar pedido de consentimento'}
+              {saving ? t('profileSetup.sending') : t('profileSetup.sendConsent')}
             </Button>
           </div>
         </div>
