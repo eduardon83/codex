@@ -11,7 +11,7 @@
     "library": "Bibliothèque",
     "addBook": "Ajouter",
     "profile": "Profil",
-    "find": "Chercher",
+    "find": "Rechercher",
     "wishlist": "Envies"
   },
   "auth": {
@@ -541,5 +541,34 @@
     "verify": "Vérifier",
     "setupFailed": "Impossible de configurer 2FA",
     "qrAlt": "QR Code pour configurer 2FA"
+  },
+  "search": {
+    "title": "Rechercher",
+    "tabs": {
+      "books": "Livres",
+      "libraries": "Bibliothèques",
+      "readingLists": "Listes de lecture"
+    },
+    "schoolPrompt": "Définissez votre école dans le profil pour voir les livres et listes de votre école et district.",
+    "goToProfile": "Aller au profil",
+    "books": {
+      "placeholder": "Titre, auteur ou ISBN…",
+      "empty": "Aucun livre disponible dans votre district.",
+      "userFallback": "utilisateur",
+      "returnRate": "{{rate}}% de retours à temps",
+      "requestLoan": "Demander un prêt"
+    },
+    "libraries": {
+      "libraryFallback": "Bibliothèque"
+    },
+    "readingLists": {
+      "empty": "Aucune liste de lecture publiée disponible pour vous.",
+      "official": "Officiel",
+      "creatorFallback": "Plan National de Lecture",
+      "bookCount": "{{count}} livres",
+      "viewList": "Voir la liste",
+      "subscribe": "S’abonner",
+      "subscribed": "Abonné"
+    }
   }
 }

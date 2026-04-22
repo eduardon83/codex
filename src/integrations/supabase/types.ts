@@ -877,25 +877,81 @@ export type Database = {
           },
         ]
       }
-      reading_lists: {
+      reading_list_subscriptions: {
         Row: {
           created_at: string
           id: string
-          name: string
-          updated_at: string
+          reading_list_id: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          name?: string
-          updated_at?: string
+          reading_list_id: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          reading_list_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_list_subscriptions_reading_list_id_fkey"
+            columns: ["reading_list_id"]
+            isOneToOne: false
+            referencedRelation: "reading_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reading_lists: {
+        Row: {
+          approval_status: string
+          created_at: string
+          creator_name: string | null
+          creator_role: string | null
+          district_id: string | null
+          education_level: string | null
+          id: string
+          is_official: boolean
+          name: string
+          school_id: string | null
+          scope: string
+          subject: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approval_status?: string
+          created_at?: string
+          creator_name?: string | null
+          creator_role?: string | null
+          district_id?: string | null
+          education_level?: string | null
+          id?: string
+          is_official?: boolean
           name?: string
+          school_id?: string | null
+          scope?: string
+          subject?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          approval_status?: string
+          created_at?: string
+          creator_name?: string | null
+          creator_role?: string | null
+          district_id?: string | null
+          education_level?: string | null
+          id?: string
+          is_official?: boolean
+          name?: string
+          school_id?: string | null
+          scope?: string
+          subject?: string | null
           updated_at?: string
           user_id?: string
         }
