@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -17,8 +18,9 @@ import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
+import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
 
-type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
 interface District { id: string; name: string; }
@@ -36,9 +38,9 @@ function calculateAge(dob: string): number {
 
 export default function ProfileSetup() {
   const { t } = useTranslation();
-  const { user, refreshProfile, signOut } = useAuth();
+  const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
-  const [step, setStep] = useState<Step>('basics');
+  const [step, setStep] = useState<Step>('age_gate');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,6 +51,14 @@ export default function ProfileSetup() {
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
   const [dob, setDob] = useState('');
+
+  // Legal acceptance
+  const [termsDocument, setTermsDocument] = useState<LegalDocumentRecord | null>(null);
+  const [privacyDocument, setPrivacyDocument] = useState<LegalDocumentRecord | null>(null);
+  const [loadingLegal, setLoadingLegal] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   // Step 3a: parental consent
   const [parentEmail, setParentEmail] = useState('');
