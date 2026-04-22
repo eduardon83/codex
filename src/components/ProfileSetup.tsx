@@ -9,11 +9,11 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { useEffect } from 'react';
-import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle } from 'lucide-react';
+import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
-import { THEMES } from '@/hooks/useTheme';
+import { applyTheme, THEMES } from '@/hooks/useTheme';
 
 type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
@@ -60,6 +60,7 @@ export default function ProfileSetup() {
 
   // Step 5: theme
   const [themeId, setThemeId] = useState('claro');
+  const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
 
   const age = useMemo(() => calculateAge(dob), [dob]);
 
@@ -267,6 +268,13 @@ export default function ProfileSetup() {
     setSaving(false);
     if (error) { toast.error(error.message); return; }
     await refreshProfile();
+  };
+
+  const previewTheme = (id: string) => {
+    const theme = THEMES.find(th => th.id === id);
+    if (!theme) return;
+    setThemeId(id);
+    applyTheme(theme);
   };
 
   const Header = ({ onBack }: { onBack?: () => void }) => (
