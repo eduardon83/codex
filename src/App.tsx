@@ -44,6 +44,7 @@ const App = () => {
                     <Route path="/admin/*" element={<Admin />} />
                     <Route path="/lista/:libraryId" element={<PublicList />} />
                     <Route path="/parental-consent" element={<ParentalConsent />} />
+                    <Route path="/consent" element={<ParentalConsent />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </BrowserRouter>

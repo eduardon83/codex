@@ -610,5 +610,16 @@
     "acceptedVersion": "Versión aceptada",
     "acceptedOn": "Aceptado el {{date}}",
     "documentPreparing": "Documento en preparación."
+  },
+  "consent": {
+    "title": "Autorizar cuenta Folium",
+    "intro": "{{name}} ({{age}} años) quiere usar Folium.",
+    "pointLibrary": "Organizar una biblioteca personal de libros.",
+    "pointLoans": "Pedir y prestar libros entre compañeros de escuela.",
+    "pointSchool": "Ver libros y listas vinculados a su escuela y distrito.",
+    "authorize": "Autorizar",
+    "successTitle": "Cuenta autorizada",
+    "successBody": "¡Gracias! La cuenta de {{name}} está ahora activa.",
+    "invalid": "Este enlace ya no es válido o ha caducado. Si necesitas ayuda, contacta con folium@kendirstudios.pt"
   }
 }
