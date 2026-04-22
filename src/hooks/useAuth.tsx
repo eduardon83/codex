@@ -17,6 +17,8 @@ interface Profile {
   account_status?: string;
   date_of_birth?: string | null;
   parent_email?: string | null;
+  terms_accepted_at?: string | null;
+  terms_version?: string | null;
 }
 
 interface AuthContextType {

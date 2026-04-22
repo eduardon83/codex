@@ -68,7 +68,11 @@
     "saveError": "Impossible d’enregistrer le profil.",
     "requiredFields": "Remplissez tous les champs.",
     "consentRequired": "Saisissez l’email et acceptez les conditions.",
-    "schoolRequired": "Sélectionnez un district et une école."
+    "schoolRequired": "Sélectionnez un district et une école.",
+    "termsIntro": "Avant de continuer, lisez et acceptez les documents légaux de Folium.",
+    "acceptTerms": "J’ai lu et j’accepte les Conditions d’utilisation",
+    "acceptPrivacyPrefix": "J’ai lu et j’accepte la",
+    "privacyPolicy": "Politique de confidentialité"
   },
   "profile": {
     "title": "Profil",
@@ -584,5 +588,13 @@
       "subscribe": "S’abonner",
       "subscribed": "Abonné"
     }
+  },
+  "legal": {
+    "groupTitle": "Conditions et légal",
+    "termsTitle": "Conditions d’utilisation",
+    "privacyTitle": "Politique de confidentialité",
+    "acceptedVersion": "Version acceptée",
+    "acceptedOn": "Accepté le {{date}}",
+    "documentPreparing": "Document en préparation."
   }
 }

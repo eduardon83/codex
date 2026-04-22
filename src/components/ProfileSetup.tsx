@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -17,8 +18,9 @@ import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
+import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
 
-type Step = 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
+type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
 interface District { id: string; name: string; }
@@ -36,9 +38,9 @@ function calculateAge(dob: string): number {
 
 export default function ProfileSetup() {
   const { t } = useTranslation();
-  const { user, refreshProfile, signOut } = useAuth();
+  const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
-  const [step, setStep] = useState<Step>('basics');
+  const [step, setStep] = useState<Step>('age_gate');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -49,6 +51,14 @@ export default function ProfileSetup() {
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
   const [dob, setDob] = useState('');
+
+  // Legal acceptance
+  const [termsDocument, setTermsDocument] = useState<LegalDocumentRecord | null>(null);
+  const [privacyDocument, setPrivacyDocument] = useState<LegalDocumentRecord | null>(null);
+  const [loadingLegal, setLoadingLegal] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
 
   // Step 3a: parental consent
   const [parentEmail, setParentEmail] = useState('');
@@ -97,6 +107,7 @@ export default function ProfileSetup() {
 
   useEffect(() => {
     const trimmed = username.trim();
+    if (step !== 'basics') return;
     if (!trimmed) {
       setUsernameStatus('idle');
       setUsernameMessage('');
@@ -135,7 +146,25 @@ export default function ProfileSetup() {
     }, 600);
 
     return () => clearTimeout(debounceId);
-  }, [username, user?.id]);
+  }, [step, username, user?.id]);
+
+  useEffect(() => {
+    if (step !== 'terms') return;
+    let active = true;
+    setLoadingLegal(true);
+    const language = profile?.language || 'pt';
+    Promise.all([
+      fetchCurrentLegalDocument('terms', language),
+      fetchCurrentLegalDocument('privacy', language),
+    ]).then(([terms, privacy]) => {
+      if (!active) return;
+      setTermsDocument(terms);
+      setPrivacyDocument(privacy);
+    }).finally(() => {
+      if (active) setLoadingLegal(false);
+    });
+    return () => { active = false; };
+  }, [step, profile?.language]);
 
   // Load districts when reaching school step
   useEffect(() => {
@@ -168,10 +197,33 @@ export default function ProfileSetup() {
     return () => { active = false; clearTimeout(t); };
   }, [step, districtId, schoolQuery, districts]);
 
-  // ---- Step 1 → next ----
+  const submitAgeGate = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!dob) {
+      toast.error(t('profileSetup.requiredFields'));
+      return;
+    }
+    if (age < 12) { setStep('underage_block'); return; }
+    setStep(profile?.terms_accepted_at ? 'basics' : 'terms');
+  };
+
+  const submitTerms = async () => {
+    if (!user || !acceptedTerms || !acceptedPrivacy) return;
+    setSaving(true);
+    const { error } = await supabase.from('profiles').update({
+      terms_accepted_at: new Date().toISOString(),
+      terms_version: termsDocument?.version || 'pending',
+    } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    await refreshProfile();
+    setStep('basics');
+  };
+
+  // ---- Basics → next ----
   const submitBasics = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName.trim() || !username.trim() || !dob) {
+    if (!firstName.trim() || !username.trim()) {
       toast.error(t('profileSetup.requiredFields'));
       return;
     }
@@ -179,7 +231,6 @@ export default function ProfileSetup() {
       usernameInputRef.current?.focus();
       return;
     }
-    if (age < 12) { setStep('underage_block'); return; }
     if (age < 18) { setStep('parental_consent'); return; }
     setStep('school');
   };
@@ -298,6 +349,24 @@ export default function ProfileSetup() {
 
   // ===== STEP RENDERS =====
 
+  if (step === 'age_gate') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header />
+          <form onSubmit={submitAgeGate} className="space-y-4">
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
+              <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
+                max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
+            </div>
+            <Button type="submit" className="w-full h-11">{t('profileSetup.continue')}</Button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   if (step === 'underage_block') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
@@ -310,6 +379,48 @@ export default function ProfileSetup() {
             {t('profileSetup.underageSubtitle')}
           </p>
           <Button onClick={signOut} variant="outline" className="w-full h-11">{t('profile.signOut')}</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'terms') {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+        <div className="w-full max-w-sm">
+          <Header onBack={() => setStep('age_gate')} />
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('profileSetup.termsIntro')}</p>
+            <div className="max-h-[320px] overflow-y-auto rounded-md border border-border bg-card p-3 text-sm leading-relaxed text-card-foreground whitespace-pre-wrap">
+              {loadingLegal ? t('app.loading') : (termsDocument?.content || t('legal.documentPreparing'))}
+            </div>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox checked={acceptedTerms} onCheckedChange={v => setAcceptedTerms(!!v)} className="mt-0.5" />
+              <span>{t('profileSetup.acceptTerms')}</span>
+            </label>
+            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
+              <Checkbox checked={acceptedPrivacy} onCheckedChange={v => setAcceptedPrivacy(!!v)} className="mt-0.5" />
+              <span>
+                {t('profileSetup.acceptPrivacyPrefix')}{' '}
+                <button type="button" onClick={(e) => { e.preventDefault(); setShowPrivacy(true); }} className="text-foreground underline underline-offset-2">
+                  {t('profileSetup.privacyPolicy')}
+                </button>
+              </span>
+            </label>
+            <Button onClick={submitTerms} disabled={saving || loadingLegal || !acceptedTerms || !acceptedPrivacy} className="w-full h-11">
+              {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
+            </Button>
+          </div>
+          <Dialog open={showPrivacy} onOpenChange={setShowPrivacy}>
+            <DialogContent className="bg-background border-border max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="font-serif">{t('legal.privacyTitle')}</DialogTitle>
+              </DialogHeader>
+              <div className="max-h-[60vh] overflow-y-auto rounded-md border border-border p-3 text-sm leading-relaxed whitespace-pre-wrap">
+                {privacyDocument?.content || t('legal.documentPreparing')}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     );
@@ -430,7 +541,7 @@ export default function ProfileSetup() {
     );
   }
 
-  // STEP 1: basics
+  // STEP: basics
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-sm">
@@ -454,11 +565,6 @@ export default function ProfileSetup() {
                 <span>{usernameMessage}</span>
               </p>
             )}
-          </div>
-          <div className="space-y-1">
-            <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
-            <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
-              max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
           </div>
           <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">{t('profileSetup.continue')}</Button>
         </form>

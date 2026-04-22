@@ -438,6 +438,42 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_documents: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_current: boolean
+          language: string
+          title: string | null
+          type: string
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_current?: boolean
+          language?: string
+          title?: string | null
+          type: string
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_current?: boolean
+          language?: string
+          title?: string | null
+          type?: string
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       libraries: {
         Row: {
           created_at: string
@@ -662,6 +698,8 @@ export type Database = {
           profile_completed: boolean
           school_id: string | null
           suspended: boolean
+          terms_accepted_at: string | null
+          terms_version: string | null
           theme: string
           updated_at: string
           user_id: string
@@ -690,6 +728,8 @@ export type Database = {
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
+          terms_accepted_at?: string | null
+          terms_version?: string | null
           theme?: string
           updated_at?: string
           user_id: string
@@ -718,6 +758,8 @@ export type Database = {
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
+          terms_accepted_at?: string | null
+          terms_version?: string | null
           theme?: string
           updated_at?: string
           user_id?: string

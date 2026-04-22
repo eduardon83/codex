@@ -7,6 +7,7 @@ import { uploadFileToStorage } from '@/lib/storage';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { LogOut, Check, Camera, User, BookOpen, CalendarDays, History } from 'lucide-react';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
@@ -22,6 +23,7 @@ import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
 import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
+import { fetchCurrentLegalDocument, LegalDocumentRecord, LegalDocumentType } from '@/lib/legalDocuments';
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -35,6 +37,9 @@ export default function ProfileScreen() {
   const [showReadingHistory, setShowReadingHistory] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showLoanHistory, setShowLoanHistory] = useState(false);
+  const [legalModal, setLegalModal] = useState<LegalDocumentType | null>(null);
+  const [legalDocument, setLegalDocument] = useState<LegalDocumentRecord | null>(null);
+  const [loadingLegal, setLoadingLegal] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const displayProfile = {
     first_name: editing ? form.first_name : profile?.first_name || '',
@@ -96,6 +101,15 @@ export default function ProfileScreen() {
   };
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
+
+  const openLegalDocument = async (type: LegalDocumentType) => {
+    setLegalModal(type);
+    setLegalDocument(null);
+    setLoadingLegal(true);
+    const document = await fetchCurrentLegalDocument(type, profile?.language || 'pt');
+    setLegalDocument(document);
+    setLoadingLegal(false);
+  };
 
   if (showAbout) return <AboutScreen onBack={() => setShowAbout(false)} />;
   if (showReadingHistory) return <ReadingHistoryScreen onBack={() => setShowReadingHistory(false)} />;
@@ -277,6 +291,38 @@ export default function ProfileScreen() {
           ))}
         </div>
       </div>
+
+      <div className="mt-8 border-t border-border pt-5">
+        <p className="text-sm text-muted-foreground mb-3">{t('legal.groupTitle')}</p>
+        <div className="space-y-2">
+          <Button variant="outline" className="w-full justify-start" onClick={() => openLegalDocument('terms')}>
+            {t('legal.termsTitle')}
+          </Button>
+          <Button variant="outline" className="w-full justify-start" onClick={() => openLegalDocument('privacy')}>
+            {t('legal.privacyTitle')}
+          </Button>
+          <div className="text-xs text-muted-foreground border border-border rounded-md px-3 py-2">
+            <span className="text-foreground">{t('legal.acceptedVersion')}</span>{' '}
+            {(profile as any)?.terms_version || '—'}
+            {(profile as any)?.terms_accepted_at && (
+              <span className="block mt-1">{t('legal.acceptedOn', { date: new Date((profile as any).terms_accepted_at).toLocaleDateString(profile?.language || 'pt') })}</span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <Dialog open={!!legalModal} onOpenChange={(open) => !open && setLegalModal(null)}>
+        <DialogContent className="bg-background border-border max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-serif">
+              {legalModal === 'privacy' ? t('legal.privacyTitle') : t('legal.termsTitle')}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="max-h-[60vh] overflow-y-auto rounded-md border border-border p-3 text-sm leading-relaxed whitespace-pre-wrap">
+            {loadingLegal ? t('app.loading') : (legalDocument?.content || t('legal.documentPreparing'))}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <button
         onClick={() => setShowAbout(true)}
