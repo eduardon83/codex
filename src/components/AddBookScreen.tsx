@@ -19,6 +19,7 @@ import { format } from 'date-fns';
 import GenreMultiSelect, { parseGenres, serializeGenres } from '@/components/GenreMultiSelect';
 import HelpButton from '@/components/tutorial/HelpButton';
 import BarcodeScanner from '@/components/BarcodeScanner';
+import { tFormat } from '@/lib/displayMappings';
 
 interface AddBookScreenProps {
   isWishlist?: boolean;
@@ -191,10 +192,10 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
 
   const formatOptions = [
-    { value: 'Softcover', label: t('addBook.softcover') },
-    { value: 'Hardcover', label: t('addBook.hardcover') },
-    { value: 'Ebook', label: t('addBook.ebook') },
-    { value: 'Other', label: t('addBook.other') },
+    { value: 'Softcover', label: tFormat('Softcover', t) },
+    { value: 'Hardcover', label: tFormat('Hardcover', t) },
+    { value: 'Ebook', label: tFormat('Ebook', t) },
+    { value: 'Other', label: tFormat('Other', t) },
   ];
 
   return (
