@@ -61,7 +61,7 @@ export default function Index() {
     );
   }
 
-  if (!user) return <AuthScreen />;
+  if (!user) return <Navigate to="/" replace />;
 
   // Suspended account screen
   if (profile?.suspended) {
