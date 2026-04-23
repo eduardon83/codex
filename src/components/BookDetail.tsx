@@ -98,7 +98,9 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
         if (data) setAllLibraries(data);
       });
     }
-    return () => window.dispatchEvent(new CustomEvent('folium-book-detail', { detail: { open: false, bookId } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent('folium-book-detail', { detail: { open: false, bookId } }));
+    };
   }, [bookId]);
 
   const loadBook = async () => {
