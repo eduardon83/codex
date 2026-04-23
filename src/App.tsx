@@ -11,11 +11,41 @@ import { CelebrationProvider } from "@/components/CelebrationOverlay";
 import { FoliumTutorialProvider } from "@/components/tutorial/FoliumTutorialProvider";
 import TreeBackground from "@/components/TreeBackground";
 import Index from "./pages/Index.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
 import Admin from "./pages/Admin.tsx";
 import PublicList from "./pages/PublicList.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ParentalConsent from "./pages/ParentalConsent.tsx";
 import ResetPasswordScreen from "./components/ResetPasswordScreen.tsx";
+import AuthScreen from "./components/AuthScreen.tsx";
+import { useAuth } from "@/hooks/useAuth";
+import OwlLoader from "@/components/OwlLoader";
+
+function RootRoute() {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <OwlLoader />
+      </div>
+    );
+  }
+  if (!user) return <LandingPage />;
+  return <Index />;
+}
+
+function AuthRoute() {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <OwlLoader />
+      </div>
+    );
+  }
+  if (user) return <Index />;
+  return <AuthScreen />;
+}
 
 const queryClient = new QueryClient();
 
