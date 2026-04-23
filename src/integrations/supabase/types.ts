@@ -1411,7 +1411,14 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "teacher" | "entity" | "moderator" | "user"
+      app_role:
+        | "admin"
+        | "teacher"
+        | "entity"
+        | "moderator"
+        | "user"
+        | "school_admin"
+        | "global_admin"
       reading_plan_item_status: "planned" | "reading" | "done" | "skipped"
       reading_plan_scope:
         | "personal"
@@ -1546,7 +1553,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "teacher", "entity", "moderator", "user"],
+      app_role: [
+        "admin",
+        "teacher",
+        "entity",
+        "moderator",
+        "user",
+        "school_admin",
+        "global_admin",
+      ],
       reading_plan_item_status: ["planned", "reading", "done", "skipped"],
       reading_plan_scope: [
         "personal",
