@@ -13,10 +13,11 @@ import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function AuthScreen() {
   const { t } = useTranslation();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, resetPassword } = useAuth();
   const { showToast } = useAppToast();
   const { currentTheme } = useTheme();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isRecovering, setIsRecovering] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +34,11 @@ export default function AuthScreen() {
     setMessage('');
     setLoading(true);
 
-    if (isSignUp) {
+    if (isRecovering) {
+      const { error } = await resetPassword(email);
+      if (error) { setError(error.message); showToast(t('auth.resetError')); }
+      else { setMessage(t('auth.resetEmailSent')); showToast(t('auth.resetEmailSent')); }
+    } else if (isSignUp) {
       const { error } = await signUp(email, password);
       if (error) { setError(error.message); showToast(t('auth.signInError')); }
       else { setMessage(t('auth.checkEmail')); showToast(t('auth.accountCreated')); }
@@ -74,33 +79,45 @@ export default function AuthScreen() {
             className="bg-background border-border h-11 text-sm"
             required
           />
-          <Input
-            type="password"
-            placeholder={t('auth.password')}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-background border-border h-11 text-sm"
-            required
-            minLength={6}
-          />
+          {!isRecovering && (
+            <Input
+              type="password"
+              placeholder={t('auth.password')}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="bg-background border-border h-11 text-sm"
+              required
+              minLength={6}
+            />
+          )}
 
           {error && <p className="text-destructive text-sm">{error}</p>}
           {message && <p className="text-accent text-sm">{message}</p>}
 
            <Button type="submit" className="w-full h-11" disabled={loading}>
-             {loading ? '...' : isSignUp ? t('auth.createAccount') : t('auth.signIn')}
+             {loading ? '...' : isRecovering ? t('auth.sendResetLink') : isSignUp ? t('auth.createAccount') : t('auth.signIn')}
            </Button>
 
-           <div className="relative my-2">
+           {!isSignUp && !isRecovering && (
+             <button
+               type="button"
+               onClick={() => { setIsRecovering(true); setError(''); setMessage(''); }}
+               className="text-xs text-muted-foreground hover:text-foreground w-full text-center transition-colors"
+             >
+               {t('auth.forgotPassword')}
+             </button>
+           )}
+
+           {!isRecovering && <div className="relative my-2">
              <div className="absolute inset-0 flex items-center">
                <span className="w-full border-t border-border" />
              </div>
              <div className="relative flex justify-center text-xs">
                <span className="bg-background px-2 text-muted-foreground">{t('auth.or')}</span>
              </div>
-           </div>
+           </div>}
 
-           <Button
+           {!isRecovering && <Button
              type="button"
              variant="outline"
              className="w-full h-11 gap-2"
@@ -126,14 +143,14 @@ export default function AuthScreen() {
                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
              </svg>
              {googleLoading ? '...' : t('auth.googleSignIn')}
-           </Button>
+           </Button>}
          </form>
 
         <button
-          onClick={() => { setIsSignUp(!isSignUp); setError(''); setMessage(''); }}
+          onClick={() => { setIsSignUp(isRecovering ? false : !isSignUp); setIsRecovering(false); setError(''); setMessage(''); }}
           className="mt-6 text-sm text-muted-foreground hover:text-foreground w-full text-center transition-colors"
         >
-          {isSignUp ? t('auth.alreadyHaveAccount') : t('auth.noAccount')}
+          {isRecovering ? t('auth.backToSignIn') : isSignUp ? t('auth.alreadyHaveAccount') : t('auth.noAccount')}
         </button>
 
         <button
