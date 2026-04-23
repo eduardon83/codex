@@ -37,6 +37,12 @@ export default function AuthScreen() {
     }
   }, [i18n]);
 
+  useEffect(() => {
+    const mode = searchParams.get('mode');
+    if (mode === 'signup') setIsSignUp(true);
+    else if (mode === 'login') setIsSignUp(false);
+  }, [searchParams]);
+
   const handleLanguageChange = (language: string) => {
     sessionStorage.setItem('authLanguageSelected', language);
     i18n.changeLanguage(language);
