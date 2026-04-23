@@ -10,7 +10,8 @@ import {
 } from '@/components/ui/table';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuTrigger, DropdownMenuSeparator,
+  DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuSub,
+  DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
@@ -40,9 +41,23 @@ interface AdminUser {
   book_count: number;
   library_count: number;
   last_sign_in_at: string | null;
+  roles: AppRole[];
 }
 
+type AppRole = 'admin' | 'teacher' | 'school_admin' | 'entity' | 'global_admin' | 'moderator' | 'user';
 type SortKey = 'name' | 'email' | 'created_at' | 'book_count' | 'library_count';
+
+const roleLabels: Record<AppRole, string> = {
+  admin: 'Admin',
+  teacher: 'Teacher',
+  school_admin: 'School admin',
+  entity: 'Entity',
+  global_admin: 'Global admin',
+  moderator: 'Moderator',
+  user: 'User',
+};
+
+const assignableRoles: AppRole[] = ['teacher', 'school_admin', 'entity', 'moderator', 'user', 'global_admin', 'admin'];
 
 export default function AdminUsers() {
   const { user: currentUser } = useAuth();
@@ -62,12 +77,25 @@ export default function AdminUsers() {
   const loadUsers = async () => {
     const { data, error } = await supabase.rpc('admin_get_users');
     if (!error && data) {
-      setUsers(data as unknown as AdminUser[]);
+      const baseUsers = data as unknown as AdminUser[];
+      const { data: rolesData } = await supabase
+        .from('user_roles' as any)
+        .select('user_id, role');
+      const rolesByUser = new Map<string, AppRole[]>();
+      ((rolesData as any[]) || []).forEach((row) => {
+        const roles = rolesByUser.get(row.user_id) || [];
+        roles.push(row.role as AppRole);
+        rolesByUser.set(row.user_id, roles);
+      });
+      setUsers(baseUsers.map((adminUser) => ({
+        ...adminUser,
+        roles: Array.from(new Set([...(rolesByUser.get(adminUser.user_id) || []), ...(adminUser.is_admin ? ['admin' as AppRole] : [])])),
+      })));
     }
     setLoading(false);
   };
 
-  const callAdminAction = async (action: string, userId: string, details?: string) => {
+  const callAdminAction = async (action: string, userId: string, details?: string, role?: AppRole) => {
     const { data: { session } } = await supabase.auth.getSession();
     const res = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-actions`,
@@ -77,7 +105,7 @@ export default function AdminUsers() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session?.access_token}`,
         },
-        body: JSON.stringify({ action, user_id: userId, details }),
+        body: JSON.stringify({ action, user_id: userId, role, details }),
       }
     );
     if (!res.ok) {
@@ -100,6 +128,19 @@ export default function AdminUsers() {
     setActionLoading(false);
     setConfirmAction(null);
     setBulkAction(null);
+  };
+
+  const handleRoleToggle = async (targetUser: AdminUser, role: AppRole) => {
+    const hasRole = targetUser.roles.includes(role);
+    setActionLoading(true);
+    try {
+      await callAdminAction(hasRole ? 'remove_role' : 'assign_role', targetUser.user_id, undefined, role);
+      toast.success(hasRole ? 'Role removed' : 'Role assigned', { description: `${roleLabels[role]} updated.` });
+      await loadUsers();
+    } catch (err: any) {
+      toast.error('Error', { description: err.message });
+    }
+    setActionLoading(false);
   };
 
   const handleBulk = async (action: string) => {
@@ -267,7 +308,9 @@ export default function AdminUsers() {
                 <TableCell className="text-center text-sm">{u.library_count}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1.5">
-                    {u.is_admin && <Badge variant="secondary" className="text-[10px]">Admin</Badge>}
+                    {u.roles.map((role) => (
+                      <Badge key={role} variant="secondary" className="text-[10px]">{roleLabels[role]}</Badge>
+                    ))}
                     {u.suspended && <Badge variant="destructive" className="text-[10px]">Suspended</Badge>}
                   </div>
                 </TableCell>
@@ -295,20 +338,23 @@ export default function AdminUsers() {
                           <Ban className="w-3 h-3 mr-2" /> Suspend
                         </DropdownMenuItem>
                       )}
-                      {u.is_admin ? (
-                        <DropdownMenuItem
-                          onClick={() => setConfirmAction({ action: 'demote_admin', userId: u.user_id, name: `${u.first_name} ${u.last_name}` })}
-                          disabled={u.user_id === currentUser?.id}
-                        >
-                          <Shield className="w-3 h-3 mr-2" /> Remove Admin
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem
-                          onClick={() => handleAction('promote_admin', u.user_id)}
-                        >
-                          <Shield className="w-3 h-3 mr-2" /> Promote to Admin
-                        </DropdownMenuItem>
-                      )}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <Shield className="w-3 h-3 mr-2" /> Roles
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {assignableRoles.map((role) => (
+                            <DropdownMenuCheckboxItem
+                              key={role}
+                              checked={u.roles.includes(role)}
+                              disabled={actionLoading || (u.user_id === currentUser?.id && role === 'admin')}
+                              onCheckedChange={() => handleRoleToggle(u, role)}
+                            >
+                              {roleLabels[role]}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         className="text-destructive"
@@ -411,7 +457,7 @@ export default function AdminUsers() {
                   ['Joined', new Date(profileView.created_at).toLocaleDateString()],
                   ['Last Active', profileView.last_sign_in_at ? new Date(profileView.last_sign_in_at).toLocaleDateString() : 'Never'],
                   ['Status', profileView.suspended ? 'Suspended' : 'Active'],
-                  ['Admin', profileView.is_admin ? 'Yes' : 'No'],
+                  ['Roles', profileView.roles.map((role) => roleLabels[role]).join(', ') || '—'],
                 ].map(([label, value]) => (
                   <div key={label as string}>
                     <p className="text-[11px] uppercase tracking-wider font-['Josefin_Sans'] text-muted-foreground">{label}</p>
