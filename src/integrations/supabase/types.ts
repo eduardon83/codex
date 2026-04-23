@@ -926,6 +926,10 @@ export type Database = {
           terms_accepted_at: string | null
           terms_version: string | null
           theme: string
+          tutorial_chapter_statuses: Json
+          tutorial_completed: boolean
+          tutorial_started_at: string | null
+          tutorial_step: number
           updated_at: string
           user_id: string
           username: string | null
@@ -959,6 +963,10 @@ export type Database = {
           terms_accepted_at?: string | null
           terms_version?: string | null
           theme?: string
+          tutorial_chapter_statuses?: Json
+          tutorial_completed?: boolean
+          tutorial_started_at?: string | null
+          tutorial_step?: number
           updated_at?: string
           user_id: string
           username?: string | null
@@ -992,6 +1000,10 @@ export type Database = {
           terms_accepted_at?: string | null
           terms_version?: string | null
           theme?: string
+          tutorial_chapter_statuses?: Json
+          tutorial_completed?: boolean
+          tutorial_started_at?: string | null
+          tutorial_step?: number
           updated_at?: string
           user_id?: string
           username?: string | null
