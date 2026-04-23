@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { SUPPORTED_LANGUAGES } from '@/i18n';
 import { lovable } from '@/integrations/lovable/index';
 import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
@@ -12,7 +13,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function AuthScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { signIn, signUp, resetPassword } = useAuth();
   const { showToast } = useAppToast();
   const { currentTheme } = useTheme();
@@ -27,6 +28,17 @@ export default function AuthScreen() {
   const [message, setMessage] = useState('');
 
   const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
+
+  useEffect(() => {
+    if (!sessionStorage.getItem('authLanguageSelected') && i18n.language !== 'pt') {
+      i18n.changeLanguage('pt');
+    }
+  }, [i18n]);
+
+  const handleLanguageChange = (language: string) => {
+    sessionStorage.setItem('authLanguageSelected', language);
+    i18n.changeLanguage(language);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,6 +171,22 @@ export default function AuthScreen() {
         >
           {t('about.title')}
         </button>
+
+        <label className="mt-5 block text-xs text-muted-foreground">
+          <span className="sr-only">{t('profile.language')}</span>
+          <select
+            value={i18n.resolvedLanguage || i18n.language || 'pt'}
+            onChange={(event) => handleLanguageChange(event.target.value)}
+            className="w-full h-10 rounded-md border border-border bg-background px-3 text-center text-sm text-foreground outline-none transition-colors hover:border-foreground/40 focus:border-foreground"
+            aria-label={t('profile.language')}
+          >
+            {SUPPORTED_LANGUAGES.map((language) => (
+              <option key={language.code} value={language.code}>
+                {language.name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
     </div>
   );
