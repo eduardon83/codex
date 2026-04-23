@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
@@ -17,7 +18,8 @@ export default function AuthScreen() {
   const { signIn, signUp, resetPassword } = useAuth();
   const { showToast } = useAppToast();
   const { currentTheme } = useTheme();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [isSignUp, setIsSignUp] = useState(() => searchParams.get('mode') === 'signup');
   const [isRecovering, setIsRecovering] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [email, setEmail] = useState('');
