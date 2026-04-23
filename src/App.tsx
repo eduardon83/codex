@@ -73,7 +73,8 @@ const App = () => {
               <div className="relative z-[1]">
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/" element={<Index />} />
+                    <Route path="/" element={<RootRoute />} />
+                    <Route path="/auth" element={<AuthRoute />} />
                     <Route path="/admin/*" element={<Admin />} />
                     <Route path="/lista/:libraryId" element={<PublicList />} />
                     <Route path="/reset-password" element={<ResetPasswordScreen />} />
