@@ -308,7 +308,9 @@ export default function AdminUsers() {
                 <TableCell className="text-center text-sm">{u.library_count}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1.5">
-                    {u.is_admin && <Badge variant="secondary" className="text-[10px]">Admin</Badge>}
+                    {u.roles.map((role) => (
+                      <Badge key={role} variant="secondary" className="text-[10px]">{roleLabels[role]}</Badge>
+                    ))}
                     {u.suspended && <Badge variant="destructive" className="text-[10px]">Suspended</Badge>}
                   </div>
                 </TableCell>
@@ -336,20 +338,23 @@ export default function AdminUsers() {
                           <Ban className="w-3 h-3 mr-2" /> Suspend
                         </DropdownMenuItem>
                       )}
-                      {u.is_admin ? (
-                        <DropdownMenuItem
-                          onClick={() => setConfirmAction({ action: 'demote_admin', userId: u.user_id, name: `${u.first_name} ${u.last_name}` })}
-                          disabled={u.user_id === currentUser?.id}
-                        >
-                          <Shield className="w-3 h-3 mr-2" /> Remove Admin
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem
-                          onClick={() => handleAction('promote_admin', u.user_id)}
-                        >
-                          <Shield className="w-3 h-3 mr-2" /> Promote to Admin
-                        </DropdownMenuItem>
-                      )}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <Shield className="w-3 h-3 mr-2" /> Roles
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          {assignableRoles.map((role) => (
+                            <DropdownMenuCheckboxItem
+                              key={role}
+                              checked={u.roles.includes(role)}
+                              disabled={actionLoading || (u.user_id === currentUser?.id && role === 'admin')}
+                              onCheckedChange={() => handleRoleToggle(u, role)}
+                            >
+                              {roleLabels[role]}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         className="text-destructive"
@@ -452,7 +457,7 @@ export default function AdminUsers() {
                   ['Joined', new Date(profileView.created_at).toLocaleDateString()],
                   ['Last Active', profileView.last_sign_in_at ? new Date(profileView.last_sign_in_at).toLocaleDateString() : 'Never'],
                   ['Status', profileView.suspended ? 'Suspended' : 'Active'],
-                  ['Admin', profileView.is_admin ? 'Yes' : 'No'],
+                  ['Roles', profileView.roles.map((role) => roleLabels[role]).join(', ') || '—'],
                 ].map(([label, value]) => (
                   <div key={label as string}>
                     <p className="text-[11px] uppercase tracking-wider font-['Josefin_Sans'] text-muted-foreground">{label}</p>
