@@ -14,6 +14,10 @@
     "events": "Événements",
     "profile": "Profil"
   },
+  "listas": {
+    "planosHelp": "Ici, tu peux consulter tes plans de lecture, en créer un nouveau adapté à tes ambitions de lecture ou suivre un plan recommandé par ton professeur ! Tu peux aussi exporter ou importer un plan. Attention : tu ne peux avoir qu’un seul plan à la fois !",
+    "listasHelp": "Importe des listes de lecture recommandées, comme le Plan National de Lecture, ou crée tes propres listes de lecture !"
+  },
   "auth": {
     "signIn": "Se connecter",
     "createAccount": "Créer un compte",
