@@ -438,6 +438,228 @@ export type Database = {
         }
         Relationships: []
       }
+      entities: {
+        Row: {
+          created_at: string
+          district_id: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          role_label: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          district_id?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          role_label?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          district_id?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          role_label?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      event_media: {
+        Row: {
+          created_at: string
+          event_id: string
+          file_size: number | null
+          filename: string | null
+          id: string
+          mime_type: string | null
+          sort_order: number
+          type: Database["public"]["Enums"]["event_media_type"]
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          file_size?: number | null
+          filename?: string | null
+          id?: string
+          mime_type?: string | null
+          sort_order?: number
+          type: Database["public"]["Enums"]["event_media_type"]
+          url: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          file_size?: number | null
+          filename?: string | null
+          id?: string
+          mime_type?: string | null
+          sort_order?: number
+          type?: Database["public"]["Enums"]["event_media_type"]
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_media_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_registrations: {
+        Row: {
+          event_id: string
+          id: string
+          registered_at: string
+          status: Database["public"]["Enums"]["event_registration_status"]
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          registered_at?: string
+          status?: Database["public"]["Enums"]["event_registration_status"]
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          registered_at?: string
+          status?: Database["public"]["Enums"]["event_registration_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          approval_status: Database["public"]["Enums"]["event_approval_status"]
+          body: string
+          created_at: string
+          created_by_user_id: string
+          district_id: string | null
+          ends_at: string | null
+          entity_id: string | null
+          id: string
+          introduction: string
+          is_official: boolean
+          linked_book_isbn: string | null
+          linked_reading_list_id: string | null
+          location: string | null
+          online_link: string | null
+          registration_closes_at: string | null
+          registration_limit: number | null
+          registration_opens_at: string | null
+          rejection_note: string | null
+          school_id: string | null
+          scope: Database["public"]["Enums"]["event_scope"]
+          starts_at: string | null
+          status: Database["public"]["Enums"]["event_status"]
+          title: string
+          type: Database["public"]["Enums"]["event_type"]
+          updated_at: string
+        }
+        Insert: {
+          approval_status?: Database["public"]["Enums"]["event_approval_status"]
+          body: string
+          created_at?: string
+          created_by_user_id: string
+          district_id?: string | null
+          ends_at?: string | null
+          entity_id?: string | null
+          id?: string
+          introduction: string
+          is_official?: boolean
+          linked_book_isbn?: string | null
+          linked_reading_list_id?: string | null
+          location?: string | null
+          online_link?: string | null
+          registration_closes_at?: string | null
+          registration_limit?: number | null
+          registration_opens_at?: string | null
+          rejection_note?: string | null
+          school_id?: string | null
+          scope: Database["public"]["Enums"]["event_scope"]
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["event_status"]
+          title: string
+          type: Database["public"]["Enums"]["event_type"]
+          updated_at?: string
+        }
+        Update: {
+          approval_status?: Database["public"]["Enums"]["event_approval_status"]
+          body?: string
+          created_at?: string
+          created_by_user_id?: string
+          district_id?: string | null
+          ends_at?: string | null
+          entity_id?: string | null
+          id?: string
+          introduction?: string
+          is_official?: boolean
+          linked_book_isbn?: string | null
+          linked_reading_list_id?: string | null
+          location?: string | null
+          online_link?: string | null
+          registration_closes_at?: string | null
+          registration_limit?: number | null
+          registration_opens_at?: string | null
+          rejection_note?: string | null
+          school_id?: string | null
+          scope?: Database["public"]["Enums"]["event_scope"]
+          starts_at?: string | null
+          status?: Database["public"]["Enums"]["event_status"]
+          title?: string
+          type?: Database["public"]["Enums"]["event_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_linked_reading_list_id_fkey"
+            columns: ["linked_reading_list_id"]
+            isOneToOne: false
+            referencedRelation: "reading_lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legal_documents: {
         Row: {
           content: string
@@ -1411,7 +1633,36 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "teacher" | "entity" | "moderator" | "user"
+      app_role:
+        | "admin"
+        | "teacher"
+        | "entity"
+        | "moderator"
+        | "user"
+        | "school_admin"
+        | "global_admin"
+      event_approval_status: "pending" | "approved" | "rejected"
+      event_media_type: "banner" | "image" | "attachment"
+      event_registration_status: "confirmed" | "waitlisted" | "cancelled"
+      event_scope: "school" | "district" | "regional" | "national"
+      event_status: "draft" | "published" | "archived" | "cancelled"
+      event_type:
+        | "reading_group"
+        | "author_talk"
+        | "writing_comp"
+        | "reading_comp"
+        | "poetry_slam"
+        | "book_club"
+        | "symposium"
+        | "workshop"
+        | "book_fair"
+        | "interschool"
+        | "library_visit"
+        | "reading_week"
+        | "storytelling"
+        | "news"
+        | "award"
+        | "pnl_update"
       reading_plan_item_status: "planned" | "reading" | "done" | "skipped"
       reading_plan_scope:
         | "personal"
@@ -1546,7 +1797,38 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "teacher", "entity", "moderator", "user"],
+      app_role: [
+        "admin",
+        "teacher",
+        "entity",
+        "moderator",
+        "user",
+        "school_admin",
+        "global_admin",
+      ],
+      event_approval_status: ["pending", "approved", "rejected"],
+      event_media_type: ["banner", "image", "attachment"],
+      event_registration_status: ["confirmed", "waitlisted", "cancelled"],
+      event_scope: ["school", "district", "regional", "national"],
+      event_status: ["draft", "published", "archived", "cancelled"],
+      event_type: [
+        "reading_group",
+        "author_talk",
+        "writing_comp",
+        "reading_comp",
+        "poetry_slam",
+        "book_club",
+        "symposium",
+        "workshop",
+        "book_fair",
+        "interschool",
+        "library_visit",
+        "reading_week",
+        "storytelling",
+        "news",
+        "award",
+        "pnl_update",
+      ],
       reading_plan_item_status: ["planned", "reading", "done", "skipped"],
       reading_plan_scope: [
         "personal",

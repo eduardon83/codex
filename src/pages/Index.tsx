@@ -12,7 +12,7 @@ import BookDetail from '@/components/BookDetail';
 import ProfileScreen from '@/components/ProfileScreen';
 import ProcurarLivroScreen from '@/components/ProcurarLivroScreen';
 import ListasScreen from '@/components/ListasScreen';
-import EventsPlaceholder from '@/components/EventsPlaceholder';
+import EventsScreen from '@/components/EventsScreen';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
 
@@ -141,7 +141,7 @@ export default function Index() {
       {activeTab === 'lists' && (
         <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
       )}
-      {activeTab === 'events' && <EventsPlaceholder />}
+      {activeTab === 'events' && <EventsScreen />}
       <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={setActiveTab} />
     </>
   );
