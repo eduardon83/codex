@@ -116,6 +116,12 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   }, [user]);
 
   useEffect(() => {
+    const refresh = () => { loadLibraries(); if (activeLibrary) loadBooks(); };
+    window.addEventListener('folium-library-refresh', refresh);
+    return () => window.removeEventListener('folium-library-refresh', refresh);
+  }, [activeLibrary]);
+
+  useEffect(() => {
     if (activeLibrary) loadBooks();
   }, [activeLibrary]);
 

@@ -32,6 +32,7 @@ import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
 import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
+import { useFoliumTutorial } from '@/components/tutorial/FoliumTutorialProvider';
 import AvatarPickerDialog from '@/components/AvatarPickerDialog';
 import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
 
@@ -39,6 +40,7 @@ export default function ProfileScreen() {
   const { t } = useTranslation();
   const { user, profile, signOut, refreshProfile } = useAuth();
   const { theme, availableThemes, setTheme } = useTheme();
+  const { openChapterMap } = useFoliumTutorial();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ first_name: '', last_name: '', username: '', bio: '' });
   const [bookCount, setBookCount] = useState(0);
@@ -179,7 +181,7 @@ export default function ProfileScreen() {
               {[displayProfile.first_name, displayProfile.last_name].filter(Boolean).join(' ')}
             </p>
             {displayProfile.username && <p className="text-sm text-muted-foreground">@{displayProfile.username}</p>}
-            <div className="mt-1">
+            <div className="mt-1" data-tutorial="school-selector">
               <SchoolSelector
                 current={{
                   country_code: (profile as any)?.country_code ?? null,
@@ -203,6 +205,7 @@ export default function ProfileScreen() {
               <Input value={form.last_name} onChange={e => update('last_name', e.target.value)} placeholder={t('profile.lastName')} className="bg-background border-border text-sm h-9" />
             </div>
             <Input value={form.username} onChange={e => update('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} placeholder={t('profile.username')} className="bg-background border-border text-sm h-9" />
+            <div data-tutorial="school-selector">
             <SchoolSelector
               current={{
                 country_code: (profile as any)?.country_code ?? null,
@@ -211,6 +214,7 @@ export default function ProfileScreen() {
               }}
               onSaved={refreshProfile}
             />
+            </div>
             <Textarea value={form.bio} onChange={e => update('bio', e.target.value)} placeholder={t('profile.bio')} className="bg-background border-border text-sm resize-none" rows={2} maxLength={280} />
             <div className="flex gap-2">
               <Button onClick={save} size="sm" className="flex-1">{t('profile.save')}</Button>
@@ -328,6 +332,9 @@ export default function ProfileScreen() {
 
       <div className="mt-8 border-t border-border pt-5">
         <p className="text-sm text-muted-foreground mb-3">{t('about.title')}</p>
+        <Button variant="outline" className="w-full justify-start mb-3" onClick={openChapterMap}>
+          Revisitar tutorial
+        </Button>
         <Button variant="outline" className="w-full justify-start" onClick={() => setShowAbout(true)}>
           {t('about.title')}
         </Button>

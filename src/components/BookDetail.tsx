@@ -90,6 +90,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const [showMoveSheet, setShowMoveSheet] = useState(false);
 
   useEffect(() => {
+    window.dispatchEvent(new CustomEvent('folium-book-detail', { detail: { open: true, bookId } }));
     loadBook();
     loadActiveLoan();
     if (user) {
@@ -97,6 +98,9 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
         if (data) setAllLibraries(data);
       });
     }
+    return () => {
+      window.dispatchEvent(new CustomEvent('folium-book-detail', { detail: { open: false, bookId } }));
+    };
   }, [bookId]);
 
   const loadBook = async () => {

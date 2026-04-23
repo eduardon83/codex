@@ -151,7 +151,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
       </div>
 
       <Tabs value={tab} onValueChange={(value) => setTab(value as ProcurarTab)}>
-        <TabsList className="w-full rounded-full">
+        <TabsList data-tutorial="procurar-tabs" className="w-full rounded-full">
           <TabsTrigger value="books" className="flex-1 rounded-full">{t('search.tabs.books')}</TabsTrigger>
           <TabsTrigger value="libraries" className="flex-1 rounded-full">{t('search.tabs.libraries')}</TabsTrigger>
           <TabsTrigger value="readingLists" className="flex-1 rounded-full">{t('search.tabs.readingLists')}</TabsTrigger>

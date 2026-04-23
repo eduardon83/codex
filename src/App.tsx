@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { AppToastProvider } from "@/components/ToastNotification";
 import { CelebrationProvider } from "@/components/CelebrationOverlay";
+import { FoliumTutorialProvider } from "@/components/tutorial/FoliumTutorialProvider";
 import TreeBackground from "@/components/TreeBackground";
 import Index from "./pages/Index.tsx";
 import Admin from "./pages/Admin.tsx";
@@ -33,6 +34,7 @@ const App = () => {
       <ThemeProvider>
         <AppToastProvider>
           <CelebrationProvider>
+            <FoliumTutorialProvider>
             <TooltipProvider>
               
               <Sonner />
@@ -50,6 +52,7 @@ const App = () => {
                 </BrowserRouter>
               </div>
             </TooltipProvider>
+            </FoliumTutorialProvider>
           </CelebrationProvider>
         </AppToastProvider>
       </ThemeProvider>
