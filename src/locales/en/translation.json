@@ -14,6 +14,10 @@
     "events": "Events",
     "profile": "Profile"
   },
+  "listas": {
+    "planosHelp": "Here you can view your reading plans, create a new one tailored to your reading ambitions, or follow a plan recommended by your teacher! You can also export or import a plan. Please note: you can only have one plan at a time!",
+    "listasHelp": "Import recommended reading lists such as the National Reading Plan, or create your own reading lists!"
+  },
   "auth": {
     "signIn": "Sign in",
     "createAccount": "Create account",
