@@ -13,7 +13,11 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const anonKey = Deno.env.get('SUPABASE_PUBLISHABLE_KEY')!
+    const anonKey = Deno.env.get('SUPABASE_PUBLISHABLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY')
+
+    if (!supabaseUrl || !serviceRoleKey || !anonKey) {
+      throw new Error('Backend configuration is missing required credentials')
+    }
 
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
@@ -47,7 +51,8 @@ Deno.serve(async (req) => {
       })
     }
 
-    const { action, user_id, details } = await req.json()
+    const { action, user_id, role, details } = await req.json()
+    const allowedRoles = ['admin', 'teacher', 'school_admin', 'entity', 'global_admin', 'moderator', 'user']
 
     // Log to audit
     const logAction = async (actionName: string, affectedUserId?: string, actionDetails?: string) => {
@@ -105,8 +110,54 @@ Deno.serve(async (req) => {
         const { error } = await adminClient
           .from('admin_users')
           .insert({ user_id })
+        const { error: roleError } = await adminClient
+          .from('user_roles')
+          .upsert({ user_id, role: 'admin' }, { onConflict: 'user_id,role' })
+        if (roleError) throw roleError
         if (error) throw error
         await logAction('promote_admin', user_id, details)
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      case 'assign_role': {
+        if (!user_id) throw new Error('user_id required')
+        if (!role || !allowedRoles.includes(role)) throw new Error('Invalid role')
+        const { error } = await adminClient
+          .from('user_roles')
+          .upsert({ user_id, role }, { onConflict: 'user_id,role' })
+        if (error) throw error
+        if (role === 'admin') {
+          const { error: adminError } = await adminClient
+            .from('admin_users')
+            .insert({ user_id })
+          if (adminError && adminError.code !== '23505') throw adminError
+        }
+        await logAction(`assign_role_${role}`, user_id, details)
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      case 'remove_role': {
+        if (!user_id) throw new Error('user_id required')
+        if (!role || !allowedRoles.includes(role)) throw new Error('Invalid role')
+        if (user_id === user.id && role === 'admin') throw new Error('Cannot remove your own admin role')
+        const { error } = await adminClient
+          .from('user_roles')
+          .delete()
+          .eq('user_id', user_id)
+          .eq('role', role)
+        if (error) throw error
+        if (role === 'admin') {
+          const { error: adminError } = await adminClient
+            .from('admin_users')
+            .delete()
+            .eq('user_id', user_id)
+          if (adminError) throw adminError
+        }
+        await logAction(`remove_role_${role}`, user_id, details)
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
