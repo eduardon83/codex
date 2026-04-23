@@ -59,7 +59,7 @@ export default function AddToPlanSheet({ book, open, onOpenChange, onNoActivePla
       .eq('is_template', false)
       .maybeSingle()
       .then(({ data }) => {
-        const activePlan = (data as ReadingPlan | null) || null;
+        const activePlan = (data as unknown as ReadingPlan | null) || null;
         setPlan(activePlan);
         if (!activePlan) {
           onOpenChange(false);

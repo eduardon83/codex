@@ -122,7 +122,7 @@ function PlanosTab({ userId }: { userId: string | null }) {
   const load = async () => {
     if (!userId) return;
     const { data } = await supabase.from('reading_plans' as any).select('*').eq('user_id', userId).eq('status', 'active').eq('is_template', false).maybeSingle();
-    const active = (data as Plan | null) || null;
+    const active = (data as unknown as Plan | null) || null;
     setPlan(active);
     if (active) {
       const { data: rows } = await supabase.from('reading_plan_items' as any).select('*, books(reading_status)').eq('plan_id', active.id).order('priority');
