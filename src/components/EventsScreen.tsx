@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type React from 'react';
 import { ArrowLeft, CalendarDays, Check, Download, File, Filter, Globe2, ImagePlus, Link as LinkIcon, List, MapPin, Plus, Share2, Upload, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -147,7 +148,7 @@ export function EventDetail({ event, onBack, onChanged, adminActions }: { event:
   const waitlisted = event.my_registration?.status === 'waitlisted';
   const registrationClosed = event.registration_closes_at ? new Date(event.registration_closes_at).getTime() < Date.now() : false;
   const online = event.location?.toLowerCase() === 'online' || Boolean(event.online_link);
-  const avatar = event.profiles?.avatar_url ? getAvatarById(event.profiles.avatar_url)?.src : null;
+  const avatar = event.profiles?.avatar_url ? getAvatarById(event.profiles.avatar_url)?.file : null;
 
   const share = async () => {
     const url = window.location.href;
