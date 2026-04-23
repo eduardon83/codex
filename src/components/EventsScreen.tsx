@@ -87,7 +87,7 @@ export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEv
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto pb-3 -mx-4 px-4">
+      <div data-tutorial="events-filters" className="flex gap-2 overflow-x-auto pb-3 -mx-4 px-4">
         {Object.entries(EVENT_GROUP_LABELS).map(([key, label]) => <button key={key} onClick={() => setActiveGroup(key)} className={cn('shrink-0 rounded-full border px-3 py-1.5 text-xs font-[Josefin_Sans]', activeGroup === key ? 'bg-foreground text-background border-foreground' : 'bg-background text-foreground border-border')}>{label}</button>)}
       </div>
 

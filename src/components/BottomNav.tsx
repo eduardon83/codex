@@ -55,6 +55,7 @@ export default function BottomNav({ active, onChange }: BottomNavProps) {
         {tabConfig.map(({ id, labelKey, icon: Icon }) => (
           <button
             key={id}
+            data-tutorial-nav={id}
             onClick={() => onChange(id)}
             className={`relative flex flex-col items-center gap-0.5 py-2 px-3 transition-colors ${
               active === id ? 'text-foreground' : 'text-muted-foreground'

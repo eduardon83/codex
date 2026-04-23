@@ -94,7 +94,7 @@ export default function ListasScreen({ onGoToSearchReadingLists }: { onGoToSearc
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <Tabs value={tab} onValueChange={(value) => setTab(value as ListasTab)}>
-        <TabsList className="w-full rounded-full mb-4">
+        <TabsList data-tutorial="listas-tabs" className="w-full rounded-full mb-4">
           <TabsTrigger value="wishlist" className="flex-1 rounded-full">Desejos</TabsTrigger>
           <TabsTrigger value="planos" className="flex-1 rounded-full">Planos</TabsTrigger>
           <TabsTrigger value="listas" className="flex-1 rounded-full">Listas</TabsTrigger>
