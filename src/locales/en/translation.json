@@ -31,7 +31,21 @@
     "welcomeBack": "Welcome back.",
     "emailNotConfirmed": "Email not confirmed. Please check your inbox.",
     "or": "or",
-    "googleSignIn": "Continue with Google"
+    "googleSignIn": "Continue with Google",
+    "forgotPassword": "Forgot your password?",
+    "sendResetLink": "Send recovery link",
+    "resetEmailSent": "If an account exists for this email, you will receive a link to set a new password.",
+    "resetError": "Could not send the recovery email.",
+    "backToSignIn": "Back to sign in",
+    "resetPasswordTitle": "Set a new password",
+    "resetPasswordSubtitle": "Choose a new password to get back into Folium.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "updatePassword": "Save new password",
+    "passwordsDontMatch": "Passwords do not match.",
+    "passwordUpdated": "Password updated. You can continue.",
+    "updatePasswordError": "Could not update the password.",
+    "resetLinkInvalid": "This link has expired or is not valid. Request a new recovery link."
   },
   "profileSetup": {
     "welcome": "Welcome to Folium",

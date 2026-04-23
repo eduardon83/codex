@@ -31,7 +31,21 @@
     "welcomeBack": "Bon retour.",
     "emailNotConfirmed": "Email non confirmé. Vérifiez votre boîte de réception.",
     "or": "ou",
-    "googleSignIn": "Continuer avec Google"
+    "googleSignIn": "Continuer avec Google",
+    "forgotPassword": "Mot de passe oublié ?",
+    "sendResetLink": "Envoyer le lien de récupération",
+    "resetEmailSent": "Si un compte existe avec cet email, vous recevrez un lien pour définir un nouveau mot de passe.",
+    "resetError": "Impossible d’envoyer l’email de récupération.",
+    "backToSignIn": "Retour à la connexion",
+    "resetPasswordTitle": "Définir un nouveau mot de passe",
+    "resetPasswordSubtitle": "Choisissez un nouveau mot de passe pour revenir sur Folium.",
+    "newPassword": "Nouveau mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "updatePassword": "Enregistrer le nouveau mot de passe",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas.",
+    "passwordUpdated": "Mot de passe mis à jour. Vous pouvez continuer.",
+    "updatePasswordError": "Impossible de mettre à jour le mot de passe.",
+    "resetLinkInvalid": "Ce lien a expiré ou n’est pas valide. Demandez un nouveau lien de récupération."
   },
   "profileSetup": {
     "welcome": "Bienvenue sur Folium",
