@@ -147,127 +147,26 @@ function stripHtml(s: string): string {
     .trim();
 }
 
-// ─── Source 5: ISBNsearch.org scrape ───
-async function tryISBNSearch(isbn: string): Promise<BookData | null> {
+async function tryServerScrape(isbn: string, source: 'isbnsearch' | 'isbndb' | 'bookfinder'): Promise<BookData | null> {
   try {
-    const res = await fetch(`https://isbnsearch.org/isbn/${isbn}`);
-    if (!res.ok) return null;
-    const html = await res.text();
-
-    const extract = (label: string): string => {
-      const regex = new RegExp(`<strong>${label}:</strong>\\s*</p>\\s*<p>([^<]+)</p>`, 'i');
-      const altRegex = new RegExp(`<strong>${label}:</strong>\\s*([^<]+)`, 'i');
-      const match = html.match(regex) || html.match(altRegex);
-      return match?.[1]?.trim() || '';
-    };
-
-    // Try extracting from bookinfo div
-    const titleMatch = html.match(/<h1[^>]*>([^<]+)<\/h1>/);
-    const title = titleMatch?.[1]?.trim() || extract('Title');
-    if (!title) return null;
-
-    return {
-      title,
-      author: extract('Author') || extract('Authors'),
-      isbn,
-      publisher: extract('Publisher'),
-      publish_date: extract('Published') || extract('Year'),
-      cover_url: '',
-      page_count: null,
-      language: extract('Language'),
-      genre: '',
-      source: 'ISBNsearch.org',
-    };
+    const { data, error } = await supabase.functions.invoke('lookup-isbn-metadata', {
+      body: { isbn, source },
+    });
+    if (error) return null;
+    return (data?.book as BookData | null) || null;
   } catch {
     return null;
   }
 }
 
-// ─── Source 6: ISBNdb.com scrape (public book page) ───
-async function tryISBNdb(isbn: string): Promise<BookData | null> {
-  try {
-    const clean = isbn.replace(/[-\s]/g, '');
-    const res = await fetch(`https://isbndb.com/book/${clean}`);
-    if (!res.ok) return null;
-    const html = await res.text();
+// ─── Source 5: ISBNsearch.org scrape via backend ───
+const tryISBNSearch = (isbn: string) => tryServerScrape(isbn, 'isbnsearch');
 
-    const titleMatch = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-    const title = titleMatch ? stripHtml(titleMatch[1]) : '';
-    if (!title) return null;
+// ─── Source 6: ISBNdb.com scrape via backend ───
+const tryISBNdb = (isbn: string) => tryServerScrape(isbn, 'isbndb');
 
-    const field = (label: string): string => {
-      const re = new RegExp(
-        `<(?:th|td|strong|b|dt)[^>]*>\\s*${label}\\s*:?\\s*<\\/(?:th|td|strong|b|dt)>\\s*<(?:td|dd)[^>]*>([\\s\\S]*?)<\\/(?:td|dd)>`,
-        'i'
-      );
-      const m = html.match(re);
-      return m ? stripHtml(m[1]) : '';
-    };
-
-    const coverMatch = html.match(/<img[^>]+src="([^"]+)"[^>]*alt="[^"]*(?:cover|book)/i);
-    const cover = coverMatch?.[1] || '';
-    const pagesRaw = field('Pages');
-    const pages = pagesRaw ? parseInt(pagesRaw, 10) || null : null;
-
-    return {
-      title,
-      author: field('Author') || field('Authors'),
-      isbn,
-      publisher: field('Publisher'),
-      publish_date: field('Published') || field('Publish Date') || field('Date Published'),
-      cover_url: cover,
-      page_count: pages,
-      language: field('Language'),
-      genre: field('Subjects') || field('Subject'),
-      source: 'ISBNdb',
-    };
-  } catch {
-    return null;
-  }
-}
-
-// ─── Source 7: BookFinder.com scrape ───
-async function tryBookFinder(isbn: string): Promise<BookData | null> {
-  try {
-    const clean = isbn.replace(/[-\s]/g, '');
-    const res = await fetch(
-      `https://www.bookfinder.com/search/?keywords=${clean}&currency=USD&destination=us&mode=basic&il=en&classic=off&lang=en&st=sh&ac=qr&submit=`
-    );
-    if (!res.ok) return null;
-    const html = await res.text();
-
-    const field = (label: string): string => {
-      const re = new RegExp(
-        `<(?:td|th|strong|b|span)[^>]*>\\s*${label}\\s*:?\\s*<\\/(?:td|th|strong|b|span)>\\s*<(?:td|span|div)[^>]*>([\\s\\S]*?)<\\/(?:td|span|div)>`,
-        'i'
-      );
-      const m = html.match(re);
-      return m ? stripHtml(m[1]) : '';
-    };
-
-    let title = field('Title');
-    if (!title) {
-      const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-      title = h1 ? stripHtml(h1[1]) : '';
-    }
-    if (!title) return null;
-
-    return {
-      title,
-      author: field('Author') || field('Author(s)') || field('Authors'),
-      isbn,
-      publisher: field('Publisher'),
-      publish_date: field('Published') || field('Publication date') || field('Year'),
-      cover_url: '',
-      page_count: null,
-      language: '',
-      genre: '',
-      source: 'BookFinder',
-    };
-  } catch {
-    return null;
-  }
-}
+// ─── Source 7: BookFinder.com scrape via backend ───
+const tryBookFinder = (isbn: string) => tryServerScrape(isbn, 'bookfinder');
 
 /**
  * Multi-source ISBN lookup with Portuguese ISBN optimization and community cache.
