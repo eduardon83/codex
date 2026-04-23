@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
-import AuthScreen from '@/components/AuthScreen';
 import ProfileSetup from '@/components/ProfileSetup';
 import PendingParentalConsent from '@/components/PendingParentalConsent';
 import BottomNav from '@/components/BottomNav';
@@ -61,7 +61,7 @@ export default function Index() {
     );
   }
 
-  if (!user) return <AuthScreen />;
+  if (!user) return <Navigate to="/" replace />;
 
   // Suspended account screen
   if (profile?.suspended) {
