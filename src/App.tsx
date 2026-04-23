@@ -15,6 +15,7 @@ import Admin from "./pages/Admin.tsx";
 import PublicList from "./pages/PublicList.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ParentalConsent from "./pages/ParentalConsent.tsx";
+import ResetPasswordScreen from "./components/ResetPasswordScreen.tsx";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => {
                     <Route path="/" element={<Index />} />
                     <Route path="/admin/*" element={<Admin />} />
                     <Route path="/lista/:libraryId" element={<PublicList />} />
+                    <Route path="/reset-password" element={<ResetPasswordScreen />} />
                     <Route path="/parental-consent" element={<ParentalConsent />} />
                     <Route path="/consent" element={<ParentalConsent />} />
                     <Route path="*" element={<NotFound />} />
