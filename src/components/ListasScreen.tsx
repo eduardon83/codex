@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useContent } from '@/hooks/useContent';
 import WishlistScreen from '@/components/WishlistScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -94,7 +95,7 @@ export default function ListasScreen({ onGoToSearchReadingLists }: { onGoToSearc
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <Tabs value={tab} onValueChange={(value) => setTab(value as ListasTab)}>
         <TabsList className="w-full rounded-full mb-4">
-          <TabsTrigger value="wishlist" className="flex-1 rounded-full">Wishlist</TabsTrigger>
+          <TabsTrigger value="wishlist" className="flex-1 rounded-full">Desejos</TabsTrigger>
           <TabsTrigger value="planos" className="flex-1 rounded-full">Planos</TabsTrigger>
           <TabsTrigger value="listas" className="flex-1 rounded-full">Listas</TabsTrigger>
         </TabsList>
@@ -107,6 +108,7 @@ export default function ListasScreen({ onGoToSearchReadingLists }: { onGoToSearc
 }
 
 function PlanosTab({ userId }: { userId: string | null }) {
+  const helpText = useContent('listas.planosHelp');
   const [plan, setPlan] = useState<Plan | null>(null);
   const [items, setItems] = useState<PlanItem[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>('');
@@ -158,10 +160,11 @@ function PlanosTab({ userId }: { userId: string | null }) {
   const updateItem = async (id: string, patch: Partial<PlanItem>) => { await supabase.from('reading_plan_items' as any).update(patch).eq('id', id); if (patch.status === 'done') { const found = items.find(i => i.id === id); if (found?.book_id) await supabase.from('books').update({ reading_status: 'Read' }).eq('id', found.book_id); } load(); };
   const movePriority = async (item: PlanItem, direction: -1 | 1) => { const list = monthItems; const index = list.findIndex(i => i.id === item.id); const other = list[index + direction]; if (!other) return; await Promise.all([supabase.from('reading_plan_items' as any).update({ priority: other.priority }).eq('id', item.id), supabase.from('reading_plan_items' as any).update({ priority: item.priority }).eq('id', other.id)]); load(); };
 
-  if (!plan) return <PlanEmptyState onCreate={() => setShowCreate(true)} onImport={() => setShowImport(true)} createSheet={{ open: showCreate, setOpen: setShowCreate, form, setForm, onSave: () => createPlan() }} importDialog={{ open: showImport, setOpen: setShowImport, form, setForm, preview, setPreview, onConfirm: () => createPlan(preview) }} />;
+  if (!plan) return <div className="space-y-4"><p className="text-xs leading-relaxed text-muted-foreground">{helpText}</p><PlanEmptyState onCreate={() => setShowCreate(true)} onImport={() => setShowImport(true)} createSheet={{ open: showCreate, setOpen: setShowCreate, form, setForm, onSave: () => createPlan() }} importDialog={{ open: showImport, setOpen: setShowImport, form, setForm, preview, setPreview, onConfirm: () => createPlan(preview) }} /></div>;
 
   return (
     <div className="space-y-5">
+      <p className="text-xs leading-relaxed text-muted-foreground">{helpText}</p>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           {editingMeta ? <Input value={form.name || plan.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="mb-2" /> : <h2 className="font-serif text-2xl text-foreground truncate">{plan.name}</h2>}
@@ -219,6 +222,7 @@ function BookSearchDialog({ open, onOpenChange, planId, month, onAdded }: any) {
 }
 
 function ReadingListsArea({ userId, onGoToSearchReadingLists, onCreatePlan }: { userId: string | null; onGoToSearchReadingLists?: () => void; onCreatePlan: () => void }) {
+  const helpText = useContent('listas.listasHelp');
   const [personal, setPersonal] = useState<ReadingList[]>([]);
   const [subscribed, setSubscribed] = useState<ReadingList[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -241,7 +245,7 @@ function ReadingListsArea({ userId, onGoToSearchReadingLists, onCreatePlan }: { 
   const openDetail = async (list: ReadingList) => { setDetail(list); const { data } = await supabase.from('reading_list_books').select('id, reading_list_id, title, author, isbn, cover_url').eq('reading_list_id', list.id); setBooks((data as any) || []); };
   const createList = async () => { if (!userId || !form.name.trim()) return; const { data } = await supabase.from('reading_lists').insert({ user_id: userId, name: form.name.trim(), scope: 'private', creator_role: 'student', approval_status: 'published' } as any).select().single(); if (data && preview.length) await supabase.from('reading_list_books').insert(preview.map(b => ({ reading_list_id: (data as any).id, title: b.title, author: b.author, isbn: b.isbn }))); setDialogOpen(false); setForm({ name: '', description: '', import: false }); setPreview([]); load(); };
   if (detail) return <ListDetail list={detail} books={books} onBack={() => setDetail(null)} onCreatePlan={onCreatePlan} />;
-  return <div className="space-y-8"><section><div className="flex items-center justify-between mb-3"><h2 className="font-serif text-xl">As minhas listas</h2><Button size="sm" onClick={() => setDialogOpen(true)}><Plus size={14} className="mr-1" />Nova lista</Button></div>{personal.length === 0 ? <div className="text-center py-10 border border-border rounded-md"><p className="text-sm text-muted-foreground mb-3">Ainda não criaste nenhuma lista.</p><Button onClick={() => setDialogOpen(true)}>+ Nova lista</Button></div> : <div className="space-y-3">{personal.map(l => <ListCard key={l.id} list={l} onView={() => openDetail(l)} onReload={load} />)}</div>}</section><section><h2 className="font-serif text-xl mb-3">Listas subscritas</h2>{subscribed.length === 0 ? <div className="text-center py-10 border border-border rounded-md"><p className="text-sm text-muted-foreground mb-3">Ainda não subscreveste nenhuma lista.</p><Button variant="outline" onClick={onGoToSearchReadingLists}>Descobrir listas no Procurar</Button></div> : <div className="space-y-3">{subscribed.map(l => <ListCard key={l.id} list={l} onView={() => openDetail(l)} onReload={load} subscribed />)}</div>}</section><Dialog open={dialogOpen} onOpenChange={setDialogOpen}><DialogContent><DialogHeader><DialogTitle>Nova lista</DialogTitle></DialogHeader><div className="space-y-3"><Input placeholder="Nome da lista" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /><Textarea placeholder="Descrição (opcional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /><div className="grid grid-cols-2 gap-2"><Button variant={!form.import ? 'default' : 'outline'} onClick={() => setForm(f => ({ ...f, import: false }))}>Criar vazia</Button><Button variant={form.import ? 'default' : 'outline'} onClick={() => setForm(f => ({ ...f, import: true }))}>Importar de ficheiro</Button></div>{form.import && <ImportFileInline mode="list" preview={preview} setPreview={setPreview} />}<Button className="w-full" disabled={!form.name.trim()} onClick={createList}>Guardar</Button></div></DialogContent></Dialog></div>;
+  return <div className="space-y-8"><p className="text-xs leading-relaxed text-muted-foreground">{helpText}</p><section><div className="flex items-center justify-between mb-3"><h2 className="font-serif text-xl">As minhas listas</h2><Button size="sm" onClick={() => setDialogOpen(true)}><Plus size={14} className="mr-1" />Nova lista</Button></div>{personal.length === 0 ? <div className="text-center py-10 border border-border rounded-md"><p className="text-sm text-muted-foreground mb-3">Ainda não criaste nenhuma lista.</p><Button onClick={() => setDialogOpen(true)}>+ Nova lista</Button></div> : <div className="space-y-3">{personal.map(l => <ListCard key={l.id} list={l} onView={() => openDetail(l)} onReload={load} />)}</div>}</section><section><h2 className="font-serif text-xl mb-3">Listas subscritas</h2>{subscribed.length === 0 ? <div className="text-center py-10 border border-border rounded-md"><p className="text-sm text-muted-foreground mb-3">Ainda não subscreveste nenhuma lista.</p><Button variant="outline" onClick={onGoToSearchReadingLists}>Descobrir listas no Procurar</Button></div> : <div className="space-y-3">{subscribed.map(l => <ListCard key={l.id} list={l} onView={() => openDetail(l)} onReload={load} subscribed />)}</div>}</section><Dialog open={dialogOpen} onOpenChange={setDialogOpen}><DialogContent><DialogHeader><DialogTitle>Nova lista</DialogTitle></DialogHeader><div className="space-y-3"><Input placeholder="Nome da lista" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} /><Textarea placeholder="Descrição (opcional)" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} /><div className="grid grid-cols-2 gap-2"><Button variant={!form.import ? 'default' : 'outline'} onClick={() => setForm(f => ({ ...f, import: false }))}>Criar vazia</Button><Button variant={form.import ? 'default' : 'outline'} onClick={() => setForm(f => ({ ...f, import: true }))}>Importar de ficheiro</Button></div>{form.import && <ImportFileInline mode="list" preview={preview} setPreview={setPreview} />}<Button className="w-full" disabled={!form.name.trim()} onClick={createList}>Guardar</Button></div></DialogContent></Dialog></div>;
 }
 
 function ImportFileInline({ mode, preview, setPreview }: any) { const ref = useRef<HTMLInputElement>(null); return <div><input ref={ref} type="file" accept=".csv,.xlsx" className="hidden" onChange={async e => { const f = e.target.files?.[0]; if (f) setPreview(await parseFile(f, mode)); }} /><Button variant="outline" className="w-full" onClick={() => ref.current?.click()}><FileUp size={15} className="mr-2" />Escolher ficheiro</Button>{preview.length > 0 && <p className="text-xs text-muted-foreground mt-2">{preview.length} livros detectados</p>}</div>; }
