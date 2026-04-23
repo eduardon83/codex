@@ -40,6 +40,19 @@ export default function Index() {
     return () => clearTimeout(t);
   }, [loading, user, profile]);
 
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('folium-active-tab', { detail: { tab: activeTab } }));
+  }, [activeTab]);
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const tab = (event as CustomEvent).detail?.tab as Tab | undefined;
+      if (tab) { setSelectedBookId(null); setPublicLibView(null); setActiveTab(tab); }
+    };
+    window.addEventListener('folium-tutorial-navigate', handler);
+    return () => window.removeEventListener('folium-tutorial-navigate', handler);
+  }, []);
+
   if (loading || (user && !routingReady)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
