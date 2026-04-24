@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -43,7 +43,14 @@ function AuthRoute() {
       </div>
     );
   }
-  if (user) return <Index />;
+  if (user) {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    if (redirect && redirect.startsWith('/')) {
+      return <Navigate to={redirect} replace />;
+    }
+    return <Index />;
+  }
   return <AuthScreen />;
 }
 
