@@ -133,28 +133,30 @@ export default function Index() {
   return (
     <>
       <AppHeader />
-      {activeTab === 'library' && (
-        <LibraryScreen
-          onBookSelect={setSelectedBookId}
-          onAddBook={() => setActiveTab('add')}
-          onWishlist={() => setActiveTab('lists')}
-          onGoToProfile={() => setActiveTab('profile')}
-        />
-      )}
-      {activeTab === 'add' && (
-        <AddBookScreen onDone={() => setActiveTab('library')} />
-      )}
-      {activeTab === 'profile' && <ProfileScreen />}
-      {activeTab === 'find' && (
-        <ProcurarLivroScreen
-          onGoToProfile={() => setActiveTab('profile')}
-          onOpenLibrary={(lib) => setPublicLibView(lib)}
-        />
-      )}
-      {activeTab === 'lists' && (
-        <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
-      )}
-      {activeTab === 'events' && <EventsScreen />}
+      <main id="main-content">
+        {activeTab === 'library' && (
+          <LibraryScreen
+            onBookSelect={setSelectedBookId}
+            onAddBook={() => setActiveTab('add')}
+            onWishlist={() => setActiveTab('lists')}
+            onGoToProfile={() => setActiveTab('profile')}
+          />
+        )}
+        {activeTab === 'add' && (
+          <AddBookScreen onDone={() => setActiveTab('library')} />
+        )}
+        {activeTab === 'profile' && <ProfileScreen />}
+        {activeTab === 'find' && (
+          <ProcurarLivroScreen
+            onGoToProfile={() => setActiveTab('profile')}
+            onOpenLibrary={(lib) => setPublicLibView(lib)}
+          />
+        )}
+        {activeTab === 'lists' && (
+          <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
+        )}
+        {activeTab === 'events' && <EventsScreen />}
+      </main>
       <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={setActiveTab} />
     </>
   );
