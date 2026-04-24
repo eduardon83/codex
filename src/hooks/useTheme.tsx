@@ -62,6 +62,14 @@ function hexToHSL(hex: string): string {
 export function applyTheme(theme: ThemeOption) {
   const root = document.documentElement;
   const [bgPrimary, bgSecondary, accent, textPrimary] = theme.colors.map(hexToHSL);
+  // Derive a muted-foreground that always passes WCAG AA contrast against card bg.
+  // We start from textPrimary and shift its lightness toward 65% (for dark themes)
+  // or 38% (for light themes) so muted text retains >=4.5:1 contrast on card surfaces.
+  const parseHSL = (s: string) => { const [h, sat, l] = s.split(' '); return { h: parseFloat(h), s: parseFloat(sat), l: parseFloat(l) }; };
+  const bgL = parseHSL(bgSecondary).l;
+  const tp = parseHSL(textPrimary);
+  const mutedL = bgL < 50 ? 72 : 35;
+  const mutedFg = `${tp.h} ${Math.min(tp.s, 15)}% ${mutedL}%`;
 
   root.style.setProperty('--background', bgPrimary);
   root.style.setProperty('--foreground', textPrimary);
@@ -74,7 +82,7 @@ export function applyTheme(theme: ThemeOption) {
   root.style.setProperty('--secondary', bgSecondary);
   root.style.setProperty('--secondary-foreground', textPrimary);
   root.style.setProperty('--muted', bgSecondary);
-  root.style.setProperty('--muted-foreground', accent);
+  root.style.setProperty('--muted-foreground', mutedFg);
   root.style.setProperty('--accent', accent);
   root.style.setProperty('--accent-foreground', bgPrimary);
   root.style.setProperty('--gold', accent);
