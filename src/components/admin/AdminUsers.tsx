@@ -20,6 +20,8 @@ import {
   Sheet, SheetContent, SheetHeader, SheetTitle,
 } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { MoreHorizontal, Search, Shield, Ban, Trash2, Eye, ChevronUp, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { resolveAvatarSrc } from '@/lib/avatars';
@@ -71,6 +73,7 @@ export default function AdminUsers() {
   const [bulkAction, setBulkAction] = useState<string | null>(null);
   const [profileView, setProfileView] = useState<AdminUser | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [suspendReason, setSuspendReason] = useState('');
 
   useEffect(() => { loadUsers(); }, []);
 
@@ -95,7 +98,13 @@ export default function AdminUsers() {
     setLoading(false);
   };
 
-  const callAdminAction = async (action: string, userId: string, details?: string, role?: AppRole) => {
+  const callAdminAction = async (
+    action: string,
+    userId: string,
+    details?: string,
+    role?: AppRole,
+    extras?: Record<string, unknown>,
+  ) => {
     const { data: { session } } = await supabase.auth.getSession();
     const res = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/admin-actions`,
@@ -105,7 +114,7 @@ export default function AdminUsers() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session?.access_token}`,
         },
-        body: JSON.stringify({ action, user_id: userId, role, details }),
+        body: JSON.stringify({ action, user_id: userId, role, details, ...(extras || {}) }),
       }
     );
     if (!res.ok) {
@@ -115,10 +124,10 @@ export default function AdminUsers() {
     return res.json();
   };
 
-  const handleAction = async (action: string, userId: string) => {
+  const handleAction = async (action: string, userId: string, extras?: Record<string, unknown>) => {
     setActionLoading(true);
     try {
-      await callAdminAction(action, userId);
+      await callAdminAction(action, userId, undefined, undefined, extras);
       toast.success('Action completed', { description: `${action.replace('_', ' ')} successful.` });
       await loadUsers();
       setSelected(prev => { const n = new Set(prev); n.delete(userId); return n; });
@@ -128,6 +137,7 @@ export default function AdminUsers() {
     setActionLoading(false);
     setConfirmAction(null);
     setBulkAction(null);
+    setSuspendReason('');
   };
 
   const handleRoleToggle = async (targetUser: AdminUser, role: AppRole) => {
@@ -373,7 +383,7 @@ export default function AdminUsers() {
       </div>
 
       {/* Confirm dialog */}
-      <Dialog open={!!confirmAction} onOpenChange={() => setConfirmAction(null)}>
+      <Dialog open={!!confirmAction} onOpenChange={(open) => { if (!open) { setConfirmAction(null); setSuspendReason(''); } }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="font-['Cormorant_Garamond']">
@@ -388,11 +398,30 @@ export default function AdminUsers() {
                 : `${confirmAction?.name} will lose admin privileges.`}
             </DialogDescription>
           </DialogHeader>
+          {confirmAction?.action === 'suspend_user' && (
+            <div className="space-y-2">
+              <Label htmlFor="suspend-reason" className="text-xs font-['Josefin_Sans']">
+                Motivo da suspensão (opcional — será incluído no email ao utilizador)
+              </Label>
+              <Textarea
+                id="suspend-reason"
+                value={suspendReason}
+                onChange={(e) => setSuspendReason(e.target.value)}
+                placeholder="Ex: Comportamento abusivo na comunidade…"
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+          )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmAction(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => { setConfirmAction(null); setSuspendReason(''); }}>Cancel</Button>
             <Button
               variant={confirmAction?.action === 'delete_user' ? 'destructive' : 'default'}
-              onClick={() => confirmAction && handleAction(confirmAction.action, confirmAction.userId)}
+              onClick={() => confirmAction && handleAction(
+                confirmAction.action,
+                confirmAction.userId,
+                confirmAction.action === 'suspend_user' && suspendReason.trim() ? { reason: suspendReason.trim() } : undefined,
+              )}
               disabled={actionLoading}
             >
               {actionLoading ? '…' : 'Confirm'}
