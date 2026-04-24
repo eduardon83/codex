@@ -24,13 +24,14 @@ export default function BottomNav({ active, onChange }: BottomNavProps) {
   const { user } = useAuth();
   const [requestCount, setRequestCount] = useState(0);
 
+  const userId = user?.id;
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
     const loadCount = async () => {
       const { count } = await supabase
         .from('loan_requests' as any)
         .select('id', { count: 'exact', head: true })
-        .eq('owner_user_id', user.id)
+        .eq('owner_user_id', userId)
         .eq('status', 'pending');
       setRequestCount(count || 0);
     };
@@ -41,13 +42,13 @@ export default function BottomNav({ active, onChange }: BottomNavProps) {
       .channel('loan_requests_badge')
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${user.id}` },
+        { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${userId}` },
         () => loadCount()
       )
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [user]);
+  }, [userId]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
