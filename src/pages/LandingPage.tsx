@@ -6,7 +6,7 @@ const GOLD_LIGHT = '#E8C97A';
 const BG = '#1E2A22';
 const BG2 = '#2F3E33';
 const TEXT = '#F0E8D8';
-const MUTED = '#B8AE98';
+const MUTED = '#CFC6B0';
 const ACCENT = '#8BA18B';
 
 const VILLAGES = [
