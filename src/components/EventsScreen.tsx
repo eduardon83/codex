@@ -83,7 +83,7 @@ export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEv
         <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground">Eventos</h1>
         <div className="flex items-center gap-2">
           {canCreate && <Button size="sm" onClick={() => setCreateOpen(true)}><Plus size={15} className="mr-1" />Criar evento</Button>}
-          <button onClick={() => setFilterOpen(true)} className="h-9 w-9 grid place-items-center rounded-full border border-border text-muted-foreground"><Filter size={17} /></button>
+          <button onClick={() => setFilterOpen(true)} aria-label="Filtrar eventos" className="h-9 w-9 grid place-items-center rounded-full border border-border text-muted-foreground"><Filter size={17} /></button>
         </div>
       </div>
 

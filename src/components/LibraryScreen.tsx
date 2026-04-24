@@ -388,6 +388,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           <TooltipTrigger asChild>
             <button
               onClick={() => setShowCreateDialog(true)}
+              aria-label={t('library.addNewLibrary')}
               className="px-3 py-1.5 text-sm border border-dashed border-border text-muted-foreground rounded hover:border-foreground hover:text-foreground transition-colors"
             >
               <Plus size={14} />
@@ -413,7 +414,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                   />
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button onClick={saveEditName} className="text-foreground hover:opacity-70 transition-opacity">
+                      <button onClick={saveEditName} aria-label={t('library.confirmName')} className="text-foreground hover:opacity-70 transition-opacity">
                         <Check size={18} />
                       </button>
                     </TooltipTrigger>
@@ -441,7 +442,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 <h1 className="font-serif text-2xl text-foreground">{currentLib.name}</h1>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button onClick={startEditName} className="text-muted-foreground hover:text-foreground transition-colors">
+                    <button onClick={startEditName} aria-label={t('library.editName')} className="text-muted-foreground hover:text-foreground transition-colors">
                       <Pencil size={14} />
                     </button>
                   </TooltipTrigger>
@@ -542,6 +543,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 <button
                   data-tutorial="library-filter"
                   onClick={() => setShowFilters(!showFilters)}
+                  aria-label={t('library.filterGenre')}
                   className="relative flex items-center justify-center w-10 h-10 border border-border rounded bg-background text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <SlidersHorizontal size={16} />
