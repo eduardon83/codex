@@ -418,7 +418,7 @@ export default function LandingPage() {
         </nav>
 
         {/* HERO */}
-        <section id="main-content" className="folium-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', overflow: 'hidden' }}>
+        <section id="main-content" tabIndex={-1} className="folium-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', overflow: 'hidden', outline: 'none' }}>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.12, pointerEvents: 'none', overflow: 'hidden' }}>
             <TreeBranches />
           </div>
