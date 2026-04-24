@@ -28,12 +28,13 @@ export default function PendingRequestsSection() {
   const [acting, setActing] = useState<string | null>(null);
   const [loaded, setLoaded] = useState(false);
 
+  const userId = user?.id;
   const load = useCallback(async () => {
-    if (!user) return;
+    if (!userId) return;
     const { data } = await supabase
       .from('loan_requests' as any)
       .select('id, book_id, book_title, book_author, book_cover_url, message, requester_user_id, requested_at')
-      .eq('owner_user_id', user.id)
+      .eq('owner_user_id', userId)
       .eq('status', 'pending')
       .order('requested_at', { ascending: false });
     const rows = ((data || []) as unknown) as PendingRequest[];
@@ -65,19 +66,19 @@ export default function PendingRequestsSection() {
       setReputations(reps);
     }
     setLoaded(true);
-  }, [user]);
+  }, [userId]);
 
   useEffect(() => {
     load();
-    if (!user) return;
+    if (!userId) return;
     const channel = supabase
-      .channel(`loan_requests_owner_${user.id}`)
+      .channel(`loan_requests_owner_${userId}`)
       .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${user.id}` },
+        { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${userId}` },
         () => load())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, load]);
+  }, [userId, load]);
 
   const accept = async (req: PendingRequest) => {
     if (!user) return;

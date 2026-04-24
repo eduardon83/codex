@@ -25,26 +25,27 @@ export default function ActiveLoansSection() {
   const [loans, setLoans] = useState<ActiveLoanRow[]>([]);
   const [acting, setActing] = useState<string | null>(null);
 
+  const userId = user?.id;
   const load = useCallback(async () => {
-    if (!user) return;
+    if (!userId) return;
     const { data } = await supabase
       .from('loan_requests' as any)
       .select('id, status, book_id, book_title, book_cover_url, due_date, borrower_confirmed_return, lender_confirmed_return, owner_user_id, requester_user_id')
-      .or(`owner_user_id.eq.${user.id},requester_user_id.eq.${user.id}`)
+      .or(`owner_user_id.eq.${userId},requester_user_id.eq.${userId}`)
       .in('status', ACTIVE_STATUSES)
       .order('due_date', { ascending: true });
     setLoans(((data || []) as unknown) as ActiveLoanRow[]);
-  }, [user]);
+  }, [userId]);
 
   useEffect(() => {
     load();
-    if (!user) return;
+    if (!userId) return;
     const channel = supabase
-      .channel(`loan_requests_active_${user.id}`)
+      .channel(`loan_requests_active_${userId}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'loan_requests' }, () => load())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [user, load]);
+  }, [userId, load]);
 
   const markReturned = async (loan: ActiveLoanRow) => {
     if (!user) return;

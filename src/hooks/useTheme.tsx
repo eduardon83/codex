@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -108,16 +108,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const { user, profile } = useAuth();
   const [themeId, setThemeIdState] = useState('claro');
 
+  const profileTheme = (profile as any)?.theme || null;
   useEffect(() => {
-    if (profile) {
-      const th = (profile as any).theme || 'claro';
-      // Migrate any old theme ids to claro silently
-      const exists = THEMES.find(t => t.id === th);
-      setThemeIdState(exists ? th : 'claro');
+    if (profileTheme) {
+      const exists = THEMES.find(t => t.id === profileTheme);
+      setThemeIdState(exists ? profileTheme : 'claro');
     }
-  }, [profile]);
+  }, [profileTheme]);
 
-  const currentTheme = THEMES.find(t => t.id === themeId) || THEMES[0];
+  const currentTheme = useMemo(
+    () => THEMES.find(t => t.id === themeId) || THEMES[0],
+    [themeId]
+  );
 
   useEffect(() => {
     applyTheme(currentTheme);
