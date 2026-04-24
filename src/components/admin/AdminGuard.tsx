@@ -18,7 +18,7 @@ export default function AdminGuard({ children }: Props) {
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      navigate('/', { replace: true });
+      navigate('/auth?mode=login&redirect=/admin', { replace: true });
       return;
     }
 
