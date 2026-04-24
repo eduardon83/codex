@@ -438,7 +438,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h2 className="font-serif text-2xl text-foreground">{currentLib.name}</h2>
+                <h1 className="font-serif text-2xl text-foreground">{currentLib.name}</h1>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button onClick={startEditName} className="text-muted-foreground hover:text-foreground transition-colors">
