@@ -15,7 +15,9 @@ export default function AppHeader() {
         alt="Folium"
         className="h-7 w-auto"
       />
-      <h1
+      <div
+        role="img"
+        aria-label="Folium"
         className="font-serif italic leading-none"
         style={{
           fontWeight: 500,
@@ -24,7 +26,7 @@ export default function AppHeader() {
         }}
       >
         Folium
-      </h1>
+      </div>
     </div>
   );
 }
