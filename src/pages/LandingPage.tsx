@@ -6,7 +6,7 @@ const GOLD_LIGHT = '#E8C97A';
 const BG = '#1E2A22';
 const BG2 = '#2F3E33';
 const TEXT = '#F0E8D8';
-const MUTED = '#A09880';
+const MUTED = '#B8AE98';
 const ACCENT = '#8BA18B';
 
 const VILLAGES = [
@@ -271,6 +271,11 @@ export default function LandingPage() {
     return () => { document.body.style.background = prev; };
   }, []);
 
+  // Keep <html lang> in sync with the landing-page language (WCAG 3.1.1)
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   useEffect(() => {
     if (!langOpen) return;
     const onDown = (e: MouseEvent) => {
@@ -413,7 +418,7 @@ export default function LandingPage() {
         </nav>
 
         {/* HERO */}
-        <section className="folium-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', overflow: 'hidden' }}>
+        <section id="main-content" className="folium-hero" style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '7rem 2rem 4rem', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.12, pointerEvents: 'none', overflow: 'hidden' }}>
             <TreeBranches />
           </div>
@@ -459,7 +464,7 @@ export default function LandingPage() {
 
         {/* FEATURES */}
         <section id="features" className="folium-features" style={{ padding: '6rem 2rem', maxWidth: 1100, margin: '0 auto' }}>
-          <p style={{ textAlign: 'center', fontSize: '0.65rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, marginBottom: '3.5rem' }}>{t.features_label}</p>
+          <h2 style={{ textAlign: 'center', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, marginBottom: '3.5rem', marginTop: 0 }}>{t.features_label}</h2>
           <div className="folium-features-grid">
             <Feat title={t.feat1_title} desc={t.feat1_desc} icon={
               <svg viewBox="0 0 24 24" width={40} height={40} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
