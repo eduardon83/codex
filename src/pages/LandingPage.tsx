@@ -271,6 +271,11 @@ export default function LandingPage() {
     return () => { document.body.style.background = prev; };
   }, []);
 
+  // Keep <html lang> in sync with the landing-page language (WCAG 3.1.1)
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   useEffect(() => {
     if (!langOpen) return;
     const onDown = (e: MouseEvent) => {
