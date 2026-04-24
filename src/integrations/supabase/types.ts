@@ -562,6 +562,7 @@ export type Database = {
           linked_book_isbn: string | null
           linked_reading_list_id: string | null
           location: string | null
+          notification_sent_at: string | null
           online_link: string | null
           registration_closes_at: string | null
           registration_limit: number | null
@@ -589,6 +590,7 @@ export type Database = {
           linked_book_isbn?: string | null
           linked_reading_list_id?: string | null
           location?: string | null
+          notification_sent_at?: string | null
           online_link?: string | null
           registration_closes_at?: string | null
           registration_limit?: number | null
@@ -616,6 +618,7 @@ export type Database = {
           linked_book_isbn?: string | null
           linked_reading_list_id?: string | null
           location?: string | null
+          notification_sent_at?: string | null
           online_link?: string | null
           registration_closes_at?: string | null
           registration_limit?: number | null
@@ -923,6 +926,7 @@ export type Database = {
           profile_completed: boolean
           school_id: string | null
           suspended: boolean
+          suspension_reason: string | null
           terms_accepted_at: string | null
           terms_version: string | null
           theme: string
@@ -960,6 +964,7 @@ export type Database = {
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
+          suspension_reason?: string | null
           terms_accepted_at?: string | null
           terms_version?: string | null
           theme?: string
@@ -997,6 +1002,7 @@ export type Database = {
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
+          suspension_reason?: string | null
           terms_accepted_at?: string | null
           terms_version?: string | null
           theme?: string
@@ -1202,6 +1208,8 @@ export type Database = {
           id: string
           is_official: boolean
           name: string
+          notification_sent_at: string | null
+          rejection_note: string | null
           school_id: string | null
           scope: string
           subject: string | null
@@ -1218,6 +1226,8 @@ export type Database = {
           id?: string
           is_official?: boolean
           name?: string
+          notification_sent_at?: string | null
+          rejection_note?: string | null
           school_id?: string | null
           scope?: string
           subject?: string | null
@@ -1234,6 +1244,8 @@ export type Database = {
           id?: string
           is_official?: boolean
           name?: string
+          notification_sent_at?: string | null
+          rejection_note?: string | null
           school_id?: string | null
           scope?: string
           subject?: string | null
@@ -1350,6 +1362,65 @@ export type Database = {
         }
         Relationships: []
       }
+      role_requests: {
+        Row: {
+          created_at: string
+          entity_name: string | null
+          entity_type: string | null
+          id: string
+          message: string | null
+          notification_sent_at: string | null
+          requested_role: string
+          requester_user_id: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by_user_id: string | null
+          school_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string
+          message?: string | null
+          notification_sent_at?: string | null
+          requested_role: string
+          requester_user_id: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by_user_id?: string | null
+          school_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity_name?: string | null
+          entity_type?: string | null
+          id?: string
+          message?: string | null
+          notification_sent_at?: string | null
+          requested_role?: string
+          requester_user_id?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by_user_id?: string | null
+          school_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_requests_school_id_fkey"
+            columns: ["school_id"]
+            isOneToOne: false
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saved_libraries: {
         Row: {
           created_at: string
@@ -1398,6 +1469,7 @@ export type Database = {
           is_verified: boolean
           me_code: string | null
           name: string
+          notification_sent_at: string | null
           school_type: string
           submitted_by_user_id: string | null
           updated_at: string
@@ -1413,6 +1485,7 @@ export type Database = {
           is_verified?: boolean
           me_code?: string | null
           name: string
+          notification_sent_at?: string | null
           school_type?: string
           submitted_by_user_id?: string | null
           updated_at?: string
@@ -1428,6 +1501,7 @@ export type Database = {
           is_verified?: boolean
           me_code?: string | null
           name?: string
+          notification_sent_at?: string | null
           school_type?: string
           submitted_by_user_id?: string | null
           updated_at?: string
@@ -1584,6 +1658,7 @@ export type Database = {
       }
     }
     Functions: {
+      _fmt_dt: { Args: { _ts: string }; Returns: string }
       admin_export_books: { Args: never; Returns: Json }
       admin_export_users: { Args: never; Returns: Json }
       admin_get_stats: { Args: never; Returns: Json }
@@ -1642,6 +1717,16 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      send_notification_email: {
+        Args: {
+          _action_label: string
+          _action_url: string
+          _body_html: string
+          _subject: string
+          _to: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
