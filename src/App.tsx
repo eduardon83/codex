@@ -43,7 +43,14 @@ function AuthRoute() {
       </div>
     );
   }
-  if (user) return <Index />;
+  if (user) {
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect');
+    if (redirect && redirect.startsWith('/')) {
+      return <Navigate to={redirect} replace />;
+    }
+    return <Index />;
+  }
   return <AuthScreen />;
 }
 
