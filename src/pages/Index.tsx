@@ -133,7 +133,7 @@ export default function Index() {
   return (
     <>
       <AppHeader />
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         {activeTab === 'library' && (
           <LibraryScreen
             onBookSelect={setSelectedBookId}

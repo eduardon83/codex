@@ -388,6 +388,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           <TooltipTrigger asChild>
             <button
               onClick={() => setShowCreateDialog(true)}
+              aria-label={t('library.addNewLibrary')}
               className="px-3 py-1.5 text-sm border border-dashed border-border text-muted-foreground rounded hover:border-foreground hover:text-foreground transition-colors"
             >
               <Plus size={14} />
@@ -413,7 +414,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                   />
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button onClick={saveEditName} className="text-foreground hover:opacity-70 transition-opacity">
+                      <button onClick={saveEditName} aria-label={t('library.confirmName')} className="text-foreground hover:opacity-70 transition-opacity">
                         <Check size={18} />
                       </button>
                     </TooltipTrigger>
@@ -438,10 +439,10 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h2 className="font-serif text-2xl text-foreground">{currentLib.name}</h2>
+                <h1 className="font-serif text-2xl text-foreground">{currentLib.name}</h1>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <button onClick={startEditName} className="text-muted-foreground hover:text-foreground transition-colors">
+                    <button onClick={startEditName} aria-label={t('library.editName')} className="text-muted-foreground hover:text-foreground transition-colors">
                       <Pencil size={14} />
                     </button>
                   </TooltipTrigger>
@@ -542,6 +543,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 <button
                   data-tutorial="library-filter"
                   onClick={() => setShowFilters(!showFilters)}
+                  aria-label={t('library.filterGenre')}
                   className="relative flex items-center justify-center w-10 h-10 border border-border rounded bg-background text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <SlidersHorizontal size={16} />
@@ -694,7 +696,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <span role="button" tabIndex={0} onClick={(e) => e.stopPropagation()} className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:text-foreground">
+                      <span role="button" tabIndex={0} aria-label="Mais opções" onClick={(e) => e.stopPropagation()} className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:text-foreground">
                         <MoreVertical size={16} />
                       </span>
                     </DropdownMenuTrigger>
@@ -713,7 +715,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       {/* On loan to others */}
       {loansToOthers.length > 0 && (
         <div className="mt-8">
-          <h3 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.onLoanToOthers')}</h3>
+          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.onLoanToOthers')}</h2>
           {loansToOthers.map(loan => (
             <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
               <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
@@ -727,7 +729,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       {/* On loan from others */}
       {loansFromOthers.length > 0 && (
         <div className="mt-6">
-          <h3 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.borrowedFromOthers')}</h3>
+          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.borrowedFromOthers')}</h2>
           {loansFromOthers.map(loan => (
             <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
               <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
