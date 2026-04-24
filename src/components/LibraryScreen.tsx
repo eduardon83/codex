@@ -715,7 +715,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       {/* On loan to others */}
       {loansToOthers.length > 0 && (
         <div className="mt-8">
-          <h3 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.onLoanToOthers')}</h3>
+          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.onLoanToOthers')}</h2>
           {loansToOthers.map(loan => (
             <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
               <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
@@ -729,7 +729,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       {/* On loan from others */}
       {loansFromOthers.length > 0 && (
         <div className="mt-6">
-          <h3 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.borrowedFromOthers')}</h3>
+          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.borrowedFromOthers')}</h2>
           {loansFromOthers.map(loan => (
             <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
               <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
