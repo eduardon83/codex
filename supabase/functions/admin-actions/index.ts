@@ -51,7 +51,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const { action, user_id, role, details } = await req.json()
+    const { action, user_id, role, details, reason } = await req.json()
     const allowedRoles = ['admin', 'teacher', 'school_admin', 'entity', 'global_admin', 'moderator', 'user']
 
     // Log to audit
@@ -81,12 +81,17 @@ Deno.serve(async (req) => {
 
       case 'suspend_user': {
         if (!user_id) throw new Error('user_id required')
+        const trimmedReason = typeof reason === 'string' ? reason.trim().slice(0, 500) : null
         const { error } = await adminClient
           .from('profiles')
-          .update({ suspended: true })
+          .update({
+            suspended: true,
+            account_status: 'suspended',
+            suspension_reason: trimmedReason || null,
+          })
           .eq('user_id', user_id)
         if (error) throw error
-        await logAction('suspend_user', user_id, details)
+        await logAction('suspend_user', user_id, trimmedReason || details || null)
         return new Response(JSON.stringify({ success: true }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
@@ -96,7 +101,11 @@ Deno.serve(async (req) => {
         if (!user_id) throw new Error('user_id required')
         const { error } = await adminClient
           .from('profiles')
-          .update({ suspended: false })
+          .update({
+            suspended: false,
+            account_status: 'active',
+            suspension_reason: null,
+          })
           .eq('user_id', user_id)
         if (error) throw error
         await logAction('unsuspend_user', user_id, details)
