@@ -696,7 +696,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 <div className="flex items-center gap-1 flex-shrink-0">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <span role="button" tabIndex={0} onClick={(e) => e.stopPropagation()} className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:text-foreground">
+                      <span role="button" tabIndex={0} aria-label="Mais opções" onClick={(e) => e.stopPropagation()} className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:text-foreground">
                         <MoreVertical size={16} />
                       </span>
                     </DropdownMenuTrigger>
