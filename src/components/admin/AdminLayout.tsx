@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database, School, CalendarDays } from 'lucide-react';
+import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database, School, CalendarDays, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -13,6 +13,7 @@ const navItems = [
   { path: '/admin/backups', labelKey: 'admin.backups', icon: Database },
   { path: '/admin/export', labelKey: 'admin.export', icon: Download },
   { path: '/admin/audit', labelKey: 'admin.auditLog', icon: ScrollText },
+  { path: '/admin/system', labelKey: 'Sistema', icon: Settings },
 ];
 
 interface Props {
