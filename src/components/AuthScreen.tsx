@@ -184,7 +184,7 @@ export default function AuthScreen() {
             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
             aria-label="Folium - voltar à página inicial"
           >
-            <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeafSVG size={28} /></span>
+            <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeaf width={28} height={36} stroke={GOLD} /></span>
             <span
               className="brand-text"
               style={{
