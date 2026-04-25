@@ -107,8 +107,8 @@ export default function AuthScreen() {
   const currentLang = (i18n.resolvedLanguage || i18n.language || 'pt').slice(0, 2);
   const currentOpt = LANG_OPTIONS.find((o) => o.code === currentLang) ?? LANG_OPTIONS[0];
 
-  const eyebrow = isRecovering ? t('auth.eyebrow_recover') : isSignUp ? t('auth.eyebrow_signup') : t('auth.eyebrow_login');
-  const heading = isRecovering ? t('auth.h1_recover') : isSignUp ? t('auth.h1_signup') : t('auth.h1_login');
+  const eyebrow = isRecovering ? t('auth.eyebrow_recover') : t('auth.eyebrow');
+  const heading = isRecovering ? t('auth.h1_recover') : t('auth.heading');
   const submitLabel = loading ? '...' : isRecovering ? t('auth.sendResetLink') : isSignUp ? t('auth.createAccount') : t('auth.signIn');
 
   const labelStyle: React.CSSProperties = {
