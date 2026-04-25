@@ -45,7 +45,18 @@
     "passwordsDontMatch": "Passwords do not match.",
     "passwordUpdated": "Password updated. You can continue.",
     "updatePasswordError": "Could not update the password.",
-    "resetLinkInvalid": "This link has expired or is not valid. Request a new recovery link."
+    "resetLinkInvalid": "This link has expired or is not valid. Request a new recovery link.",
+    "email_label": "Email",
+    "password_label": "Password",
+    "password_confirm_label": "Confirm password",
+    "eyebrow_login": "Welcome back",
+    "eyebrow_signup": "Welcome to Folium",
+    "eyebrow_recover": "Recover access",
+    "h1_login": "Welcome back",
+    "h1_signup": "Create your account",
+    "h1_recover": "Recover your password",
+    "footer_terms": "Terms",
+    "footer_privacy": "Privacy"
   },
   "profileSetup": {
     "welcome": "Welcome to Folium",
