@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
 import { lovable } from '@/integrations/lovable/index';
 import AboutScreen from '@/components/AboutScreen';
+import FoliumLeaf from '@/components/FoliumLeaf';
 
 // Wilderness Hearth palette (matches LandingPage)
 const GOLD = '#C9A84C';
@@ -23,14 +24,7 @@ const LANG_OPTIONS = [
   { code: 'fr', flag: '🇫🇷', name: 'Français' },
 ] as const;
 
-const FoliumLeafSVG = ({ size = 28, strokeWidth = 2 }: { size?: number; strokeWidth?: number }) => (
-  <svg viewBox="0 0 200 260" width={size} height={size * 1.3} fill="none" stroke={GOLD} strokeLinecap="round" strokeLinejoin="round" strokeWidth={strokeWidth} aria-hidden="true">
-    <path d="M 100,20 Q 158,70 160,135 Q 160,195 100,210 Q 40,195 40,135 Q 42,70 100,20 Z" />
-    <line x1="100" y1="22" x2="100" y2="208" />
-    <line x1="105" y1="90" x2="145" y2="90" />
-    <line x1="105" y1="110" x2="153" y2="110" />
-  </svg>
-);
+// Folium leaf is provided by the shared <FoliumLeaf /> component for visual consistency.
 
 export default function AuthScreen() {
   const { t, i18n } = useTranslation();
@@ -63,7 +57,7 @@ export default function AuthScreen() {
   }, [searchParams]);
 
   useEffect(() => {
-    document.title = 'Folium — ' + (isSignUp ? t('auth.h1_signup') : t('auth.h1_login'));
+    document.title = 'Folium — ' + t('auth.heading');
     const prevBg = document.body.style.background;
     document.body.style.background = BG;
     return () => { document.body.style.background = prevBg; };
@@ -113,8 +107,8 @@ export default function AuthScreen() {
   const currentLang = (i18n.resolvedLanguage || i18n.language || 'pt').slice(0, 2);
   const currentOpt = LANG_OPTIONS.find((o) => o.code === currentLang) ?? LANG_OPTIONS[0];
 
-  const eyebrow = isRecovering ? t('auth.eyebrow_recover') : isSignUp ? t('auth.eyebrow_signup') : t('auth.eyebrow_login');
-  const heading = isRecovering ? t('auth.h1_recover') : isSignUp ? t('auth.h1_signup') : t('auth.h1_login');
+  const eyebrow = isRecovering ? t('auth.eyebrow_recover') : t('auth.eyebrow');
+  const heading = isRecovering ? t('auth.h1_recover') : t('auth.heading');
   const submitLabel = loading ? '...' : isRecovering ? t('auth.sendResetLink') : isSignUp ? t('auth.createAccount') : t('auth.signIn');
 
   const labelStyle: React.CSSProperties = {
@@ -190,7 +184,7 @@ export default function AuthScreen() {
             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
             aria-label="Folium - voltar à página inicial"
           >
-            <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeafSVG size={28} /></span>
+            <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeaf width={28} height={36} stroke={GOLD} /></span>
             <span
               className="brand-text"
               style={{
@@ -303,7 +297,7 @@ export default function AuthScreen() {
             {/* Heading block */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <div className="float-leaf" style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
-                <FoliumLeafSVG size={32} />
+                <FoliumLeaf width={32} height={42} stroke={GOLD} />
               </div>
               <p
                 style={{

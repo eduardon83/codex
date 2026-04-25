@@ -56,7 +56,9 @@
     "h1_signup": "Create your account",
     "h1_recover": "Recover your password",
     "footer_terms": "Terms",
-    "footer_privacy": "Privacy"
+    "footer_privacy": "Privacy",
+    "eyebrow": "Welcome!",
+    "heading": "Get ready for a new chapter"
   },
   "profileSetup": {
     "welcome": "Welcome to Folium",
