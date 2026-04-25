@@ -57,7 +57,7 @@ export default function AuthScreen() {
   }, [searchParams]);
 
   useEffect(() => {
-    document.title = 'Folium — ' + (isSignUp ? t('auth.h1_signup') : t('auth.h1_login'));
+    document.title = 'Folium — ' + t('auth.heading');
     const prevBg = document.body.style.background;
     document.body.style.background = BG;
     return () => { document.body.style.background = prevBg; };
