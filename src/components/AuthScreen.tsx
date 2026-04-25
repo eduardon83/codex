@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
 import { lovable } from '@/integrations/lovable/index';
 import AboutScreen from '@/components/AboutScreen';
+import FoliumLeaf from '@/components/FoliumLeaf';
 
 // Wilderness Hearth palette (matches LandingPage)
 const GOLD = '#C9A84C';
