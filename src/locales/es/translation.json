@@ -45,7 +45,18 @@
     "passwordsDontMatch": "Las contraseñas no coinciden.",
     "passwordUpdated": "Contraseña actualizada. Puedes continuar.",
     "updatePasswordError": "No se pudo actualizar la contraseña.",
-    "resetLinkInvalid": "Este enlace ha caducado o no es válido. Solicita un nuevo enlace de recuperación."
+    "resetLinkInvalid": "Este enlace ha caducado o no es válido. Solicita un nuevo enlace de recuperación.",
+    "email_label": "Correo",
+    "password_label": "Contraseña",
+    "password_confirm_label": "Confirmar contraseña",
+    "eyebrow_login": "Bienvenido de nuevo",
+    "eyebrow_signup": "Bienvenido a Folium",
+    "eyebrow_recover": "Recuperar acceso",
+    "h1_login": "Bienvenido de nuevo",
+    "h1_signup": "Crea tu cuenta",
+    "h1_recover": "Recuperar contraseña",
+    "footer_terms": "Términos",
+    "footer_privacy": "Privacidad"
   },
   "profileSetup": {
     "welcome": "Bienvenido a Folium",

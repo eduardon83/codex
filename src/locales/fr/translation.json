@@ -45,7 +45,18 @@
     "passwordsDontMatch": "Les mots de passe ne correspondent pas.",
     "passwordUpdated": "Mot de passe mis à jour. Vous pouvez continuer.",
     "updatePasswordError": "Impossible de mettre à jour le mot de passe.",
-    "resetLinkInvalid": "Ce lien a expiré ou n’est pas valide. Demandez un nouveau lien de récupération."
+    "resetLinkInvalid": "Ce lien a expiré ou n’est pas valide. Demandez un nouveau lien de récupération.",
+    "email_label": "Email",
+    "password_label": "Mot de passe",
+    "password_confirm_label": "Confirmer le mot de passe",
+    "eyebrow_login": "Bon retour",
+    "eyebrow_signup": "Bienvenue sur Folium",
+    "eyebrow_recover": "Récupérer l’accès",
+    "h1_login": "Bon retour",
+    "h1_signup": "Crée ton compte",
+    "h1_recover": "Récupérer le mot de passe",
+    "footer_terms": "Conditions",
+    "footer_privacy": "Confidentialité"
   },
   "profileSetup": {
     "welcome": "Bienvenue sur Folium",

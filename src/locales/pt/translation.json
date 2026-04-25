@@ -45,7 +45,18 @@
     "passwordsDontMatch": "As palavras-passe não coincidem.",
     "passwordUpdated": "Palavra-passe actualizada. Podes continuar.",
     "updatePasswordError": "Não foi possível actualizar a palavra-passe.",
-    "resetLinkInvalid": "Este link expirou ou não é válido. Pede um novo link de recuperação."
+    "resetLinkInvalid": "Este link expirou ou não é válido. Pede um novo link de recuperação.",
+    "email_label": "Email",
+    "password_label": "Palavra-passe",
+    "password_confirm_label": "Confirmar palavra-passe",
+    "eyebrow_login": "Bem-vindo de volta",
+    "eyebrow_signup": "Bem-vindo ao Folium",
+    "eyebrow_recover": "Recuperar acesso",
+    "h1_login": "Bem-vindo de volta",
+    "h1_signup": "Cria a tua conta",
+    "h1_recover": "Recuperar palavra-passe",
+    "footer_terms": "Termos",
+    "footer_privacy": "Privacidade"
   },
   "profileSetup": {
     "welcome": "Bem-vindo ao Folium",
