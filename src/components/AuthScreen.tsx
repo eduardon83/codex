@@ -297,7 +297,7 @@ export default function AuthScreen() {
             {/* Heading block */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <div className="float-leaf" style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
-                <FoliumLeafSVG size={32} />
+                <FoliumLeaf width={32} height={42} stroke={GOLD} />
               </div>
               <p
                 style={{
