@@ -593,7 +593,14 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
 
           {error && <p className="text-destructive text-sm">{error}</p>}
 
-          <Button data-tutorial="add-save" onClick={save} disabled={loading || !form.title.trim()} className="w-full h-11">
+          <Button
+            data-tutorial="add-save"
+            onClick={save}
+            disabled={loading || !form.title.trim() || !form.isbn.trim()}
+            aria-disabled={!form.isbn.trim()}
+            title={!form.isbn.trim() ? t('add_book.isbn_disabled_tooltip') : undefined}
+            className="w-full h-11"
+          >
             {loading ? t('addBook.saving') : isWishlist ? t('addBook.addToWishlistBtn') : t('addBook.saveToLibrary')}
           </Button>
 
