@@ -297,17 +297,89 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
               <Camera size={16} /> {t('addBook.scanIsbn')}
             </button>
           </div>
-          <div className="flex gap-2">
-            <Input
-              placeholder={t('addBook.enterIsbn')}
-              value={isbn}
-              onChange={e => setIsbn(e.target.value)}
-              className="bg-background border-border text-sm"
-              onKeyDown={e => e.key === 'Enter' && lookupISBN()}
-            />
-            <Button onClick={lookupISBN} disabled={loading} variant="outline">
-              {loading ? <OwlLoader size={16} inline /> : t('addBook.lookUp')}
-            </Button>
+
+          <div ref={searchBoxRef} className="relative">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <Input
+                  placeholder={t('addBook.enterIsbn')}
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  className="bg-background border-border text-sm pl-9 pr-9"
+                  onKeyDown={e => e.key === 'Enter' && handleSearchSubmit()}
+                  onFocus={() => { if (searchResults.length > 0) setShowResults(true); }}
+                />
+                {searching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <OwlLoader size={14} inline />
+                  </div>
+                )}
+              </div>
+              <Button onClick={handleSearchSubmit} disabled={loading} variant="outline">
+                {loading ? <OwlLoader size={16} inline /> : t('addBook.lookUp')}
+              </Button>
+            </div>
+            <p className="mt-1.5 text-muted-foreground" style={{ fontSize: '11px' }}>
+              {searching ? t('add_book.searching') : t('add_book.search_hint')}
+            </p>
+
+            {showResults && (
+              <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-popover border border-border rounded-md shadow-lg max-h-[420px] overflow-y-auto">
+                {searching && searchResults.length === 0 && (
+                  <div className="px-3 py-4 text-sm text-muted-foreground text-center">
+                    {t('add_book.searching')}
+                  </div>
+                )}
+                {!searching && searchResults.length === 0 && query.trim().length >= 3 && (
+                  <div className="px-3 py-4 text-sm text-muted-foreground">
+                    {t('add_book.no_results', { query: query.trim() })}
+                  </div>
+                )}
+                {searchResults.map((b) => (
+                  <button
+                    key={`${b.isbn}-${b.source}`}
+                    onClick={() => selectSearchResult(b)}
+                    className="w-full text-left px-3 py-2 hover:bg-accent/30 border-b border-border/50 last:border-0 flex gap-3 items-start relative"
+                  >
+                    <div className="shrink-0 w-10 h-14 rounded bg-muted overflow-hidden flex items-center justify-center">
+                      {b.cover_url ? (
+                        <img src={b.cover_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <BookOpen size={16} className="text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0 pr-16">
+                      <div className="truncate text-foreground" style={{ fontFamily: '"Josefin Sans", sans-serif', fontSize: '13px' }}>
+                        {b.title}
+                      </div>
+                      <div className="truncate text-muted-foreground" style={{ fontSize: '11px' }}>
+                        {b.author || '—'}
+                      </div>
+                      <div className="truncate text-muted-foreground flex items-center gap-1.5" style={{ fontSize: '10px' }}>
+                        <span>{[b.year, b.publisher].filter(Boolean).join(' · ') || ''}</span>
+                        {b.source === 'community' && (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-accent/20 text-accent" style={{ fontSize: '9px' }}>
+                            🇵🇹 {t('add_book.community_cache_badge')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="absolute right-2 bottom-1.5 text-muted-foreground" style={{ fontSize: '9px' }}>
+                      ISBN {b.isbn}
+                    </span>
+                  </button>
+                ))}
+                {searchResults.length > 0 && (
+                  <button
+                    onClick={() => { setShowResults(false); setMode('manual'); setIsManualFill(true); }}
+                    className="w-full text-left px-3 py-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent/20 border-t border-border"
+                  >
+                    {t('add_book.manual_isbn_link')}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Borrowed toggle in ISBN mode */}
@@ -326,6 +398,7 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
           </button>
         </div>
       )}
+
 
       {mode === 'manual' && (
         <div className="space-y-4" data-tutorial="add-fields">
