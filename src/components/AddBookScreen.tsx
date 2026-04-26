@@ -76,13 +76,18 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
     }
   }, [user]);
 
-  const lookupISBN = async () => {
-    if (!isbn.trim()) return;
+  const isIsbnLike = (s: string) => {
+    const clean = s.replace(/[-\s]/g, '');
+    return /^\d{9,13}$/.test(clean);
+  };
+
+  const fillFormFromIsbn = async (rawIsbn: string) => {
     setLoading(true);
     setError('');
     setBookSource(null);
     setIsManualFill(false);
-    const result = await fetchBookByISBN(isbn.trim());
+    setIsbnError('');
+    const result = await fetchBookByISBN(rawIsbn.trim());
     if (result) {
       setForm({
         ...form,
@@ -98,21 +103,88 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
       });
       setGenres(parseGenres(result.genre));
       setBookSource(result.source || null);
+      setIsbnLocked(true);
       setMode('manual');
     } else {
-      // Not found anywhere — switch to manual mode with ISBN pre-filled
       setForm({
         ...form,
-        isbn: isbn.trim(),
+        isbn: rawIsbn.trim(),
         title: '', author: '', publisher: '', publish_date: '',
         cover_url: '', language: '', page_count: '', genre: '',
       });
       setIsManualFill(true);
       setBookSource(null);
+      setIsbnLocked(false);
       setMode('manual');
     }
     setLoading(false);
   };
+
+  const handleSearchSubmit = async () => {
+    const q = query.trim();
+    if (!q) return;
+    if (isIsbnLike(q)) {
+      await fillFormFromIsbn(q);
+    } else {
+      // trigger immediate search
+      setSearching(true);
+      setShowResults(true);
+      const results = await searchBooksByQuery(q);
+      setSearchResults(results.slice(0, 8));
+      setSearching(false);
+    }
+  };
+
+  const selectSearchResult = (book: BookResult) => {
+    setForm({
+      ...form,
+      title: book.title,
+      author: book.author,
+      isbn: book.isbn,
+      publisher: book.publisher || '',
+      publish_date: book.year || '',
+      cover_url: book.cover_url || '',
+      language: book.language || '',
+      page_count: '',
+      genre: '',
+    });
+    setBookSource(book.source === 'community' ? 'community' : null);
+    setIsbnLocked(true);
+    setIsManualFill(false);
+    setIsbnError('');
+    setShowResults(false);
+    setMode('manual');
+  };
+
+  // Debounced search-as-you-type
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3 || isIsbnLike(q)) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+    setSearching(true);
+    setShowResults(true);
+    const handle = setTimeout(async () => {
+      const results = await searchBooksByQuery(q);
+      setSearchResults(results.slice(0, 8));
+      setSearching(false);
+    }, 600);
+    return () => clearTimeout(handle);
+  }, [query]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!showResults) return;
+    const onClick = (e: MouseEvent) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [showResults]);
 
   const addTag = () => {
     if (tagInput.trim() && tags.length < 5 && !tags.includes(tagInput.trim())) {
