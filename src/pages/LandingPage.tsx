@@ -550,7 +550,7 @@ export default function LandingPage() {
               <a key={l.label} href={l.href} className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>{l.label}</a>
             ))}
           </div>
-          <p style={{ fontSize: '0.68rem', color: 'rgba(160,152,128,0.5)', width: '100%' }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>
+          <p style={{ fontSize: '0.68rem', color: MUTED, width: '100%' }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>
         </footer>
       </div>
     </div>
