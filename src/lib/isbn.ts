@@ -312,7 +312,7 @@ async function searchOpenLibrary(query: string): Promise<BookResult[]> {
           source: 'openlibrary' as const,
         };
       })
-      .filter((b): b is BookResult => b !== null);
+      .filter((b) => b !== null) as BookResult[];
   } catch {
     return [];
   }
@@ -344,7 +344,7 @@ async function searchGoogleBooks(query: string): Promise<BookResult[]> {
           source: 'googlebooks' as const,
         };
       })
-      .filter((b): b is BookResult => b !== null);
+      .filter((b) => b !== null) as BookResult[];
   } catch {
     return [];
   }
