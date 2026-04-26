@@ -263,3 +263,167 @@ export async function saveToBookCache(
     console.warn('Failed to save to book cache', e);
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+// Multi-source title/author search
+// ─────────────────────────────────────────────────────────────
+
+export interface BookResult {
+  title: string;
+  author: string;
+  isbn: string; // mandatory
+  cover_url: string | null;
+  year: string | null;
+  publisher: string | null;
+  language: string | null;
+  source?: 'openlibrary' | 'googlebooks' | 'community';
+}
+
+function pickIsbn(arr: any): string | null {
+  if (!Array.isArray(arr)) return null;
+  // Prefer 13-digit ISBN
+  const thirteen = arr.find((s: any) => typeof s === 'string' && s.replace(/[-\s]/g, '').length === 13);
+  if (thirteen) return String(thirteen).replace(/[-\s]/g, '');
+  const ten = arr.find((s: any) => typeof s === 'string' && s.replace(/[-\s]/g, '').length === 10);
+  if (ten) return String(ten).replace(/[-\s]/g, '');
+  return null;
+}
+
+async function searchOpenLibrary(query: string): Promise<BookResult[]> {
+  try {
+    const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=12&fields=title,author_name,isbn,cover_i,first_publish_year,publisher,language`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const docs: any[] = data.docs || [];
+    return docs
+      .map((d) => {
+        const isbn = pickIsbn(d.isbn);
+        if (!isbn) return null;
+        const coverId = d.cover_i;
+        return {
+          title: d.title || '',
+          author: Array.isArray(d.author_name) ? d.author_name.join(', ') : '',
+          isbn,
+          cover_url: coverId ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg` : null,
+          year: d.first_publish_year ? String(d.first_publish_year) : null,
+          publisher: Array.isArray(d.publisher) ? d.publisher[0] : null,
+          language: Array.isArray(d.language) ? d.language[0] : null,
+          source: 'openlibrary' as const,
+        };
+      })
+      .filter((b) => b !== null) as BookResult[];
+  } catch {
+    return [];
+  }
+}
+
+async function searchGoogleBooks(query: string): Promise<BookResult[]> {
+  try {
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=12&langRestrict=pt`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const items: any[] = data.items || [];
+    return items
+      .map((it) => {
+        const v = it.volumeInfo || {};
+        const ids: any[] = v.industryIdentifiers || [];
+        const isbn13 = ids.find((i) => i.type === 'ISBN_13')?.identifier;
+        const isbn10 = ids.find((i) => i.type === 'ISBN_10')?.identifier;
+        const isbn = (isbn13 || isbn10 || '').replace(/[-\s]/g, '');
+        if (!isbn) return null;
+        return {
+          title: v.title || '',
+          author: Array.isArray(v.authors) ? v.authors.join(', ') : '',
+          isbn,
+          cover_url: v.imageLinks?.thumbnail?.replace('http:', 'https:') || null,
+          year: v.publishedDate ? v.publishedDate.split('-')[0] : null,
+          publisher: v.publisher || null,
+          language: v.language || null,
+          source: 'googlebooks' as const,
+        };
+      })
+      .filter((b) => b !== null) as BookResult[];
+  } catch {
+    return [];
+  }
+}
+
+async function searchCommunityCache(query: string): Promise<BookResult[]> {
+  try {
+    const q = query.replace(/[%_]/g, '\\$&');
+    const { data } = await supabase
+      .from('book_cache')
+      .select('*')
+      .or(`title.ilike.%${q}%,author.ilike.%${q}%`)
+      .limit(12);
+    if (!data) return [];
+    return data
+      .filter((d: any) => !!d.isbn)
+      .map((d: any) => ({
+        title: d.title,
+        author: d.author || '',
+        isbn: String(d.isbn).replace(/[-\s]/g, ''),
+        cover_url: d.cover_url || null,
+        year: d.year || null,
+        publisher: d.publisher || null,
+        language: d.language || null,
+        source: 'community' as const,
+      }));
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Search books by free-text query (title or author) across multiple sources.
+ * Results are deduplicated by ISBN. Books without an ISBN are discarded.
+ */
+export async function searchBooksByQuery(query: string): Promise<BookResult[]> {
+  const q = query.trim();
+  if (q.length < 3) return [];
+
+  const [ol, gb, cache] = await Promise.all([
+    searchOpenLibrary(q),
+    searchGoogleBooks(q),
+    searchCommunityCache(q),
+  ]);
+
+  // Merge with priority: community > openlibrary > googlebooks (community first so it wins on dedupe)
+  // Spec: prefer Open Library; community badge for cached. We'll surface community separately but
+  // dedupe by ISBN preferring openlibrary, then community, then googlebooks; fill missing fields.
+  const byIsbn = new Map<string, BookResult>();
+
+  const merge = (existing: BookResult, incoming: BookResult): BookResult => ({
+    ...incoming,
+    ...existing,
+    title: existing.title || incoming.title,
+    author: existing.author || incoming.author,
+    cover_url: existing.cover_url || incoming.cover_url,
+    year: existing.year || incoming.year,
+    publisher: existing.publisher || incoming.publisher,
+    language: existing.language || incoming.language,
+    source: existing.source,
+  });
+
+  // Add OL first (highest priority for source label)
+  for (const b of ol) {
+    byIsbn.set(b.isbn, b);
+  }
+  // Then community (keeps OL data, but adds new books with community badge)
+  for (const b of cache) {
+    const existing = byIsbn.get(b.isbn);
+    if (existing) byIsbn.set(b.isbn, merge(existing, b));
+    else byIsbn.set(b.isbn, b);
+  }
+  // Then Google (fills gaps)
+  for (const b of gb) {
+    const existing = byIsbn.get(b.isbn);
+    if (existing) byIsbn.set(b.isbn, merge(existing, b));
+    else byIsbn.set(b.isbn, b);
+  }
+
+  return Array.from(byIsbn.values());
+}
+

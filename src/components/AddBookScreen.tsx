@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { fetchBookByISBN, saveToBookCache } from '@/lib/isbn';
+import { fetchBookByISBN, saveToBookCache, searchBooksByQuery, type BookResult } from '@/lib/isbn';
 import { reuploadExternalImage, uploadFileToStorage } from '@/lib/storage';
 import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Camera, X, Upload, CalendarIcon, Info } from 'lucide-react';
+import { Camera, X, Upload, CalendarIcon, Info, Lock, BookOpen, Search, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import GenreMultiSelect, { parseGenres, serializeGenres } from '@/components/GenreMultiSelect';
@@ -32,7 +32,15 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
   const { showToast } = useAppToast();
   const { celebrate } = useCelebration();
   const [mode, setMode] = useState<'isbn' | 'manual'>('isbn');
-  const [isbn, setIsbn] = useState('');
+  const [query, setQuery] = useState('');
+  const [searching, setSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState<BookResult[]>([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isbnLocked, setIsbnLocked] = useState(false);
+  const [isbnError, setIsbnError] = useState('');
+  const [showIsbnHelp, setShowIsbnHelp] = useState(false);
+  const isbnFieldRef = useRef<HTMLInputElement>(null);
+  const searchBoxRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
   const [libraryId, setLibraryId] = useState('');
   const [libraries, setLibraries] = useState<{ id: string; name: string }[]>([]);
@@ -68,13 +76,18 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
     }
   }, [user]);
 
-  const lookupISBN = async () => {
-    if (!isbn.trim()) return;
+  const isIsbnLike = (s: string) => {
+    const clean = s.replace(/[-\s]/g, '');
+    return /^\d{9,13}$/.test(clean);
+  };
+
+  const fillFormFromIsbn = async (rawIsbn: string) => {
     setLoading(true);
     setError('');
     setBookSource(null);
     setIsManualFill(false);
-    const result = await fetchBookByISBN(isbn.trim());
+    setIsbnError('');
+    const result = await fetchBookByISBN(rawIsbn.trim());
     if (result) {
       setForm({
         ...form,
@@ -90,21 +103,88 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
       });
       setGenres(parseGenres(result.genre));
       setBookSource(result.source || null);
+      setIsbnLocked(true);
       setMode('manual');
     } else {
-      // Not found anywhere — switch to manual mode with ISBN pre-filled
       setForm({
         ...form,
-        isbn: isbn.trim(),
+        isbn: rawIsbn.trim(),
         title: '', author: '', publisher: '', publish_date: '',
         cover_url: '', language: '', page_count: '', genre: '',
       });
       setIsManualFill(true);
       setBookSource(null);
+      setIsbnLocked(false);
       setMode('manual');
     }
     setLoading(false);
   };
+
+  const handleSearchSubmit = async () => {
+    const q = query.trim();
+    if (!q) return;
+    if (isIsbnLike(q)) {
+      await fillFormFromIsbn(q);
+    } else {
+      // trigger immediate search
+      setSearching(true);
+      setShowResults(true);
+      const results = await searchBooksByQuery(q);
+      setSearchResults(results.slice(0, 8));
+      setSearching(false);
+    }
+  };
+
+  const selectSearchResult = (book: BookResult) => {
+    setForm({
+      ...form,
+      title: book.title,
+      author: book.author,
+      isbn: book.isbn,
+      publisher: book.publisher || '',
+      publish_date: book.year || '',
+      cover_url: book.cover_url || '',
+      language: book.language || '',
+      page_count: '',
+      genre: '',
+    });
+    setBookSource(book.source === 'community' ? 'community' : null);
+    setIsbnLocked(true);
+    setIsManualFill(false);
+    setIsbnError('');
+    setShowResults(false);
+    setMode('manual');
+  };
+
+  // Debounced search-as-you-type
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 3 || isIsbnLike(q)) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+    setSearching(true);
+    setShowResults(true);
+    const handle = setTimeout(async () => {
+      const results = await searchBooksByQuery(q);
+      setSearchResults(results.slice(0, 8));
+      setSearching(false);
+    }, 600);
+    return () => clearTimeout(handle);
+  }, [query]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!showResults) return;
+    const onClick = (e: MouseEvent) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [showResults]);
 
   const addTag = () => {
     if (tagInput.trim() && tags.length < 5 && !tags.includes(tagInput.trim())) {
@@ -123,6 +203,13 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
 
   const save = async () => {
     if (!form.title.trim() || !libraryId) return;
+    if (!form.isbn || form.isbn.trim() === '') {
+      setIsbnError(t('add_book.isbn_required_error'));
+      setMode('manual');
+      setTimeout(() => isbnFieldRef.current?.focus(), 50);
+      return;
+    }
+    setIsbnError('');
     setLoading(true);
 
     const { data: inserted, error: err } = await supabase.from('books').insert({
@@ -217,17 +304,89 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
               <Camera size={16} /> {t('addBook.scanIsbn')}
             </button>
           </div>
-          <div className="flex gap-2">
-            <Input
-              placeholder={t('addBook.enterIsbn')}
-              value={isbn}
-              onChange={e => setIsbn(e.target.value)}
-              className="bg-background border-border text-sm"
-              onKeyDown={e => e.key === 'Enter' && lookupISBN()}
-            />
-            <Button onClick={lookupISBN} disabled={loading} variant="outline">
-              {loading ? <OwlLoader size={16} inline /> : t('addBook.lookUp')}
-            </Button>
+
+          <div ref={searchBoxRef} className="relative">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                <Input
+                  placeholder={t('addBook.enterIsbn')}
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  className="bg-background border-border text-sm pl-9 pr-9"
+                  onKeyDown={e => e.key === 'Enter' && handleSearchSubmit()}
+                  onFocus={() => { if (searchResults.length > 0) setShowResults(true); }}
+                />
+                {searching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <OwlLoader size={14} inline />
+                  </div>
+                )}
+              </div>
+              <Button onClick={handleSearchSubmit} disabled={loading} variant="outline">
+                {loading ? <OwlLoader size={16} inline /> : t('addBook.lookUp')}
+              </Button>
+            </div>
+            <p className="mt-1.5 text-muted-foreground" style={{ fontSize: '11px' }}>
+              {searching ? t('add_book.searching') : t('add_book.search_hint')}
+            </p>
+
+            {showResults && (
+              <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-popover border border-border rounded-md shadow-lg max-h-[420px] overflow-y-auto">
+                {searching && searchResults.length === 0 && (
+                  <div className="px-3 py-4 text-sm text-muted-foreground text-center">
+                    {t('add_book.searching')}
+                  </div>
+                )}
+                {!searching && searchResults.length === 0 && query.trim().length >= 3 && (
+                  <div className="px-3 py-4 text-sm text-muted-foreground">
+                    {t('add_book.no_results', { query: query.trim() })}
+                  </div>
+                )}
+                {searchResults.map((b) => (
+                  <button
+                    key={`${b.isbn}-${b.source}`}
+                    onClick={() => selectSearchResult(b)}
+                    className="w-full text-left px-3 py-2 hover:bg-accent/30 border-b border-border/50 last:border-0 flex gap-3 items-start relative"
+                  >
+                    <div className="shrink-0 w-10 h-14 rounded bg-muted overflow-hidden flex items-center justify-center">
+                      {b.cover_url ? (
+                        <img src={b.cover_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <BookOpen size={16} className="text-muted-foreground" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0 pr-16">
+                      <div className="truncate text-foreground" style={{ fontFamily: '"Josefin Sans", sans-serif', fontSize: '13px' }}>
+                        {b.title}
+                      </div>
+                      <div className="truncate text-muted-foreground" style={{ fontSize: '11px' }}>
+                        {b.author || '—'}
+                      </div>
+                      <div className="truncate text-muted-foreground flex items-center gap-1.5" style={{ fontSize: '10px' }}>
+                        <span>{[b.year, b.publisher].filter(Boolean).join(' · ') || ''}</span>
+                        {b.source === 'community' && (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded bg-accent/20 text-accent" style={{ fontSize: '9px' }}>
+                            🇵🇹 {t('add_book.community_cache_badge')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="absolute right-2 bottom-1.5 text-muted-foreground" style={{ fontSize: '9px' }}>
+                      ISBN {b.isbn}
+                    </span>
+                  </button>
+                ))}
+                {searchResults.length > 0 && (
+                  <button
+                    onClick={() => { setShowResults(false); setMode('manual'); setIsManualFill(true); }}
+                    className="w-full text-left px-3 py-2.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent/20 border-t border-border"
+                  >
+                    {t('add_book.manual_isbn_link')}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Borrowed toggle in ISBN mode */}
@@ -246,6 +405,7 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
           </button>
         </div>
       )}
+
 
       {mode === 'manual' && (
         <div className="space-y-4" data-tutorial="add-fields">
@@ -273,7 +433,45 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
 
           <Input placeholder={t('addBook.titleField')} value={form.title} onChange={e => update('title', e.target.value)} className="bg-background border-border text-sm" />
           <Input placeholder={t('addBook.author')} value={form.author} onChange={e => update('author', e.target.value)} className="bg-background border-border text-sm" />
-          <Input placeholder={t('addBook.isbn')} value={form.isbn} onChange={e => update('isbn', e.target.value)} className="bg-background border-border text-sm" />
+          <div className="space-y-1">
+            {isbnLocked ? (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-foreground text-xs">
+                <Lock size={12} className="text-muted-foreground" />
+                <span>ISBN: {form.isbn}</span>
+              </div>
+            ) : (
+              <Input
+                ref={isbnFieldRef}
+                placeholder={`${t('addBook.isbn')} *`}
+                value={form.isbn}
+                onChange={e => { update('isbn', e.target.value); if (e.target.value.trim()) setIsbnError(''); }}
+                aria-required="true"
+                aria-invalid={!!isbnError}
+                className={cn("bg-background border-border text-sm", isbnError && "border-destructive")}
+              />
+            )}
+            {isbnError && (
+              <p className="text-destructive" style={{ fontSize: '12px' }}>{isbnError}</p>
+            )}
+            {!isbnLocked && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowIsbnHelp(v => !v)}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                  style={{ fontSize: '11px' }}
+                >
+                  <ChevronDown size={12} className={cn("transition-transform", showIsbnHelp && "rotate-180")} />
+                  {t('add_book.isbn_help_link', 'Não sabes o ISBN?')}
+                </button>
+                {showIsbnHelp && (
+                  <p className="text-muted-foreground bg-muted/50 rounded p-2" style={{ fontSize: '11px' }}>
+                    {t('add_book.isbn_help')}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
           <Input placeholder={t('addBook.publisher')} value={form.publisher} onChange={e => update('publisher', e.target.value)} className="bg-background border-border text-sm" />
           <Input placeholder={t('addBook.publishDate')} value={form.publish_date} onChange={e => update('publish_date', e.target.value)} className="bg-background border-border text-sm" />
 
@@ -395,7 +593,14 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
 
           {error && <p className="text-destructive text-sm">{error}</p>}
 
-          <Button data-tutorial="add-save" onClick={save} disabled={loading || !form.title.trim()} className="w-full h-11">
+          <Button
+            data-tutorial="add-save"
+            onClick={save}
+            disabled={loading || !form.title.trim() || !form.isbn.trim()}
+            aria-disabled={!form.isbn.trim()}
+            title={!form.isbn.trim() ? t('add_book.isbn_disabled_tooltip') : undefined}
+            className="w-full h-11"
+          >
             {loading ? t('addBook.saving') : isWishlist ? t('addBook.addToWishlistBtn') : t('addBook.saveToLibrary')}
           </Button>
 
@@ -412,40 +617,8 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
         onClose={() => setScannerOpen(false)}
         onDetected={(code) => {
           setScannerOpen(false);
-          setIsbn(code);
-          // auto-lookup after a short tick so state updates first
-          setTimeout(() => {
-            setIsbn(code);
-            (async () => {
-              setLoading(true);
-              setError('');
-              setBookSource(null);
-              setIsManualFill(false);
-              const result = await fetchBookByISBN(code);
-              if (result) {
-                setForm((f) => ({
-                  ...f,
-                  title: result.title,
-                  author: result.author,
-                  isbn: result.isbn,
-                  publisher: result.publisher,
-                  publish_date: result.publish_date,
-                  cover_url: result.cover_url,
-                  language: result.language,
-                  page_count: result.page_count?.toString() || '',
-                  genre: result.genre,
-                }));
-                setGenres(parseGenres(result.genre));
-                setBookSource(result.source || null);
-                setMode('manual');
-              } else {
-                setForm((f) => ({ ...f, isbn: code }));
-                setIsManualFill(true);
-                setMode('manual');
-              }
-              setLoading(false);
-            })();
-          }, 50);
+          setQuery(code);
+          setTimeout(() => { fillFormFromIsbn(code); }, 50);
         }}
       />
     </div>

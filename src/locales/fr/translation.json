@@ -693,5 +693,16 @@
     "info": "Info",
     "setupIntro": "Choisissez un avatar pour votre profil.",
     "defaultAlt": "Avatar Folium"
+  },
+  "add_book": {
+    "search_hint": "Cherche par ISBN, titre ou auteur",
+    "searching": "Recherche...",
+    "no_results": "Aucun résultat pour '{{query}}'. Essaie l'ISBN ou ajoute manuellement.",
+    "manual_isbn_link": "Tu ne trouves pas le livre ? Saisis l'ISBN manuellement →",
+    "isbn_required_error": "Tous les livres nécessitent un ISBN. Utilise la recherche pour trouver ton livre, ou saisis l'ISBN manuellement.",
+    "isbn_help": "L'ISBN est le numéro unique qui identifie chaque livre. Tu le trouves au dos du livre, près du code-barres. Il comporte 10 ou 13 chiffres.",
+    "isbn_help_link": "Tu ne connais pas l'ISBN ?",
+    "isbn_disabled_tooltip": "ISBN obligatoire",
+    "community_cache_badge": "Cache communautaire"
   }
 }
