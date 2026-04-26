@@ -341,8 +341,9 @@ export default function LandingPage() {
                 type="button"
                 className="lang-btn"
                 onClick={() => setLangOpen((v) => !v)}
-                aria-haspopup="listbox"
+                aria-haspopup="menu"
                 aria-expanded={langOpen}
+                aria-label={`${currentOpt.name} — ${currentOpt.code.toUpperCase()}`}
                 style={{
                   fontFamily: "'Josefin Sans', sans-serif",
                   fontSize: '0.75rem',
@@ -361,7 +362,7 @@ export default function LandingPage() {
                 }}
               >
                 <span style={{ fontSize: '1rem', lineHeight: 1 }} aria-hidden="true">{currentOpt.flag}</span>
-                <span>{currentOpt.code.toUpperCase()}</span>
+                <span aria-hidden="true">{currentOpt.code.toUpperCase()}</span>
               </button>
               {langOpen && (
                 <div
