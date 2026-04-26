@@ -428,9 +428,9 @@ export default function LandingPage() {
             <div style={{ animation: 'folium-floatLeaf 4s ease-in-out infinite' }}>
               <FoliumLeafSVG size={52} />
             </div>
-            <p style={{ fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, fontWeight: 600, opacity: 0, animation: 'folium-fadeUp 0.8s 0.3s ease forwards' }}>{t.eyebrow}</p>
-            <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.4rem, 7vw, 5rem)', fontWeight: 500, lineHeight: 1.05, color: TEXT, opacity: 0, animation: 'folium-fadeUp 0.8s 0.5s ease forwards', margin: 0 }}>
-              {t.hero_title_1}<br /><em style={{ fontStyle: 'italic', color: GOLD }}>{t.hero_title_2}</em>
+            <p style={{ fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, fontWeight: 600, animation: 'folium-fadeUp 0.8s 0.3s ease both' }}>{t.eyebrow}</p>
+            <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.4rem, 7vw, 5rem)', fontWeight: 500, lineHeight: 1.05, color: TEXT, animation: 'folium-fadeUp 0.8s 0.5s ease both', margin: 0 }}>
+              {t.hero_title_1} <em style={{ fontStyle: 'italic', color: GOLD }}>{t.hero_title_2}</em>
             </h1>
             <p style={{ fontSize: '0.9rem', fontWeight: 300, letterSpacing: '0.05em', color: MUTED, lineHeight: 1.8, maxWidth: 480, opacity: 0, animation: 'folium-fadeUp 0.8s 0.7s ease forwards' }}>
               {t.hero_sub}
