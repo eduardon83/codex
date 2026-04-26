@@ -288,9 +288,9 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif text-2xl text-foreground">
+        <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>
           {isWishlist ? t('addBook.addToWishlist') : t('addBook.title')}
-        </h2>
+        </h1>
         <HelpButton screen="addBook" />
       </div>
 
