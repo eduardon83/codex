@@ -695,7 +695,7 @@
     "defaultAlt": "Avatar Folium"
   },
   "add_book": {
-    "search_hint": "Pesquisa por ISBN, título ou autor",
+    "search_placeholder": "Pesquisa por autor, título ou ISBN",
     "searching": "A pesquisar...",
     "no_results": "Nenhum resultado para '{{query}}'. Tenta o ISBN ou adiciona manualmente.",
     "manual_isbn_link": "Não encontras o livro? Insere o ISBN manualmente →",

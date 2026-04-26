@@ -310,7 +310,7 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
               <div className="relative flex-1">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                 <Input
-                  placeholder={t('addBook.enterIsbn')}
+                  placeholder={t('add_book.search_placeholder')}
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   className="bg-background border-border text-sm pl-9 pr-9"
@@ -327,9 +327,11 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
                 {loading ? <OwlLoader size={16} inline /> : t('addBook.lookUp')}
               </Button>
             </div>
-            <p className="mt-1.5 text-muted-foreground" style={{ fontSize: '11px' }}>
-              {searching ? t('add_book.searching') : t('add_book.search_hint')}
-            </p>
+            {searching && (
+              <p className="mt-1.5 text-muted-foreground" style={{ fontSize: '11px' }}>
+                {t('add_book.searching')}
+              </p>
+            )}
 
             {showResults && (
               <div className="absolute left-0 right-0 top-full mt-1 z-30 bg-popover border border-border rounded-md shadow-lg max-h-[420px] overflow-y-auto">
