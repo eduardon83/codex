@@ -439,7 +439,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h1 className="font-serif text-2xl text-foreground">{currentLib.name}</h1>
+                <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>{currentLib.name}</h1>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button onClick={startEditName} aria-label={t('library.editName')} className="text-muted-foreground hover:text-foreground transition-colors">
