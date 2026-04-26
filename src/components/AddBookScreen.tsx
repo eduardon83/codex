@@ -310,7 +310,7 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
               <div className="relative flex-1">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
                 <Input
-                  placeholder={t('addBook.enterIsbn')}
+                  placeholder={t('add_book.search_placeholder')}
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   className="bg-background border-border text-sm pl-9 pr-9"
