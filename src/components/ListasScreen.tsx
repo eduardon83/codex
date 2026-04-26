@@ -91,10 +91,18 @@ export default function ListasScreen({ onGoToSearchReadingLists }: { onGoToSearc
     return () => window.removeEventListener('folium-open-planos', openPlanos);
   }, []);
 
+  const headingText = tab === 'wishlist' ? 'Lista de Desejos' : tab === 'planos' ? 'Planos de Leitura' : 'Listas';
+
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
+      <h1
+        className="font-serif italic text-foreground mb-4"
+        style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}
+      >
+        {headingText}
+      </h1>
       <Tabs value={tab} onValueChange={(value) => setTab(value as ListasTab)}>
-        <TabsList data-tutorial="listas-tabs" className="w-full rounded-full mb-4">
+        <TabsList data-tutorial="listas-tabs" className="w-full rounded-full mb-4" aria-label="Sub-secções de listas">
           <TabsTrigger value="wishlist" className="flex-1 rounded-full">Desejos</TabsTrigger>
           <TabsTrigger value="planos" className="flex-1 rounded-full">Planos</TabsTrigger>
           <TabsTrigger value="listas" className="flex-1 rounded-full">Listas</TabsTrigger>
