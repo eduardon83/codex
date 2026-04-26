@@ -104,7 +104,7 @@ export default function LibraryCardsSection() {
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <button className="p-1 text-muted-foreground hover:text-foreground" aria-label="menu">
+                      <button className="p-1 text-muted-foreground hover:text-foreground" aria-label="Mais opções do cartão">
                         <MoreVertical size={16} />
                       </button>
                     </DropdownMenuTrigger>
