@@ -348,7 +348,7 @@ export default function ProfileScreen() {
       <div className="mt-8 border-t border-border pt-5">
         <button
           onClick={openDeleteAccount}
-          className="w-full text-center text-sm text-destructive/80 hover:text-destructive transition-colors"
+          className="w-full text-center text-sm text-destructive hover:underline transition-colors"
         >
           {t('profile.deleteAccount')}
         </button>
