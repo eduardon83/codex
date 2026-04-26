@@ -180,7 +180,7 @@ function PlanosTab({ userId }: { userId: string | null }) {
           {editingMeta && <Button size="sm" className="mt-2" onClick={async () => { await supabase.from('reading_plans' as any).update({ name: form.name || plan.name, description: form.description || null }).eq('id', plan.id); setEditingMeta(false); load(); }}>Guardar</Button>}
         </div>
         <DropdownMenu>
-          <DropdownMenuTrigger asChild><button className="h-9 w-9 grid place-items-center rounded-full border border-border"><MoreVertical size={16} /></button></DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild><button aria-label="Opções do plano" className="h-9 w-9 grid place-items-center rounded-full border border-border"><MoreVertical size={16} /></button></DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => { setForm({ name: plan.name, description: plan.description || '', ends_at: plan.ends_at || '' }); setEditingMeta(true); }}>Editar nome e descrição</DropdownMenuItem>
             <DropdownMenuItem onClick={exportPlan}>Exportar plano</DropdownMenuItem>
