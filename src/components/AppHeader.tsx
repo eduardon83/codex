@@ -12,12 +12,11 @@ export default function AppHeader() {
     <div className="px-4 pt-3 pb-1 max-w-lg mx-auto flex items-center gap-[10px]">
       <img
         src={icon}
-        alt="Folium"
+        alt=""
+        aria-hidden="true"
         className="h-7 w-auto"
       />
       <div
-        role="img"
-        aria-label="Folium"
         className="font-serif italic leading-none"
         style={{
           fontWeight: 500,

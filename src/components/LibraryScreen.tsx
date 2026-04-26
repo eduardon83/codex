@@ -439,7 +439,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h1 className="font-serif text-2xl text-foreground">{currentLib.name}</h1>
+                <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>{currentLib.name}</h1>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button onClick={startEditName} aria-label={t('library.editName')} className="text-muted-foreground hover:text-foreground transition-colors">
@@ -525,6 +525,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t('library.searchPlaceholder')}
+                aria-label={t('library.searchPlaceholder')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="bg-background border-border text-sm pl-8 pr-8"
@@ -532,9 +533,10 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
+                  aria-label={t('library.clearSearch', 'Limpar pesquisa')}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <X size={14} />
+                  <X size={14} aria-hidden="true" />
                 </button>
               )}
             </div>

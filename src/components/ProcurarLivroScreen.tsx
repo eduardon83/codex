@@ -146,7 +146,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif text-2xl text-foreground">{t('search.title')}</h2>
+        <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>{t('search.title')}</h1>
         <HelpButton screen="discover" />
       </div>
 
@@ -162,7 +162,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
             <>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('search.books.placeholder')} className="pl-9" />
+                <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('search.books.placeholder')} aria-label={t('search.books.placeholder')} className="pl-9" />
               </div>
               {loading ? <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div> : results.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-10">{t('search.books.empty')}</p>

@@ -100,7 +100,7 @@ export default function LibraryCardExpiryBanner({ onGoToProfile }: Props) {
                 {t('libraryCard.bannerView')}
               </button>
             )}
-            <button onClick={() => dismiss(card.id)} className="hover:opacity-70" aria-label="dismiss">
+            <button onClick={() => dismiss(card.id)} className="hover:opacity-70" aria-label="Dispensar aviso">
               <X size={14} />
             </button>
           </div>

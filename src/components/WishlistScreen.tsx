@@ -257,9 +257,9 @@ export default function WishlistScreen() {
           {items.map(item => (
             <div key={item.id} className="flex items-center gap-3 py-3 border-b border-border">
               {item.cover_url ? (
-                <img src={item.cover_url} alt="" className="w-8 h-12 object-cover rounded-sm" />
+                <img src={item.cover_url} alt="" aria-hidden="true" className="w-8 h-12 object-cover rounded-sm" />
               ) : (
-                <div className="w-8 h-12 bg-secondary rounded-sm" />
+                <div className="w-8 h-12 bg-secondary rounded-sm" aria-hidden="true" />
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-foreground truncate">{item.title}</p>
