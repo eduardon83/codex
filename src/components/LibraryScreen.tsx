@@ -525,6 +525,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t('library.searchPlaceholder')}
+                aria-label={t('library.searchPlaceholder')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className="bg-background border-border text-sm pl-8 pr-8"
@@ -532,9 +533,10 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
+                  aria-label={t('library.clearSearch', 'Limpar pesquisa')}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  <X size={14} />
+                  <X size={14} aria-hidden="true" />
                 </button>
               )}
             </div>
