@@ -205,21 +205,18 @@ export default function WishlistScreen() {
 
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif text-2xl text-foreground">{t('wishlist.title')}</h2>
-        <div className="flex items-center gap-2">
-          {items.length > 0 && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button data-tutorial="wishlist-share" onClick={shareWishlist} className="text-muted-foreground hover:text-foreground transition-colors">
-                  <Share2 size={18} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('wishlist.shareWishlist')}</TooltipContent>
-            </Tooltip>
-          )}
-          <HelpButton screen="wishlist" />
-        </div>
+      <div className="flex items-center justify-end mb-4 gap-2">
+        {items.length > 0 && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button data-tutorial="wishlist-share" onClick={shareWishlist} aria-label={t('wishlist.shareWishlist')} className="text-muted-foreground hover:text-foreground transition-colors">
+                <Share2 size={18} aria-hidden="true" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{t('wishlist.shareWishlist')}</TooltipContent>
+          </Tooltip>
+        )}
+        <HelpButton screen="wishlist" />
       </div>
 
       <div data-tutorial="wishlist-add" className="space-y-3 mb-6">
