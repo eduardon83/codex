@@ -426,7 +426,45 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
 
           <Input placeholder={t('addBook.titleField')} value={form.title} onChange={e => update('title', e.target.value)} className="bg-background border-border text-sm" />
           <Input placeholder={t('addBook.author')} value={form.author} onChange={e => update('author', e.target.value)} className="bg-background border-border text-sm" />
-          <Input placeholder={t('addBook.isbn')} value={form.isbn} onChange={e => update('isbn', e.target.value)} className="bg-background border-border text-sm" />
+          <div className="space-y-1">
+            {isbnLocked ? (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-foreground text-xs">
+                <Lock size={12} className="text-muted-foreground" />
+                <span>ISBN: {form.isbn}</span>
+              </div>
+            ) : (
+              <Input
+                ref={isbnFieldRef}
+                placeholder={`${t('addBook.isbn')} *`}
+                value={form.isbn}
+                onChange={e => { update('isbn', e.target.value); if (e.target.value.trim()) setIsbnError(''); }}
+                aria-required="true"
+                aria-invalid={!!isbnError}
+                className={cn("bg-background border-border text-sm", isbnError && "border-destructive")}
+              />
+            )}
+            {isbnError && (
+              <p className="text-destructive" style={{ fontSize: '12px' }}>{isbnError}</p>
+            )}
+            {!isbnLocked && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowIsbnHelp(v => !v)}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                  style={{ fontSize: '11px' }}
+                >
+                  <ChevronDown size={12} className={cn("transition-transform", showIsbnHelp && "rotate-180")} />
+                  {t('add_book.isbn_help_link', 'Não sabes o ISBN?')}
+                </button>
+                {showIsbnHelp && (
+                  <p className="text-muted-foreground bg-muted/50 rounded p-2" style={{ fontSize: '11px' }}>
+                    {t('add_book.isbn_help')}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
           <Input placeholder={t('addBook.publisher')} value={form.publisher} onChange={e => update('publisher', e.target.value)} className="bg-background border-border text-sm" />
           <Input placeholder={t('addBook.publishDate')} value={form.publish_date} onChange={e => update('publish_date', e.target.value)} className="bg-background border-border text-sm" />
 
