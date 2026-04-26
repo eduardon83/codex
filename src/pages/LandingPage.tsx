@@ -438,7 +438,7 @@ export default function LandingPage() {
             <p style={{ fontSize: '0.9rem', fontWeight: 300, letterSpacing: '0.05em', color: MUTED, lineHeight: 1.8, maxWidth: 480, opacity: 0, animation: 'folium-fadeUp 0.8s 0.7s ease forwards' }}>
               {t.hero_sub}
             </p>
-            <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0.5rem', opacity: 0, animation: 'folium-fadeUp 0.8s 0.9s ease forwards' }}>
+            <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center', marginTop: '0.5rem', animation: 'folium-fadeUp 0.8s 0.9s ease both' }}>
               <button onClick={goSignup} className="btn-hero" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', background: GOLD, color: BG, border: 'none', cursor: 'pointer', padding: '14px 32px', borderRadius: 2, transition: 'background 0.2s, transform 0.15s, box-shadow 0.2s', boxShadow: '0 4px 24px rgba(201,168,76,0.25)' }}>{t.cta_primary}</button>
               <button onClick={goLogin} className="btn-hero-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: MUTED, background: 'transparent', cursor: 'pointer', padding: '14px 24px', borderRadius: 2, border: '0.5px solid rgba(160,152,128,0.3)', transition: 'color 0.2s, border-color 0.2s' }}>{t.cta_secondary}</button>
             </div>
