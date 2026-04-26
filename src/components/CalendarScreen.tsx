@@ -122,18 +122,18 @@ export default function CalendarScreen({ onBack, onOpenBook }: Props) {
   return (
     <div className="min-h-screen pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in bg-background">
       <div className="flex items-center gap-3 mb-6">
-        <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft size={20} />
+        <button onClick={onBack} aria-label={t('common.back', 'Voltar')} className="text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft size={20} aria-hidden="true" />
         </button>
-        <h2 className="font-serif text-2xl text-foreground">{t('calendar.title', 'Calendário')}</h2>
+        <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>{t('calendar.title', 'Calendário')}</h1>
       </div>
 
       <div className="flex items-center justify-between mb-4">
-        <button onClick={goPrev} className="p-2 text-muted-foreground hover:text-foreground"><ChevronLeft size={18} /></button>
+        <button onClick={goPrev} aria-label={t('calendar.prevMonth', 'Mês anterior')} className="p-2 text-muted-foreground hover:text-foreground"><ChevronLeft size={18} aria-hidden="true" /></button>
         <p className="font-serif text-lg text-foreground">
           {t(`calendar.month.${MONTH_KEYS[cursor.getMonth()]}`)} {cursor.getFullYear()}
         </p>
-        <button onClick={goNext} className="p-2 text-muted-foreground hover:text-foreground"><ChevronRight size={18} /></button>
+        <button onClick={goNext} aria-label={t('calendar.nextMonth', 'Próximo mês')} className="p-2 text-muted-foreground hover:text-foreground"><ChevronRight size={18} aria-hidden="true" /></button>
       </div>
 
       <div className="grid grid-cols-7 gap-1 text-center mb-1">
