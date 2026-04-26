@@ -203,6 +203,13 @@ export default function AddBookScreen({ isWishlist = false, onDone }: AddBookScr
 
   const save = async () => {
     if (!form.title.trim() || !libraryId) return;
+    if (!form.isbn || form.isbn.trim() === '') {
+      setIsbnError(t('add_book.isbn_required_error'));
+      setMode('manual');
+      setTimeout(() => isbnFieldRef.current?.focus(), 50);
+      return;
+    }
+    setIsbnError('');
     setLoading(true);
 
     const { data: inserted, error: err } = await supabase.from('books').insert({
