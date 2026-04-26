@@ -80,7 +80,7 @@ export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEv
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground">Eventos</h1>
+        <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>Eventos</h1>
         <div className="flex items-center gap-2">
           {canCreate && <Button size="sm" onClick={() => setCreateOpen(true)}><Plus size={15} className="mr-1" />Criar evento</Button>}
           <button onClick={() => setFilterOpen(true)} aria-label="Filtrar eventos" className="h-9 w-9 grid place-items-center rounded-full border border-border text-muted-foreground"><Filter size={17} /></button>
