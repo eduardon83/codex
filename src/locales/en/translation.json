@@ -695,7 +695,7 @@
     "defaultAlt": "Folium avatar"
   },
   "add_book": {
-    "search_hint": "Search by ISBN, title or author",
+    "search_placeholder": "Search by author, title or ISBN",
     "searching": "Searching...",
     "no_results": "No results for '{{query}}'. Try the ISBN or add manually.",
     "manual_isbn_link": "Can't find the book? Enter the ISBN manually →",
