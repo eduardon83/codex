@@ -205,26 +205,24 @@ export default function WishlistScreen() {
 
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif text-2xl text-foreground">{t('wishlist.title')}</h2>
-        <div className="flex items-center gap-2">
-          {items.length > 0 && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button data-tutorial="wishlist-share" onClick={shareWishlist} className="text-muted-foreground hover:text-foreground transition-colors">
-                  <Share2 size={18} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{t('wishlist.shareWishlist')}</TooltipContent>
-            </Tooltip>
-          )}
-          <HelpButton screen="wishlist" />
-        </div>
+      <div className="flex items-center justify-end mb-4 gap-2">
+        {items.length > 0 && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button data-tutorial="wishlist-share" onClick={shareWishlist} aria-label={t('wishlist.shareWishlist')} className="text-muted-foreground hover:text-foreground transition-colors">
+                <Share2 size={18} aria-hidden="true" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{t('wishlist.shareWishlist')}</TooltipContent>
+          </Tooltip>
+        )}
+        <HelpButton screen="wishlist" />
       </div>
 
       <div data-tutorial="wishlist-add" className="space-y-3 mb-6">
         <div className="flex gap-2">
           <Input
+            aria-label={t('wishlist.scanOrEnterIsbn')}
             placeholder={t('wishlist.scanOrEnterIsbn')}
             value={isbn}
             onChange={e => setIsbn(e.target.value)}
@@ -232,11 +230,12 @@ export default function WishlistScreen() {
             onKeyDown={e => e.key === 'Enter' && addByISBN()}
           />
           <Button onClick={addByISBN} disabled={loading} variant="outline" size="sm">
-            {loading ? <Loader2 size={14} className="animate-spin" /> : t('wishlist.add')}
+            {loading ? <Loader2 size={14} className="animate-spin" aria-label={t('app.loading')} /> : t('wishlist.add')}
           </Button>
         </div>
         <div className="flex gap-2">
           <Input
+            aria-label={t('wishlist.bookNameAuthorIsbn')}
             placeholder={t('wishlist.bookNameAuthorIsbn')}
             value={manualText}
             onChange={e => setManualText(e.target.value)}
@@ -268,8 +267,8 @@ export default function WishlistScreen() {
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="text-muted-foreground hover:text-foreground transition-colors">
-                    <MoreVertical size={15} />
+                  <button aria-label={`Opções: ${item.title}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                    <MoreVertical size={15} aria-hidden="true" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">

@@ -158,7 +158,12 @@ export default function ProfileScreen() {
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif text-2xl text-foreground">{t('profile.title')}</h2>
+        <h1
+          className="text-foreground"
+          style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}
+        >
+          {t('profile.title')}
+        </h1>
         <HelpButton screen="profile" />
       </div>
 
