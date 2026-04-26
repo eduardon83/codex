@@ -366,7 +366,8 @@ export default function LandingPage() {
               </button>
               {langOpen && (
                 <div
-                  role="listbox"
+                  role="menu"
+                  aria-label="Language"
                   style={{
                     position: 'absolute',
                     top: 'calc(100% + 6px)',
@@ -384,8 +385,9 @@ export default function LandingPage() {
                     <button
                       key={opt.code}
                       type="button"
-                      role="option"
-                      aria-selected={opt.code === lang}
+                      role="menuitemradio"
+                      aria-checked={opt.code === lang}
+                      aria-label={opt.name}
                       className="lang-item"
                       onClick={() => setLang(opt.code)}
                       style={{
@@ -407,8 +409,8 @@ export default function LandingPage() {
                       }}
                     >
                       <span style={{ fontSize: '1.05rem', lineHeight: 1 }} aria-hidden="true">{opt.flag}</span>
-                      <span style={{ fontWeight: 600, width: 22 }}>{opt.code.toUpperCase()}</span>
-                      <span style={{ opacity: 0.85 }}>{opt.name}</span>
+                      <span aria-hidden="true" style={{ fontWeight: 600, width: 22 }}>{opt.code.toUpperCase()}</span>
+                      <span aria-hidden="true" style={{ opacity: 0.85 }}>{opt.name}</span>
                     </button>
                   ))}
                 </div>
