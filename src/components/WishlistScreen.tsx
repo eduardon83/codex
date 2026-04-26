@@ -267,8 +267,8 @@ export default function WishlistScreen() {
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="text-muted-foreground hover:text-foreground transition-colors">
-                    <MoreVertical size={15} />
+                  <button aria-label={`Opções: ${item.title}`} className="text-muted-foreground hover:text-foreground transition-colors">
+                    <MoreVertical size={15} aria-hidden="true" />
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
