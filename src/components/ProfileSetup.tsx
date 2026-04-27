@@ -39,20 +39,30 @@ function calculateAge(dob: string): number {
 }
 
 export default function ProfileSetup() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
   const [step, setStep] = useState<Step>('age_gate');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Step 1: basics
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
+  // Step 1: basics — hydrate from profile so a refresh / back-and-forth
+  // doesn't wipe what the user already entered.
+  const [firstName, setFirstName] = useState(profile?.first_name || '');
+  const [lastName, setLastName] = useState(profile?.last_name || '');
+  const [username, setUsername] = useState(profile?.username || '');
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [dob, setDob] = useState('');
+  const [dob, setDob] = useState(profile?.date_of_birth || '');
+
+  // Re-hydrate when the profile finishes loading after mount.
+  useEffect(() => {
+    if (profile?.first_name && !firstName) setFirstName(profile.first_name);
+    if (profile?.last_name && !lastName) setLastName(profile.last_name);
+    if (profile?.username && !username) setUsername(profile.username);
+    if (profile?.date_of_birth && !dob) setDob(profile.date_of_birth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.first_name, profile?.last_name, profile?.username, profile?.date_of_birth]);
 
   // Legal acceptance
   const [termsDocument, setTermsDocument] = useState<LegalDocumentRecord | null>(null);
@@ -156,7 +166,12 @@ export default function ProfileSetup() {
     if (step !== 'terms') return;
     let active = true;
     setLoadingLegal(true);
-    const language = profile?.language || 'pt';
+    // Use the language currently selected in the UI (i18n) so the displayed
+    // terms always match the language the user picked on the auth screen.
+    // Fallback chain inside fetchCurrentLegalDocument is PT.
+    const supported = ['pt', 'en', 'es', 'fr'];
+    const uiLang = (i18n.language || 'pt').slice(0, 2).toLowerCase();
+    const language = supported.includes(uiLang) ? uiLang : 'pt';
     Promise.all([
       fetchCurrentLegalDocument('terms', language),
       fetchCurrentLegalDocument('privacy', language),
@@ -168,7 +183,7 @@ export default function ProfileSetup() {
       if (active) setLoadingLegal(false);
     });
     return () => { active = false; };
-  }, [step, profile?.language]);
+  }, [step, i18n.language]);
 
   // Load districts when reaching school step
   useEffect(() => {
@@ -201,14 +216,28 @@ export default function ProfileSetup() {
     return () => { active = false; clearTimeout(t); };
   }, [step, districtId, schoolQuery, districts]);
 
-  const submitAgeGate = (e: React.FormEvent) => {
+  const submitAgeGate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!dob) {
       toast.error(t('profileSetup.requiredFields'));
       return;
     }
     if (age < 13) { setStep('underage_block'); return; }
+    // Persist DOB right away so it survives a reload / step navigation.
+    if (user) {
+      await supabase.from('profiles').update({ date_of_birth: dob } as any).eq('user_id', user.id);
+    }
     setStep(profile?.terms_accepted_at ? 'basics' : 'terms');
+  };
+
+  // Language selector — also persists the choice on the profile so future
+  // emails and screens use the same language.
+  const changeLanguage = async (lang: string) => {
+    await i18n.changeLanguage(lang);
+    if (user) {
+      await supabase.from('profiles').update({ language: lang } as any).eq('user_id', user.id);
+      try { await supabase.auth.updateUser({ data: { language: lang } }); } catch (_) { /* ignore */ }
+    }
   };
 
   const submitTerms = async () => {
@@ -363,13 +392,40 @@ export default function ProfileSetup() {
     applyTheme(theme);
   };
 
+  const LANGS: Array<{ code: string; label: string }> = [
+    { code: 'pt', label: 'PT' },
+    { code: 'en', label: 'EN' },
+    { code: 'es', label: 'ES' },
+    { code: 'fr', label: 'FR' },
+  ];
+  const currentLang = (i18n.language || 'pt').slice(0, 2).toLowerCase();
+
   const Header = ({ onBack }: { onBack?: () => void }) => (
     <div className="flex flex-col items-center mb-6">
-      {onBack && (
-        <button onClick={onBack} className="self-start text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2">
-          <ArrowLeft className="w-3 h-3" /> {t('profileSetup.back')}
-        </button>
-      )}
+      <div className="w-full flex items-center justify-between mb-2 min-h-[18px]">
+        {onBack ? (
+          <button onClick={onBack} className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+            <ArrowLeft className="w-3 h-3" /> {t('profileSetup.back')}
+          </button>
+        ) : <span />}
+        <div className="flex items-center gap-1" role="group" aria-label="Language">
+          {LANGS.map(l => (
+            <button
+              key={l.code}
+              type="button"
+              onClick={() => changeLanguage(l.code)}
+              aria-pressed={currentLang === l.code}
+              className={`px-1.5 py-0.5 text-[10px] tracking-widest font-['Josefin_Sans'] border-b transition-colors ${
+                currentLang === l.code
+                  ? 'text-foreground border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+      </div>
       <img src={logo} alt="Folium" className="w-40 mb-4" />
       <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeFolium')}</h1>
       <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">{t('profileSetup.tellUs')}</p>
