@@ -141,11 +141,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const currentLang = () => {
+    const supported = ['pt', 'en', 'es', 'fr'];
+    const l = (i18n.language || 'pt').slice(0, 2).toLowerCase();
+    return supported.includes(l) ? l : 'pt';
+  };
+
   const signUp = async (email: string, password: string) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: window.location.origin },
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: { language: currentLang() },
+      },
     });
     return { error: error as Error | null };
   };
