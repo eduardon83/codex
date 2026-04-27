@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
-import { landingLegalContent, type LandingLegalLang, type LegalBlock } from '@/config/landingLegal';
+import { LANDING_LEGAL, type LandingLegalLang, type LegalBlock } from '@/config/landingLegal';
 
 // Wilderness Hearth palette — identical to LandingPage / AuthScreen so this screen
 // renders consistently regardless of the user's selected in-app theme.
@@ -22,7 +22,7 @@ type TabKey = 'about' | 'legal';
 export default function AboutScreen({ onBack }: AboutScreenProps) {
   const { t, i18n } = useTranslation();
   const lang = (['pt', 'en', 'es', 'fr'].includes(i18n.language) ? i18n.language : 'pt') as LandingLegalLang;
-  const content = landingLegalContent[lang] || landingLegalContent.pt;
+  const content = LANDING_LEGAL[lang] || LANDING_LEGAL.pt;
   const [tab, setTab] = useState<TabKey>('about');
 
   // Force the Wilderness Hearth backdrop on the body while this screen is mounted
