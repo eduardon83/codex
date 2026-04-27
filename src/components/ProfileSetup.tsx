@@ -392,13 +392,40 @@ export default function ProfileSetup() {
     applyTheme(theme);
   };
 
+  const LANGS: Array<{ code: string; label: string }> = [
+    { code: 'pt', label: 'PT' },
+    { code: 'en', label: 'EN' },
+    { code: 'es', label: 'ES' },
+    { code: 'fr', label: 'FR' },
+  ];
+  const currentLang = (i18n.language || 'pt').slice(0, 2).toLowerCase();
+
   const Header = ({ onBack }: { onBack?: () => void }) => (
     <div className="flex flex-col items-center mb-6">
-      {onBack && (
-        <button onClick={onBack} className="self-start text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-2">
-          <ArrowLeft className="w-3 h-3" /> {t('profileSetup.back')}
-        </button>
-      )}
+      <div className="w-full flex items-center justify-between mb-2 min-h-[18px]">
+        {onBack ? (
+          <button onClick={onBack} className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+            <ArrowLeft className="w-3 h-3" /> {t('profileSetup.back')}
+          </button>
+        ) : <span />}
+        <div className="flex items-center gap-1" role="group" aria-label="Language">
+          {LANGS.map(l => (
+            <button
+              key={l.code}
+              type="button"
+              onClick={() => changeLanguage(l.code)}
+              aria-pressed={currentLang === l.code}
+              className={`px-1.5 py-0.5 text-[10px] tracking-widest font-['Josefin_Sans'] border-b transition-colors ${
+                currentLang === l.code
+                  ? 'text-foreground border-foreground'
+                  : 'text-muted-foreground border-transparent hover:text-foreground'
+              }`}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+      </div>
       <img src={logo} alt="Folium" className="w-40 mb-4" />
       <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeFolium')}</h1>
       <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">{t('profileSetup.tellUs')}</p>
