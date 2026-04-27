@@ -220,31 +220,8 @@ export default function WishlistScreen() {
         <HelpButton screen="wishlist" />
       </div>
 
-      <div data-tutorial="wishlist-add" className="space-y-3 mb-6">
-        <div className="flex gap-2">
-          <Input
-            aria-label={t('wishlist.scanOrEnterIsbn')}
-            placeholder={t('wishlist.scanOrEnterIsbn')}
-            value={isbn}
-            onChange={e => setIsbn(e.target.value)}
-            className="bg-background border-border text-sm"
-            onKeyDown={e => e.key === 'Enter' && addByISBN()}
-          />
-          <Button onClick={addByISBN} disabled={loading} variant="outline" size="sm">
-            {loading ? <Loader2 size={14} className="animate-spin" aria-label={t('app.loading')} /> : t('wishlist.add')}
-          </Button>
-        </div>
-        <div className="flex gap-2">
-          <Input
-            aria-label={t('wishlist.bookNameAuthorIsbn')}
-            placeholder={t('wishlist.bookNameAuthorIsbn')}
-            value={manualText}
-            onChange={e => setManualText(e.target.value)}
-            className="bg-background border-border text-sm"
-            onKeyDown={e => e.key === 'Enter' && addManual()}
-          />
-          <Button onClick={addManual} disabled={loading} variant="outline" size="sm">{t('wishlist.add')}</Button>
-        </div>
+      <div data-tutorial="wishlist-add" className="mb-6">
+        <AddBookScreen isWishlist={true} onDone={() => loadWishlist()} />
       </div>
 
       {items.length === 0 ? (
