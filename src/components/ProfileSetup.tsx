@@ -216,14 +216,28 @@ export default function ProfileSetup() {
     return () => { active = false; clearTimeout(t); };
   }, [step, districtId, schoolQuery, districts]);
 
-  const submitAgeGate = (e: React.FormEvent) => {
+  const submitAgeGate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!dob) {
       toast.error(t('profileSetup.requiredFields'));
       return;
     }
     if (age < 13) { setStep('underage_block'); return; }
+    // Persist DOB right away so it survives a reload / step navigation.
+    if (user) {
+      await supabase.from('profiles').update({ date_of_birth: dob } as any).eq('user_id', user.id);
+    }
     setStep(profile?.terms_accepted_at ? 'basics' : 'terms');
+  };
+
+  // Language selector — also persists the choice on the profile so future
+  // emails and screens use the same language.
+  const changeLanguage = async (lang: string) => {
+    await i18n.changeLanguage(lang);
+    if (user) {
+      await supabase.from('profiles').update({ language: lang } as any).eq('user_id', user.id);
+      try { await supabase.auth.updateUser({ data: { language: lang } }); } catch (_) { /* ignore */ }
+    }
   };
 
   const submitTerms = async () => {
