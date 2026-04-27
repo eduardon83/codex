@@ -216,6 +216,14 @@ async function handleWebhook(req: Request): Promise<Response> {
     )
   }
 
+  // Resolve user language from metadata. The frontend sets `language` in
+  // user_metadata at signup (and may update it later). Default to PT.
+  const metadata =
+    (payload.data as any)?.user?.user_metadata ||
+    (payload.data as any)?.user_metadata ||
+    {}
+  const lang: Lang = normaliseLang(metadata.language || metadata.lang || metadata.locale)
+
   // Build template props from payload.data (HookData structure)
   const templateProps = {
     siteName: SITE_NAME,
@@ -225,6 +233,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     token: payload.data.token,
     email: payload.data.email,
     newEmail: payload.data.new_email,
+    lang,
   }
 
   // Render React Email to HTML and plain text
@@ -257,7 +266,7 @@ async function handleWebhook(req: Request): Promise<Response> {
       to: payload.data.email,
       from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
-      subject: EMAIL_SUBJECTS[emailType] || 'Notification',
+      subject: subjectFor(emailType, lang),
       html,
       text,
       purpose: 'transactional',
