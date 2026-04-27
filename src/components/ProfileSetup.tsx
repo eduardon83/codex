@@ -39,20 +39,30 @@ function calculateAge(dob: string): number {
 }
 
 export default function ProfileSetup() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
   const [step, setStep] = useState<Step>('age_gate');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Step 1: basics
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
+  // Step 1: basics — hydrate from profile so a refresh / back-and-forth
+  // doesn't wipe what the user already entered.
+  const [firstName, setFirstName] = useState(profile?.first_name || '');
+  const [lastName, setLastName] = useState(profile?.last_name || '');
+  const [username, setUsername] = useState(profile?.username || '');
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [dob, setDob] = useState('');
+  const [dob, setDob] = useState(profile?.date_of_birth || '');
+
+  // Re-hydrate when the profile finishes loading after mount.
+  useEffect(() => {
+    if (profile?.first_name && !firstName) setFirstName(profile.first_name);
+    if (profile?.last_name && !lastName) setLastName(profile.last_name);
+    if (profile?.username && !username) setUsername(profile.username);
+    if (profile?.date_of_birth && !dob) setDob(profile.date_of_birth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.first_name, profile?.last_name, profile?.username, profile?.date_of_birth]);
 
   // Legal acceptance
   const [termsDocument, setTermsDocument] = useState<LegalDocumentRecord | null>(null);
