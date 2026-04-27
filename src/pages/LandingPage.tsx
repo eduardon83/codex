@@ -345,7 +345,7 @@ export default function LandingPage() {
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.5rem', fontStyle: 'italic', fontWeight: 500, color: GOLD, letterSpacing: '0.02em' }}>Folium</span>
           </a>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <a href="#features" className="btn-ghost" style={{ fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</a>
+            <button type="button" onClick={() => setModal('about')} className="btn-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</button>
             <div ref={langRef} style={{ position: 'relative' }}>
               <button
                 type="button"
