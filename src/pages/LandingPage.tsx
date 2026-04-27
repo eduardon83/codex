@@ -262,8 +262,11 @@ export default function LandingPage() {
     return stored && stored in LANDING_COPY ? stored : 'pt';
   });
   const [langOpen, setLangOpen] = useState(false);
+  const [modal, setModal] = useState<null | 'about' | 'termsPrivacy'>(null);
   const langRef = useRef<HTMLDivElement>(null);
   const t = LANDING_COPY[lang];
+  const legal = LANDING_LEGAL[lang as LandingLegalLang] ?? LANDING_LEGAL.pt;
+  const activeDoc = modal ? legal[modal] : null;
 
   const setLang = (next: LandingLang) => {
     setLangState(next);
