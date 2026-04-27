@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LandingInfoModal from '@/components/LandingInfoModal';
+import { LANDING_LEGAL, type LandingLegalLang } from '@/config/landingLegal';
+import kendirStudiosLogo from '@/assets/kendir-studios-logo.png';
 
 const GOLD = '#C9A84C';
 const GOLD_LIGHT = '#E8C97A';
