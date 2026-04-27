@@ -551,18 +551,34 @@ export default function LandingPage() {
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1rem', fontStyle: 'italic', color: GOLD }}>Folium</span>
           </div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-            {[
-              { label: t.footer_terms, href: '#' },
-              { label: t.footer_privacy, href: '#' },
-              { label: t.footer_about, href: '#features' },
-              { label: 'folium@kendirstudios.pt', href: 'mailto:folium@kendirstudios.pt' },
-            ].map((l) => (
-              <a key={l.label} href={l.href} className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>{l.label}</a>
-            ))}
+            <button type="button" onClick={() => setModal('termsPrivacy')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_terms_privacy}</button>
+            <button type="button" onClick={() => setModal('about')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_about}</button>
+            <a href="mailto:folium@kendirstudios.pt" className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>folium@kendirstudios.pt</a>
           </div>
-          <p style={{ fontSize: '0.68rem', color: MUTED, width: '100%' }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <p style={{ fontSize: '0.68rem', color: MUTED, margin: 0 }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>
+            <a
+              href="https://www.kendirstudios.pt"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t.footer_kendir_alt}
+              style={{ display: 'inline-flex', alignItems: 'center', opacity: 0.75, transition: 'opacity 0.2s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.75')}
+            >
+              <img src={kendirStudiosLogo} alt="" aria-hidden="true" style={{ height: 18, width: 'auto', display: 'block' }} />
+            </a>
+          </div>
         </footer>
       </div>
+
+      <LandingInfoModal
+        open={!!activeDoc}
+        title={activeDoc?.title ?? ''}
+        blocks={activeDoc?.blocks ?? []}
+        onClose={() => setModal(null)}
+        closeLabel={t.footer_close}
+      />
     </div>
   );
 }
