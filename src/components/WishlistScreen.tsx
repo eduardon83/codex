@@ -18,6 +18,7 @@ import { resolveAvatarSrc } from '@/lib/avatars';
 import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import AddBookScreen from '@/components/AddBookScreen';
 
 interface WishlistItem {
   id: string;
