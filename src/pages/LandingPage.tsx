@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LandingInfoModal from '@/components/LandingInfoModal';
+import { LANDING_LEGAL, type LandingLegalLang } from '@/config/landingLegal';
+import kendirStudiosLogo from '@/assets/kendir-studios-logo.png';
 
 const GOLD = '#C9A84C';
 const GOLD_LIGHT = '#E8C97A';
@@ -51,9 +54,10 @@ const LANDING_COPY = {
     badge2: 'RGPD compliant',
     badge3: 'Alinhado com PNL 2027',
     badge4: 'Sem anúncios',
-    footer_terms: 'Termos',
-    footer_privacy: 'Privacidade',
+    footer_terms_privacy: 'Termos e Privacidade',
     footer_about: 'Sobre',
+    footer_close: 'Fechar',
+    footer_kendir_alt: 'Kendir Studios — abrir em nova janela',
   },
   en: {
     nav_about: 'About',
@@ -91,9 +95,10 @@ const LANDING_COPY = {
     badge2: 'GDPR compliant',
     badge3: 'Aligned with PNL 2027',
     badge4: 'No ads',
-    footer_terms: 'Terms',
-    footer_privacy: 'Privacy',
+    footer_terms_privacy: 'Terms & Privacy',
     footer_about: 'About',
+    footer_close: 'Close',
+    footer_kendir_alt: 'Kendir Studios — open in new window',
   },
   es: {
     nav_about: 'Sobre',
@@ -131,9 +136,10 @@ const LANDING_COPY = {
     badge2: 'RGPD compliant',
     badge3: 'Alineado con PNL 2027',
     badge4: 'Sin anuncios',
-    footer_terms: 'Términos',
-    footer_privacy: 'Privacidad',
+    footer_terms_privacy: 'Términos y Privacidad',
     footer_about: 'Sobre',
+    footer_close: 'Cerrar',
+    footer_kendir_alt: 'Kendir Studios — abrir en nueva ventana',
   },
   fr: {
     nav_about: 'À propos',
@@ -171,9 +177,10 @@ const LANDING_COPY = {
     badge2: 'Conforme RGPD',
     badge3: 'Aligné avec PNL 2027',
     badge4: 'Sans publicité',
-    footer_terms: 'Conditions',
-    footer_privacy: 'Confidentialité',
+    footer_terms_privacy: 'Conditions et Confidentialité',
     footer_about: 'À propos',
+    footer_close: 'Fermer',
+    footer_kendir_alt: 'Kendir Studios — ouvrir dans une nouvelle fenêtre',
   },
 } as const;
 
@@ -255,8 +262,11 @@ export default function LandingPage() {
     return stored && stored in LANDING_COPY ? stored : 'pt';
   });
   const [langOpen, setLangOpen] = useState(false);
+  const [modal, setModal] = useState<null | 'about' | 'termsPrivacy'>(null);
   const langRef = useRef<HTMLDivElement>(null);
   const t = LANDING_COPY[lang];
+  const legal = LANDING_LEGAL[lang as LandingLegalLang] ?? LANDING_LEGAL.pt;
+  const activeDoc = modal ? legal[modal] : null;
 
   const setLang = (next: LandingLang) => {
     setLangState(next);
@@ -335,7 +345,7 @@ export default function LandingPage() {
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.5rem', fontStyle: 'italic', fontWeight: 500, color: GOLD, letterSpacing: '0.02em' }}>Folium</span>
           </a>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <a href="#features" className="btn-ghost" style={{ fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</a>
+            <button type="button" onClick={() => setModal('about')} className="btn-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</button>
             <div ref={langRef} style={{ position: 'relative' }}>
               <button
                 type="button"
@@ -541,18 +551,34 @@ export default function LandingPage() {
             <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1rem', fontStyle: 'italic', color: GOLD }}>Folium</span>
           </div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
-            {[
-              { label: t.footer_terms, href: '#' },
-              { label: t.footer_privacy, href: '#' },
-              { label: t.footer_about, href: '#features' },
-              { label: 'folium@kendirstudios.pt', href: 'mailto:folium@kendirstudios.pt' },
-            ].map((l) => (
-              <a key={l.label} href={l.href} className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>{l.label}</a>
-            ))}
+            <button type="button" onClick={() => setModal('termsPrivacy')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_terms_privacy}</button>
+            <button type="button" onClick={() => setModal('about')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_about}</button>
+            <a href="mailto:folium@kendirstudios.pt" className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>folium@kendirstudios.pt</a>
           </div>
-          <p style={{ fontSize: '0.68rem', color: MUTED, width: '100%' }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <p style={{ fontSize: '0.68rem', color: MUTED, margin: 0 }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>
+            <a
+              href="https://www.kendirstudios.pt"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t.footer_kendir_alt}
+              style={{ display: 'inline-flex', alignItems: 'center', opacity: 0.75, transition: 'opacity 0.2s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.75')}
+            >
+              <img src={kendirStudiosLogo} alt="" aria-hidden="true" style={{ height: 18, width: 'auto', display: 'block' }} />
+            </a>
+          </div>
         </footer>
       </div>
+
+      <LandingInfoModal
+        open={!!activeDoc}
+        title={activeDoc?.title ?? ''}
+        blocks={activeDoc?.blocks ?? []}
+        onClose={() => setModal(null)}
+        closeLabel={t.footer_close}
+      />
     </div>
   );
 }
