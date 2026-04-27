@@ -166,7 +166,12 @@ export default function ProfileSetup() {
     if (step !== 'terms') return;
     let active = true;
     setLoadingLegal(true);
-    const language = profile?.language || 'pt';
+    // Use the language currently selected in the UI (i18n) so the displayed
+    // terms always match the language the user picked on the auth screen.
+    // Fallback chain inside fetchCurrentLegalDocument is PT.
+    const supported = ['pt', 'en', 'es', 'fr'];
+    const uiLang = (i18n.language || 'pt').slice(0, 2).toLowerCase();
+    const language = supported.includes(uiLang) ? uiLang : 'pt';
     Promise.all([
       fetchCurrentLegalDocument('terms', language),
       fetchCurrentLegalDocument('privacy', language),
@@ -178,7 +183,7 @@ export default function ProfileSetup() {
       if (active) setLoadingLegal(false);
     });
     return () => { active = false; };
-  }, [step, profile?.language]);
+  }, [step, i18n.language]);
 
   // Load districts when reaching school step
   useEffect(() => {
