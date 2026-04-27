@@ -1,17 +1,19 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
+import foliumLogo from '@/assets/folium-logo.svg';
 import { LANDING_LEGAL, type LandingLegalLang, type LegalBlock } from '@/config/landingLegal';
+import { useAuth } from '@/hooks/useAuth';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
-// Wilderness Hearth palette — identical to LandingPage / AuthScreen so this screen
-// renders consistently regardless of the user's selected in-app theme.
-const GOLD = '#C9A84C';
-const GOLD_LIGHT = '#E8C97A';
-const BG = '#1E2A22';
-const BG2 = '#2F3E33';
-const TEXT = '#F0E8D8';
-const MUTED = '#CFC6B0';
+// Wilderness Hearth fallback palette (used only when no authenticated user theme).
+const FALLBACK = {
+  GOLD: '#C9A84C',
+  BG: '#1E2A22',
+  TEXT: '#F0E8D8',
+  MUTED: '#CFC6B0',
+};
 
 interface AboutScreenProps {
   onBack: () => void;
@@ -21,17 +23,46 @@ type TabKey = 'about' | 'legal';
 
 export default function AboutScreen({ onBack }: AboutScreenProps) {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
   const lang = (['pt', 'en', 'es', 'fr'].includes(i18n.language) ? i18n.language : 'pt') as LandingLegalLang;
   const content = LANDING_LEGAL[lang] || LANDING_LEGAL.pt;
   const [tab, setTab] = useState<TabKey>('about');
 
-  // Force the Wilderness Hearth backdrop on the body while this screen is mounted
-  // so it looks consistent whether opened from auth (no theme yet) or from profile.
+  // When the user is authenticated, use the active in-app theme tokens so this
+  // screen matches the palette they chose in their profile. Pre-auth, fall back
+  // to the Wilderness Hearth palette to match the landing/auth aesthetic.
+  const useThemeTokens = !!user;
+  const palette = useMemo(() => {
+    if (useThemeTokens) {
+      return {
+        BG: 'hsl(var(--background))',
+        BG2: 'hsl(var(--card))',
+        TEXT: 'hsl(var(--foreground))',
+        MUTED: 'hsl(var(--muted-foreground))',
+        GOLD: 'hsl(var(--accent))',
+      };
+    }
+    return {
+      BG: FALLBACK.BG,
+      BG2: FALLBACK.BG,
+      TEXT: FALLBACK.TEXT,
+      MUTED: FALLBACK.MUTED,
+      GOLD: FALLBACK.GOLD,
+    };
+  }, [useThemeTokens]);
+
+  const { BG, TEXT, MUTED, GOLD } = palette;
+  // Use the gold logo for dark themes / pre-auth, light logo for the light "Claro" theme.
+  const themeId = (typeof document !== 'undefined' ? document.documentElement.getAttribute('data-theme') : '') || '';
+  const logoSrc = !useThemeTokens || isFoliumDarkTheme(themeId) || themeId !== 'claro' ? foliumLogoGold : foliumLogo;
+
+  // Sync the body background only while no user theme is active (pre-auth).
   useEffect(() => {
+    if (useThemeTokens) return;
     const prev = document.body.style.background;
-    document.body.style.background = BG;
+    document.body.style.background = FALLBACK.BG;
     return () => { document.body.style.background = prev; };
-  }, []);
+  }, [useThemeTokens]);
 
   const blocks = tab === 'about' ? content.about.blocks : content.termsPrivacy.blocks;
 
