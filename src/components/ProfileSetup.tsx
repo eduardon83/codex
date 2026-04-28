@@ -38,22 +38,48 @@ function calculateAge(dob: string): number {
   return age;
 }
 
+const STORAGE_KEY = 'folium_profile_setup_state';
+
+type PersistedState = {
+  step?: Step;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  dob?: string;
+  parentEmail?: string;
+  districtId?: string;
+  schoolId?: string;
+  themeId?: string;
+  avatarId?: AvatarId;
+};
+
+function loadPersisted(): PersistedState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as PersistedState) : {};
+  } catch {
+    return {};
+  }
+}
+
 export default function ProfileSetup() {
   const { t, i18n } = useTranslation();
   const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
-  const [step, setStep] = useState<Step>('age_gate');
+  const persistedRef = useRef<PersistedState>(loadPersisted());
+  const persisted = persistedRef.current;
+  const [step, setStep] = useState<Step>(persisted.step || 'age_gate');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Step 1: basics — hydrate from profile so a refresh / back-and-forth
-  // doesn't wipe what the user already entered.
-  const [firstName, setFirstName] = useState(profile?.first_name || '');
-  const [lastName, setLastName] = useState(profile?.last_name || '');
-  const [username, setUsername] = useState(profile?.username || '');
+  // Step 1: basics — hydrate from profile (or persisted draft) so a refresh /
+  // back-and-forth doesn't wipe what the user already entered.
+  const [firstName, setFirstName] = useState(persisted.firstName ?? profile?.first_name ?? '');
+  const [lastName, setLastName] = useState(persisted.lastName ?? profile?.last_name ?? '');
+  const [username, setUsername] = useState(persisted.username ?? profile?.username ?? '');
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [dob, setDob] = useState(profile?.date_of_birth || '');
+  const [dob, setDob] = useState(persisted.dob ?? profile?.date_of_birth ?? '');
 
   // Re-hydrate when the profile finishes loading after mount.
   useEffect(() => {
@@ -73,26 +99,39 @@ export default function ProfileSetup() {
   const [showPrivacy, setShowPrivacy] = useState(false);
 
   // Step 3a: parental consent
-  const [parentEmail, setParentEmail] = useState('');
+  const [parentEmail, setParentEmail] = useState(persisted.parentEmail ?? '');
   const [consentAge, setConsentAge] = useState(false);
   const [consentTerms, setConsentTerms] = useState(false);
 
   // Step 4: school
   const [districts, setDistricts] = useState<District[]>([]);
-  const [districtId, setDistrictId] = useState<string>('');
+  const [districtId, setDistrictId] = useState<string>(persisted.districtId ?? '');
   const [schoolQuery, setSchoolQuery] = useState('');
   const [schoolResults, setSchoolResults] = useState<School[]>([]);
-  const [schoolId, setSchoolId] = useState<string>('');
+  const [schoolId, setSchoolId] = useState<string>(persisted.schoolId ?? '');
   const [searching, setSearching] = useState(false);
 
   // Step 5: theme
-  const [themeId, setThemeId] = useState(currentTheme.id);
-  const [avatarId, setAvatarId] = useState<AvatarId>((profile?.avatar_url as AvatarId) || AVATARS[0].id);
+  const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
+  const [avatarId, setAvatarId] = useState<AvatarId>(
+    persisted.avatarId ?? ((profile?.avatar_url as AvatarId) || AVATARS[0].id)
+  );
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
   const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
   const age = useMemo(() => calculateAge(dob), [dob]);
+
+  // Persist setup progress so navigating away / refreshing doesn't reset it.
+  useEffect(() => {
+    try {
+      const snapshot: PersistedState = {
+        step, firstName, lastName, username, dob,
+        parentEmail, districtId, schoolId, themeId, avatarId,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    } catch { /* ignore quota */ }
+  }, [step, firstName, lastName, username, dob, parentEmail, districtId, schoolId, themeId, avatarId]);
 
   const showUsernameTaken = () => {
     setUsernameStatus('error');
@@ -312,6 +351,7 @@ export default function ProfileSetup() {
     }
 
     setSaving(false);
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     await refreshProfile();
   };
 
@@ -382,6 +422,7 @@ export default function ProfileSetup() {
     } as any).eq('user_id', user.id);
     setSaving(false);
     if (error) { toast.error(error.message); return; }
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     await refreshProfile();
   };
 
