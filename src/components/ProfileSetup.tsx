@@ -351,6 +351,7 @@ export default function ProfileSetup() {
     }
 
     setSaving(false);
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     await refreshProfile();
   };
 
