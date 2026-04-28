@@ -38,22 +38,48 @@ function calculateAge(dob: string): number {
   return age;
 }
 
+const STORAGE_KEY = 'folium_profile_setup_state';
+
+type PersistedState = {
+  step?: Step;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  dob?: string;
+  parentEmail?: string;
+  districtId?: string;
+  schoolId?: string;
+  themeId?: string;
+  avatarId?: AvatarId;
+};
+
+function loadPersisted(): PersistedState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as PersistedState) : {};
+  } catch {
+    return {};
+  }
+}
+
 export default function ProfileSetup() {
   const { t, i18n } = useTranslation();
   const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
-  const [step, setStep] = useState<Step>('age_gate');
+  const persistedRef = useRef<PersistedState>(loadPersisted());
+  const persisted = persistedRef.current;
+  const [step, setStep] = useState<Step>(persisted.step || 'age_gate');
   const [saving, setSaving] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Step 1: basics — hydrate from profile so a refresh / back-and-forth
-  // doesn't wipe what the user already entered.
-  const [firstName, setFirstName] = useState(profile?.first_name || '');
-  const [lastName, setLastName] = useState(profile?.last_name || '');
-  const [username, setUsername] = useState(profile?.username || '');
+  // Step 1: basics — hydrate from profile (or persisted draft) so a refresh /
+  // back-and-forth doesn't wipe what the user already entered.
+  const [firstName, setFirstName] = useState(persisted.firstName ?? profile?.first_name ?? '');
+  const [lastName, setLastName] = useState(persisted.lastName ?? profile?.last_name ?? '');
+  const [username, setUsername] = useState(persisted.username ?? profile?.username ?? '');
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [dob, setDob] = useState(profile?.date_of_birth || '');
+  const [dob, setDob] = useState(persisted.dob ?? profile?.date_of_birth ?? '');
 
   // Re-hydrate when the profile finishes loading after mount.
   useEffect(() => {
