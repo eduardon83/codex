@@ -421,6 +421,7 @@ export default function ProfileSetup() {
     } as any).eq('user_id', user.id);
     setSaving(false);
     if (error) { toast.error(error.message); return; }
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     await refreshProfile();
   };
 
