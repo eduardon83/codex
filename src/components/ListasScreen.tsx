@@ -16,6 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { buildPlanMonths } from '@/components/AddToPlanSheet';
+import ReadingListDetail from '@/components/ReadingListDetail';
 
 const TAB_KEY = 'folium_listas_tab';
 type ListasTab = 'wishlist' | 'planos' | 'listas';
