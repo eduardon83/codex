@@ -99,17 +99,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
 
-    const syncAuthState = (nextSession: Session | null) => {
+    let lastUserId: string | null = null;
+
+    const syncAuthState = (nextSession: Session | null, opts: { force?: boolean } = {}) => {
       if (!active) return;
 
       setSession(nextSession);
       setUser(nextSession?.user ?? null);
 
       if (!nextSession?.user) {
+        lastUserId = null;
         setProfile(null);
         setLoading(false);
         return;
       }
+
+      // Only show loading + refetch profile when the user actually changed
+      // (initial load or sign-in/out). Benign events like TOKEN_REFRESHED or
+      // window-focus revalidations would otherwise unmount in-flight screens
+      // (e.g. ProfileSetup) and reset their local state.
+      if (!opts.force && lastUserId === nextSession.user.id) {
+        return;
+      }
+      lastUserId = nextSession.user.id;
 
       setLoading(true);
       void fetchProfile(nextSession.user.id).finally(() => {
@@ -118,8 +130,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, nextSession) => {
-        syncAuthState(nextSession);
+      (event, nextSession) => {
+        // Only treat sign-in/out (and the initial signed-in event) as a user
+        // change. Token refreshes and metadata updates should not trigger a
+        // full reload of the profile/loading state.
+        const force = event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'INITIAL_SESSION';
+        syncAuthState(nextSession, { force: false });
+        if (force && nextSession?.user && lastUserId !== nextSession.user.id) {
+          // handled inside syncAuthState by the lastUserId check
+        }
       }
     );
 
