@@ -99,26 +99,39 @@ export default function ProfileSetup() {
   const [showPrivacy, setShowPrivacy] = useState(false);
 
   // Step 3a: parental consent
-  const [parentEmail, setParentEmail] = useState('');
+  const [parentEmail, setParentEmail] = useState(persisted.parentEmail ?? '');
   const [consentAge, setConsentAge] = useState(false);
   const [consentTerms, setConsentTerms] = useState(false);
 
   // Step 4: school
   const [districts, setDistricts] = useState<District[]>([]);
-  const [districtId, setDistrictId] = useState<string>('');
+  const [districtId, setDistrictId] = useState<string>(persisted.districtId ?? '');
   const [schoolQuery, setSchoolQuery] = useState('');
   const [schoolResults, setSchoolResults] = useState<School[]>([]);
-  const [schoolId, setSchoolId] = useState<string>('');
+  const [schoolId, setSchoolId] = useState<string>(persisted.schoolId ?? '');
   const [searching, setSearching] = useState(false);
 
   // Step 5: theme
-  const [themeId, setThemeId] = useState(currentTheme.id);
-  const [avatarId, setAvatarId] = useState<AvatarId>((profile?.avatar_url as AvatarId) || AVATARS[0].id);
+  const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
+  const [avatarId, setAvatarId] = useState<AvatarId>(
+    persisted.avatarId ?? ((profile?.avatar_url as AvatarId) || AVATARS[0].id)
+  );
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
   const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
   const age = useMemo(() => calculateAge(dob), [dob]);
+
+  // Persist setup progress so navigating away / refreshing doesn't reset it.
+  useEffect(() => {
+    try {
+      const snapshot: PersistedState = {
+        step, firstName, lastName, username, dob,
+        parentEmail, districtId, schoolId, themeId, avatarId,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    } catch { /* ignore quota */ }
+  }, [step, firstName, lastName, username, dob, parentEmail, districtId, schoolId, themeId, avatarId]);
 
   const showUsernameTaken = () => {
     setUsernameStatus('error');
