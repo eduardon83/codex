@@ -237,8 +237,7 @@ function ReadingListsArea({ userId, onGoToSearchReadingLists, onCreatePlan }: { 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({ name: '', description: '', import: false });
   const [preview, setPreview] = useState<ParsedBook[]>([]);
-  const [detail, setDetail] = useState<ReadingList | null>(null);
-  const [books, setBooks] = useState<ReadingListBook[]>([]);
+  const [detail, setDetail] = useState<(ReadingList & { _subscribed?: boolean }) | null>(null);
 
   const load = async () => {
     if (!userId) return;
