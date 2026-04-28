@@ -1115,8 +1115,12 @@ export type Database = {
       reading_list_books: {
         Row: {
           author: string | null
+          book_id: string | null
           cover_url: string | null
           created_at: string
+          external_author: string | null
+          external_cover_url: string | null
+          external_title: string | null
           genre: string | null
           has_warning: boolean
           id: string
@@ -1130,8 +1134,12 @@ export type Database = {
         }
         Insert: {
           author?: string | null
+          book_id?: string | null
           cover_url?: string | null
           created_at?: string
+          external_author?: string | null
+          external_cover_url?: string | null
+          external_title?: string | null
           genre?: string | null
           has_warning?: boolean
           id?: string
@@ -1145,8 +1153,12 @@ export type Database = {
         }
         Update: {
           author?: string | null
+          book_id?: string | null
           cover_url?: string | null
           created_at?: string
+          external_author?: string | null
+          external_cover_url?: string | null
+          external_title?: string | null
           genre?: string | null
           has_warning?: boolean
           id?: string
@@ -1159,6 +1171,13 @@ export type Database = {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "reading_list_books_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "reading_list_books_reading_list_id_fkey"
             columns: ["reading_list_id"]
