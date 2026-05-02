@@ -467,8 +467,8 @@ export default function ProfileSetup() {
           ))}
         </div>
       </div>
-      <img src={logo} alt="Folium" className="w-40 mb-4" />
-      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeFolium')}</h1>
+      <img src={logo} alt="Codex" className="w-40 mb-4" />
+      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeCodex')}</h1>
       <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">{t('profileSetup.tellUs')}</p>
     </div>
   );
@@ -497,7 +497,7 @@ export default function ProfileSetup() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="w-full max-w-sm text-center">
-          <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
+          <img src={logo} alt="Codex" className="w-40 mx-auto mb-6" />
           <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-3">
             {t('profileSetup.underageTitle')}
           </h1>
@@ -660,7 +660,7 @@ export default function ProfileSetup() {
             })}
           </div>
           <Button onClick={finalize} disabled={saving} className="w-full h-11 bg-accent text-accent-foreground hover:bg-accent/90">
-            {saving ? t('profileSetup.finishing') : t('profileSetup.enterFolium')}
+            {saving ? t('profileSetup.finishing') : t('profileSetup.enterCodex')}
           </Button>
         </div>
       </div>

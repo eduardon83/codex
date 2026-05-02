@@ -46,7 +46,7 @@ export default function ParentalConsent() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-md text-center">
-        <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
+        <img src={logo} alt="Codex" className="w-40 mx-auto mb-6" />
         {status === 'loading' && <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mx-auto" />}
         {status === 'invalid' && (
           <><X className="w-10 h-10 text-destructive mx-auto mb-4" /><p className="text-sm text-muted-foreground">{t('consent.invalid')}</p></>

@@ -59,7 +59,7 @@ export default function ResetPasswordScreen() {
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <img src={logo} alt="Folium" className="w-60 min-w-[240px]" />
+          <img src={logo} alt="Codex" className="w-60 min-w-[240px]" />
           <h1 className="mt-4 text-center font-serif text-2xl text-foreground">
             {t('auth.resetPasswordTitle')}
           </h1>

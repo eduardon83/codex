@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LandingInfoModal from '@/components/LandingInfoModal';
 import { LANDING_LEGAL, type LandingLegalLang } from '@/config/landingLegal';
 import kendirStudiosLogo from '@/assets/kendir-studios-logo.png';
-import foliumLogoGold from '@/assets/folium-logo-gold.png';
-import foliumIconGold from '@/assets/folium-icon-gold.png';
+import owlGold from '@/assets/codex-owl-gold.png';
 
 const GOLD = '#C9A84C';
 const GOLD_LIGHT = '#E8C97A';
@@ -23,35 +22,35 @@ const LANDING_COPY = {
   pt: {
     nav_about: 'Sobre',
     nav_enter: 'Entrar',
-    eyebrow: 'Para jovens leitores · Portugal',
-    hero_title_1: 'Cada livro é uma',
-    hero_title_2: 'folha nova.',
-    hero_sub: 'O Folium é a tua biblioteca pessoal. Guarda os livros que tens, descobre o que os teus colegas estão a ler, empresta e pede emprestado — tudo num só lugar.',
+    eyebrow: 'Para amantes de estantes · Estabelecido MMXXIV',
+    hero_title_1: 'Construímos a nossa biblioteca,',
+    hero_title_2: 'um livro de cada vez.',
+    hero_sub: 'O Codex foi pensado como a tua biblioteca pessoal. Guarda os livros que tens, centraliza a tua wishlist e cria listas e planos de leitura para te manteres a par das tuas leituras. E acompanha eventos de autores e das tuas livrarias favoritas — tudo num só lugar!',
     cta_primary: 'Criar conta gratuita',
     cta_secondary: 'Já tenho conta',
     scroll: 'Explorar',
-    villages_label: 'Temas inspirados nas Aldeias Históricas de Portugal',
-    features_label: 'O que podes fazer',
+    villages_label: 'Encontra o tema que te apaixona, inspirado nas Aldeias Históricas de Portugal',
+    features_label: 'O que podes fazer com o Codex',
     feat1_title: 'Biblioteca pessoal',
-    feat1_desc: 'Organiza os teus livros em estantes. Regista o que leste, o que estás a ler, e o que ainda queres ler. Pesquisa por ISBN ou manualmente.',
-    feat2_title: 'Empréstimos entre colegas',
-    feat2_desc: 'Descobre quem tem o livro que procuras na tua escola ou distrito. Pede emprestado, empresta, e acompanha as devoluções.',
-    feat3_title: 'Planos de leitura',
-    feat3_desc: 'Cria um plano mensal de leituras. Importa listas do Plano Nacional de Leitura ou das tuas professoras. Acompanha o teu progresso.',
+    feat1_desc: 'Organiza os teus livros em estantes. Regista o que leste, o que estás a ler e o que queres ler. Pesquisa e adiciona livros por autor, título ou ISBN.',
+    feat2_title: 'Empréstimos e pesquisa',
+    feat2_desc: 'Procura livros em bibliotecas públicas, empresta livros a outros utilizadores e acompanha as devoluções.',
+    feat3_title: 'Listas e planos de leitura',
+    feat3_desc: 'Descobre listas de autores e livrarias. Cria um plano de leitura e importa listas para te desafiares a novas leituras todos os meses.',
     feat4_title: 'Eventos de leitura',
-    feat4_desc: 'Clubes de leitura, concursos de escrita, feiras do livro, simpósios. Os teus professores e bibliotecas publicam eventos aqui.',
-    feat5_title: 'Biblioteca pública',
-    feat5_desc: 'Encontra bibliotecas públicas perto de ti num raio de 5 a 50 km. Guarda as tuas favoritas e consulta os horários.',
-    feat6_title: 'Temas históricos',
-    feat6_desc: '12 temas visuais inspirados nas Aldeias Históricas de Portugal, cada um com a sua árvore animada e história. Sem publicidade, sem distrações.',
+    feat4_desc: 'Grupos de leitura, feiras do livro, sessões de autógrafos — tudo na área que tu definires.',
+    feat5_title: 'Cronómetro de leitura',
+    feat5_desc: 'Não te distraias da alegria de ler. Liga o cronómetro e mergulha no livro.',
+    feat6_title: 'Wishlist',
+    feat6_desc: 'Queres um livro, eventualmente? Acompanha-o, não te esqueças. Usa a wishlist.',
     loan_eyebrow: 'Empréstimos',
-    loan_title: 'Os livros que amas merecem circular.',
-    loan_desc: 'Quando um livro fica numa prateleira, só uma pessoa o lê. O Folium cria uma rede de leitores na tua escola e distrito para que os livros passem de mão em mão — com total controlo de quem pediu, quando, e quando devolve.',
+    loan_title: 'Os livros que amas merecem ter uma nova vida.',
+    loan_desc: 'Quando um livro fica preso numa estante, só uma pessoa teve a oportunidade de o ler. Através do Codex, podes ajudar-nos a criar uma rede de livros que circulam, controlando quem, quando e quando vai ser devolvido. Cada empréstimo pode ser classificado, para garantir que quem maltrata livros não pode pedir empréstimos novamente.',
     loan_available: 'Disponível',
     loan_pending: 'Pedido pendente · devolução em 12 dias',
     cta_title_1: 'Pronto para plantar',
     cta_title_2: 'a tua estante?',
-    cta_sub: 'Gratuito. Sem publicidade. Feito em Portugal.',
+    cta_sub: 'Gratuito. Feito com amor e cuidado em Portugal.',
     badge1: 'Para 12-21 anos',
     badge2: 'RGPD compliant',
     badge3: 'Alinhado com PNL 2027',
@@ -64,35 +63,35 @@ const LANDING_COPY = {
   en: {
     nav_about: 'About',
     nav_enter: 'Sign in',
-    eyebrow: 'For young readers · Portugal',
-    hero_title_1: 'Every book is a',
-    hero_title_2: 'new leaf.',
-    hero_sub: 'Folium is your personal library. Keep track of the books you own, discover what your classmates are reading, lend and borrow — all in one place.',
-    cta_primary: 'Create free account',
-    cta_secondary: 'I already have an account',
+    eyebrow: 'For bookcase lovers · Established MMXXIV',
+    hero_title_1: 'Building our own library,',
+    hero_title_2: 'one book at a time.',
+    hero_sub: 'Codex was built as your own personal library. Store the books you have, centralize your wishlist and create reading lists and plans to keep you on track with your reading. And keep up with events from authors and your favourite bookstores — all in one place!',
+    cta_primary: 'Create a free account',
+    cta_secondary: 'Log in',
     scroll: 'Explore',
-    villages_label: "Themes inspired by Portugal's Historic Villages",
-    features_label: 'What you can do',
+    villages_label: "Find the theme you'll fall in love with, based on historical villages from Portugal",
+    features_label: 'What we can do with Codex',
     feat1_title: 'Personal library',
-    feat1_desc: "Organise your books into shelves. Track what you've read, what you're reading, and what's still on the list. Search by ISBN or manually.",
-    feat2_title: 'Peer lending',
-    feat2_desc: "Find out who has the book you're looking for at your school or district. Borrow, lend, and track returns.",
-    feat3_title: 'Reading plans',
-    feat3_desc: 'Create a monthly reading plan. Import lists from the National Reading Plan or your teachers. Track your progress.',
+    feat1_desc: "Organize your books into bookcases. Register what you read, what you're reading and what you want to read. Search and add books through author, title or ISBN.",
+    feat2_title: 'Loans and search',
+    feat2_desc: 'Look for books in public libraries, loan books to other users, and track returns.',
+    feat3_title: 'Reading lists and plans',
+    feat3_desc: 'Discover lists by authors and bookstores. Create a reading plan and import lists to challenge yourself to new reads every month.',
     feat4_title: 'Reading events',
-    feat4_desc: 'Book clubs, writing competitions, book fairs, symposiums. Your teachers and libraries post events here.',
-    feat5_title: 'Public libraries',
-    feat5_desc: 'Find public libraries near you within a 5 to 50 km radius. Save your favourites and check opening hours.',
-    feat6_title: 'Historic themes',
-    feat6_desc: "12 visual themes inspired by Portugal's Historic Villages, each with an animated tree and story. No ads, no distractions.",
-    loan_eyebrow: 'Book lending',
-    loan_title: 'The books you love deserve to travel.',
-    loan_desc: "When a book sits on one shelf, only one person reads it. Folium builds a reader network at your school and district so books pass from hand to hand — with full tracking of who borrowed what and when it's due back.",
+    feat4_desc: 'Reading groups, book fairs, book signings — all within the area you define.',
+    feat5_title: 'Reading timer',
+    feat5_desc: "Don't distract yourself from the joy of reading. Use the timer and immerse yourself.",
+    feat6_title: 'Wishlist',
+    feat6_desc: "Want a book, eventually? Track it, don't forget it. Use the wishlist.",
+    loan_eyebrow: 'Loans feature',
+    loan_title: 'The books you love deserve to have a new life.',
+    loan_desc: 'When a book is stuck on a shelf, only one person had the chance to read it. Through Codex, you can help us create a network of books that circulate, while controlling who, when and when it will be returned. Each loan can be classified, to assure those that mistreat books are not allowed to request loans again.',
     loan_available: 'Available',
     loan_pending: 'Requested · due back in 12 days',
     cta_title_1: 'Ready to plant',
-    cta_title_2: 'your shelf?',
-    cta_sub: 'Free. No ads. Made in Portugal.',
+    cta_title_2: 'your bookcase?',
+    cta_sub: 'Free. Made with love and care in Portugal.',
     badge1: 'Ages 12–21',
     badge2: 'GDPR compliant',
     badge3: 'Aligned with PNL 2027',
@@ -105,35 +104,35 @@ const LANDING_COPY = {
   es: {
     nav_about: 'Sobre',
     nav_enter: 'Entrar',
-    eyebrow: 'Para jóvenes lectores · Portugal',
-    hero_title_1: 'Cada libro es una',
-    hero_title_2: 'hoja nueva.',
-    hero_sub: 'Folium es tu biblioteca personal. Guarda los libros que tienes, descubre lo que leen tus compañeros, presta y pide prestado — todo en un solo lugar.',
+    eyebrow: 'Para amantes de las estanterías · Establecido MMXXIV',
+    hero_title_1: 'Construimos nuestra biblioteca,',
+    hero_title_2: 'un libro a la vez.',
+    hero_sub: 'Codex es tu biblioteca personal. Guarda los libros que tienes, centraliza tu wishlist y crea listas y planes de lectura para mantenerte al día con tus lecturas. Y sigue eventos de autores y tus librerías favoritas — ¡todo en un solo lugar!',
     cta_primary: 'Crear cuenta gratuita',
     cta_secondary: 'Ya tengo una cuenta',
     scroll: 'Explorar',
-    villages_label: 'Temas inspirados en las Aldeas Históricas de Portugal',
-    features_label: 'Qué puedes hacer',
+    villages_label: 'Encuentra el tema del que te enamorarás, inspirado en las Aldeas Históricas de Portugal',
+    features_label: 'Qué puedes hacer con Codex',
     feat1_title: 'Biblioteca personal',
-    feat1_desc: 'Organiza tus libros en estantes. Registra lo que has leído, lo que estás leyendo y lo que quieres leer. Busca por ISBN o manualmente.',
-    feat2_title: 'Préstamos entre compañeros',
-    feat2_desc: 'Descubre quién tiene el libro que buscas en tu escuela o distrito. Pide prestado, presta y controla las devoluciones.',
-    feat3_title: 'Planes de lectura',
-    feat3_desc: 'Crea un plan mensual de lecturas. Importa listas del Plan Nacional de Lectura o de tus profesores. Sigue tu progreso.',
+    feat1_desc: 'Organiza tus libros en estanterías. Registra lo que has leído, lo que estás leyendo y lo que quieres leer. Busca y añade libros por autor, título o ISBN.',
+    feat2_title: 'Préstamos y búsqueda',
+    feat2_desc: 'Busca libros en bibliotecas públicas, presta libros a otros usuarios y controla las devoluciones.',
+    feat3_title: 'Listas y planes de lectura',
+    feat3_desc: 'Descubre listas de autores y librerías. Crea un plan de lectura e importa listas para retarte cada mes.',
     feat4_title: 'Eventos de lectura',
-    feat4_desc: 'Clubs de lectura, concursos de escritura, ferias del libro, simposios. Tus profesores y bibliotecas publican eventos aquí.',
-    feat5_title: 'Bibliotecas públicas',
-    feat5_desc: 'Encuentra bibliotecas públicas cerca de ti en un radio de 5 a 50 km. Guarda tus favoritas y consulta los horarios.',
-    feat6_title: 'Temas históricos',
-    feat6_desc: '12 temas visuales inspirados en las Aldeas Históricas de Portugal, cada uno con su árbol animado e historia. Sin publicidad, sin distracciones.',
+    feat4_desc: 'Clubs de lectura, ferias del libro, firmas de autores — todo en el área que tú definas.',
+    feat5_title: 'Cronómetro de lectura',
+    feat5_desc: 'No te distraigas de la alegría de leer. Usa el cronómetro y sumérgete.',
+    feat6_title: 'Wishlist',
+    feat6_desc: '¿Quieres un libro, eventualmente? Síguelo, no lo olvides. Usa la wishlist.',
     loan_eyebrow: 'Préstamos',
-    loan_title: 'Los libros que amas merecen circular.',
-    loan_desc: 'Cuando un libro se queda en una estantería, solo una persona lo lee. Folium crea una red de lectores en tu escuela y distrito para que los libros pasen de mano en mano — con control total de quién pidió, cuándo y cuándo devuelve.',
+    loan_title: 'Los libros que amas merecen una nueva vida.',
+    loan_desc: 'Cuando un libro se queda en una estantería, solo una persona pudo leerlo. Con Codex, puedes ayudarnos a crear una red de libros que circulan, controlando quién, cuándo y cuándo se devolverá. Cada préstamo se puede clasificar, para asegurar que quienes maltratan los libros no puedan pedirlos prestados de nuevo.',
     loan_available: 'Disponible',
     loan_pending: 'Solicitud pendiente · devolución en 12 días',
     cta_title_1: '¿Listo para plantar',
-    cta_title_2: 'tu estante?',
-    cta_sub: 'Gratuito. Sin publicidad. Hecho en Portugal.',
+    cta_title_2: 'tu estantería?',
+    cta_sub: 'Gratuito. Hecho con amor y cuidado en Portugal.',
     badge1: 'Para 12-21 años',
     badge2: 'RGPD compliant',
     badge3: 'Alineado con PNL 2027',
@@ -146,35 +145,35 @@ const LANDING_COPY = {
   fr: {
     nav_about: 'À propos',
     nav_enter: 'Se connecter',
-    eyebrow: 'Pour les jeunes lecteurs · Portugal',
-    hero_title_1: 'Chaque livre est une',
-    hero_title_2: 'nouvelle feuille.',
-    hero_sub: 'Folium est ta bibliothèque personnelle. Garde une trace des livres que tu possèdes, découvre ce que lisent tes camarades, prête et emprunte — tout en un seul endroit.',
+    eyebrow: 'Pour les amoureux des bibliothèques · Établi MMXXIV',
+    hero_title_1: 'Construisons notre bibliothèque,',
+    hero_title_2: 'un livre à la fois.',
+    hero_sub: "Codex est ta bibliothèque personnelle. Garde les livres que tu possèdes, centralise ta wishlist et crée des listes et plans de lecture pour rester sur la bonne voie. Et suis les événements d'auteurs et de tes librairies préférées — tout en un seul endroit !",
     cta_primary: 'Créer un compte gratuit',
     cta_secondary: "J'ai déjà un compte",
     scroll: 'Explorer',
-    villages_label: 'Thèmes inspirés des Villages Historiques du Portugal',
-    features_label: 'Ce que tu peux faire',
+    villages_label: 'Trouve le thème dont tu tomberas amoureux, inspiré des villages historiques du Portugal',
+    features_label: 'Ce que tu peux faire avec Codex',
     feat1_title: 'Bibliothèque personnelle',
-    feat1_desc: 'Organise tes livres en étagères. Note ce que tu as lu, ce que tu lis et ce que tu veux lire. Recherche par ISBN ou manuellement.',
-    feat2_title: 'Prêts entre camarades',
-    feat2_desc: 'Découvre qui a le livre que tu cherches dans ton école ou ton district. Emprunte, prête et suis les retours.',
-    feat3_title: 'Plans de lecture',
-    feat3_desc: 'Crée un plan mensuel de lecture. Importe des listes du Plan National de Lecture ou de tes professeurs. Suis ta progression.',
+    feat1_desc: 'Organise tes livres en étagères. Note ce que tu as lu, ce que tu lis et ce que tu veux lire. Recherche et ajoute des livres par auteur, titre ou ISBN.',
+    feat2_title: 'Prêts et recherche',
+    feat2_desc: 'Cherche des livres dans les bibliothèques publiques, prête des livres à d\'autres utilisateurs et suis les retours.',
+    feat3_title: 'Listes et plans de lecture',
+    feat3_desc: 'Découvre des listes d\'auteurs et de librairies. Crée un plan de lecture et importe des listes pour te défier chaque mois.',
     feat4_title: 'Événements de lecture',
-    feat4_desc: "Clubs de lecture, concours d'écriture, salons du livre, symposiums. Tes professeurs et bibliothèques publient des événements ici.",
-    feat5_title: 'Bibliothèques publiques',
-    feat5_desc: 'Trouve des bibliothèques publiques près de toi dans un rayon de 5 à 50 km. Sauvegarde tes favorites et consulte les horaires.',
-    feat6_title: 'Thèmes historiques',
-    feat6_desc: '12 thèmes visuels inspirés des Villages Historiques du Portugal, chacun avec son arbre animé et son histoire. Sans publicité, sans distraction.',
+    feat4_desc: "Clubs de lecture, salons du livre, séances de dédicaces — tout dans la zone que tu définis.",
+    feat5_title: 'Minuteur de lecture',
+    feat5_desc: 'Ne te laisse pas distraire de la joie de lire. Utilise le minuteur et plonge dans le livre.',
+    feat6_title: 'Wishlist',
+    feat6_desc: "Tu veux un livre, un jour ? Suis-le, ne l'oublie pas. Utilise la wishlist.",
     loan_eyebrow: 'Prêts',
-    loan_title: 'Les livres que tu aimes méritent de circuler.',
-    loan_desc: "Quand un livre reste sur une étagère, une seule personne le lit. Folium crée un réseau de lecteurs dans ton école et ton district pour que les livres passent de main en main — avec un suivi complet de qui a demandé, quand et quand il doit être rendu.",
+    loan_title: 'Les livres que tu aimes méritent une nouvelle vie.',
+    loan_desc: "Quand un livre reste sur une étagère, une seule personne a eu la chance de le lire. Avec Codex, tu peux nous aider à créer un réseau de livres qui circulent, en contrôlant qui, quand et quand il sera rendu. Chaque prêt peut être classifié, pour s'assurer que ceux qui maltraitent les livres ne puissent pas en emprunter à nouveau.",
     loan_available: 'Disponible',
     loan_pending: 'Demande en attente · retour dans 12 jours',
     cta_title_1: 'Prêt à planter',
-    cta_title_2: 'ton étagère?',
-    cta_sub: 'Gratuit. Sans publicité. Fabriqué au Portugal.',
+    cta_title_2: 'ta bibliothèque?',
+    cta_sub: 'Gratuit. Fait avec amour et soin au Portugal.',
     badge1: 'Pour 12-21 ans',
     badge2: 'Conforme RGPD',
     badge3: 'Aligné avec PNL 2027',
@@ -277,7 +276,7 @@ export default function LandingPage() {
   };
 
   useEffect(() => {
-    document.title = 'Folium — A tua biblioteca de leituras';
+    document.title = 'Codex — A tua biblioteca de leituras';
     const prev = document.body.style.background;
     document.body.style.background = BG;
     return () => { document.body.style.background = prev; };
@@ -342,8 +341,8 @@ export default function LandingPage() {
           background: 'linear-gradient(to bottom, rgba(30,42,34,0.95) 0%, transparent 100%)',
           backdropFilter: 'blur(4px)',
         }}>
-          <a href="/" aria-label="Folium" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src={foliumLogoGold} alt="Folium" style={{ height: 36, width: 'auto', display: 'block' }} />
+          <a href="/" aria-label="Codex" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src={owlGold} alt="Codex" style={{ height: 36, width: 'auto', display: 'block' }} />
           </a>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <button type="button" onClick={() => setModal('about')} className="btn-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</button>
@@ -440,7 +439,7 @@ export default function LandingPage() {
 
           <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', maxWidth: 680 }}>
             <div style={{ animation: 'folium-floatLeaf 4s ease-in-out infinite' }}>
-              <img src={foliumIconGold} alt="" aria-hidden="true" style={{ height: 64, width: 'auto', display: 'block' }} />
+              <img src={owlGold} alt="" aria-hidden="true" style={{ height: 64, width: 'auto', display: 'block' }} />
             </div>
             <p style={{ fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, fontWeight: 600, animation: 'folium-fadeUp 0.8s 0.3s ease both' }}>{t.eyebrow}</p>
             <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.4rem, 7vw, 5rem)', fontWeight: 500, lineHeight: 1.05, color: TEXT, animation: 'folium-fadeUp 0.8s 0.5s ease both', margin: 0 }}>
@@ -548,7 +547,7 @@ export default function LandingPage() {
         {/* FOOTER */}
         <footer className="folium-footer" style={{ borderTop: '1px solid rgba(139,161,139,0.1)', padding: '2rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={foliumLogoGold} alt="Folium" style={{ height: 26, width: 'auto', display: 'block' }} />
+            <img src={owlGold} alt="Codex" style={{ height: 26, width: 'auto', display: 'block' }} />
           </div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
             <button type="button" onClick={() => setModal('termsPrivacy')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_terms_privacy}</button>

@@ -37,7 +37,7 @@ function buildHtml(body: string, actionLabel: string, actionUrl: string): string
 <html>
   <body style="margin:0;background:#ffffff;color:#2c2a26;font-family:Arial,sans-serif;padding:24px">
     <main style="max-width:560px;margin:0 auto;border:1px solid #e7e0d6;padding:32px">
-      <h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 24px;color:#2c2a26">Folium</h1>
+      <h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 24px;color:#2c2a26">Codex</h1>
       <div style="font-size:15px;line-height:1.6;margin:0 0 28px">
         <p style="margin:0">${escapeHtml(body)}</p>
       </div>
@@ -46,7 +46,7 @@ function buildHtml(body: string, actionLabel: string, actionUrl: string): string
       </p>
       <hr style="border:none;border-top:1px solid #e7e0d6;margin:32px 0 16px" />
       <p style="font-size:11px;color:#8a857d;line-height:1.5;margin:0">
-        Folium · Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal<br/>
+        Codex · Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal<br/>
         <a href="${APP_URL}" style="color:#8a857d">folium.kendirstudios.pt</a>
       </p>
     </main>
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
   const to = (input.to || '').trim();
   const subject = (input.subject || '').trim();
   const bodyText = (input.body_html || '').trim();
-  const actionLabel = (input.action_label || 'Abrir Folium').trim();
+  const actionLabel = (input.action_label || 'Abrir Codex').trim();
   const actionUrl = (input.action_url || APP_URL).trim();
 
   if (!to || !subject || !bodyText) {
@@ -97,11 +97,11 @@ Deno.serve(async (req) => {
     queue_name: 'transactional_emails',
     payload: {
       to,
-      from: `Folium <no-reply@${FROM_DOMAIN}>`,
+      from: `Codex <no-reply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
       subject,
       html,
-      text: `${bodyText}\n\n${actionLabel}: ${actionUrl}\n\nFolium · folium.kendirstudios.pt`,
+      text: `${bodyText}\n\n${actionLabel}: ${actionUrl}\n\nCodex · folium.kendirstudios.pt`,
       purpose: 'transactional',
       label: 'notification',
       idempotency_key: messageId,

@@ -112,7 +112,7 @@ export default function AboutScreen({ onBack }: AboutScreenProps) {
         <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2.5rem' }}>
           <img
             src={foliumLogoGold}
-            alt="Folium"
+            alt="Codex"
             style={{ height: 56, width: 'auto', display: 'block' }}
           />
         </header>

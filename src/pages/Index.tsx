@@ -95,7 +95,7 @@ export default function Index() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="text-center max-w-sm">
-          <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-2">Folium</h1>
+          <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-2">Codex</h1>
           <p className="text-muted-foreground text-sm font-['Josefin_Sans']">
             {t('app.underageBlocked')}
           </p>

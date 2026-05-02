@@ -24,7 +24,7 @@ const LANG_OPTIONS = [
   { code: 'fr', flag: '🇫🇷', name: 'Français' },
 ] as const;
 
-// Folium leaf is provided by the shared <FoliumLeaf /> component for visual consistency.
+// Codex leaf is provided by the shared <FoliumLeaf /> component for visual consistency.
 
 export default function AuthScreen() {
   const { t, i18n } = useTranslation();
@@ -57,7 +57,7 @@ export default function AuthScreen() {
   }, [searchParams]);
 
   useEffect(() => {
-    document.title = 'Folium — ' + t('auth.heading');
+    document.title = 'Codex — ' + t('auth.heading');
     const prevBg = document.body.style.background;
     document.body.style.background = BG;
     return () => { document.body.style.background = prevBg; };
@@ -182,7 +182,7 @@ export default function AuthScreen() {
             className="brand"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
-            aria-label="Folium - voltar à página inicial"
+            aria-label="Codex - voltar à página inicial"
           >
             <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeaf width={28} height={36} stroke={GOLD} /></span>
             <span
@@ -197,7 +197,7 @@ export default function AuthScreen() {
                 transition: 'color 0.2s',
               }}
             >
-              Folium
+              Codex
             </span>
           </a>
 

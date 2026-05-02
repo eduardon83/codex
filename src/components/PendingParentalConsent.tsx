@@ -40,7 +40,7 @@ export default function PendingParentalConsent() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-sm text-center">
-        <img src={logo} alt="Folium" className="w-40 mx-auto mb-6" />
+        <img src={logo} alt="Codex" className="w-40 mx-auto mb-6" />
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary mb-4">
           <Mail className="w-6 h-6 text-foreground" />
         </div>

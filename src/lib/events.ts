@@ -7,7 +7,7 @@ export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 export type EventRole = 'teacher' | 'school_admin' | 'entity' | 'global_admin' | 'admin';
 
 export type EventMedia = { id: string; event_id: string; type: 'banner' | 'image' | 'attachment'; url: string; filename: string | null; mime_type: string | null; file_size?: number | null; sort_order: number; created_at: string };
-export type FoliumEvent = {
+export type CodexEvent = {
   id: string; created_by_user_id: string; entity_id: string | null; school_id: string | null; district_id: string | null; type: EventType; scope: EventScope; title: string; introduction: string; body: string; status: EventStatus; is_official: boolean; approval_status: ApprovalStatus; rejection_note?: string | null; starts_at: string | null; ends_at: string | null; registration_opens_at: string | null; registration_closes_at: string | null; registration_limit: number | null; location: string | null; online_link: string | null; linked_book_isbn: string | null; linked_reading_list_id: string | null; created_at: string; updated_at: string; event_media?: EventMedia[]; entities?: { name: string; role_label: string | null; logo_url: string | null } | null; schools?: { name: string } | null; districts?: { name: string } | null; profiles?: { first_name: string | null; last_name: string | null; username: string | null; avatar_url: string | null } | null; reading_lists?: { name: string } | null; registration_count?: number; my_registration?: { id: string; status: 'confirmed' | 'waitlisted' | 'cancelled' } | null;
 };
 
@@ -52,8 +52,8 @@ export const eventTone = (type: EventType) => {
   return { bg: 'bg-muted', text: 'text-foreground', border: 'border-border', chip: 'bg-muted text-foreground', dot: 'bg-muted-foreground', gradient: 'from-muted via-secondary to-background' };
 };
 
-export const isRegistrationEvent = (event: Pick<FoliumEvent, 'type' | 'registration_closes_at' | 'registration_limit'>) => !['news', 'pnl_update'].includes(event.type) && Boolean(event.registration_closes_at || event.registration_limit);
+export const isRegistrationEvent = (event: Pick<CodexEvent, 'type' | 'registration_closes_at' | 'registration_limit'>) => !['news', 'pnl_update'].includes(event.type) && Boolean(event.registration_closes_at || event.registration_limit);
 export const formatDate = (value?: string | null) => value ? new Intl.DateTimeFormat('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(value)) : '';
 export const formatDateTime = (value?: string | null) => value ? new Intl.DateTimeFormat('pt-PT', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(value)) : '';
-export const creatorName = (event: FoliumEvent) => event.entities?.name || [event.profiles?.first_name, event.profiles?.last_name].filter(Boolean).join(' ') || event.profiles?.username || 'Folium';
-export const scopeLabel = (event: FoliumEvent) => event.scope === 'school' && event.schools?.name ? event.schools.name : event.scope !== 'national' && event.districts?.name ? `${EVENT_SCOPE_LABELS_PT[event.scope]} de ${event.districts.name}` : EVENT_SCOPE_LABELS_PT[event.scope];
+export const creatorName = (event: CodexEvent) => event.entities?.name || [event.profiles?.first_name, event.profiles?.last_name].filter(Boolean).join(' ') || event.profiles?.username || 'Codex';
+export const scopeLabel = (event: CodexEvent) => event.scope === 'school' && event.schools?.name ? event.schools.name : event.scope !== 'national' && event.districts?.name ? `${EVENT_SCOPE_LABELS_PT[event.scope]} de ${event.districts.name}` : EVENT_SCOPE_LABELS_PT[event.scope];
