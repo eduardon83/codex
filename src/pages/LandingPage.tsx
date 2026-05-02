@@ -342,7 +342,7 @@ export default function LandingPage() {
           backdropFilter: 'blur(4px)',
         }}>
           <a href="/" aria-label="Codex" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src={foliumLogoGold} alt="Codex" style={{ height: 36, width: 'auto', display: 'block' }} />
+            <img src={owlGold} alt="Codex" style={{ height: 36, width: 'auto', display: 'block' }} />
           </a>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <button type="button" onClick={() => setModal('about')} className="btn-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</button>
@@ -439,7 +439,7 @@ export default function LandingPage() {
 
           <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', maxWidth: 680 }}>
             <div style={{ animation: 'folium-floatLeaf 4s ease-in-out infinite' }}>
-              <img src={foliumIconGold} alt="" aria-hidden="true" style={{ height: 64, width: 'auto', display: 'block' }} />
+              <img src={owlGold} alt="" aria-hidden="true" style={{ height: 64, width: 'auto', display: 'block' }} />
             </div>
             <p style={{ fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, fontWeight: 600, animation: 'folium-fadeUp 0.8s 0.3s ease both' }}>{t.eyebrow}</p>
             <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.4rem, 7vw, 5rem)', fontWeight: 500, lineHeight: 1.05, color: TEXT, animation: 'folium-fadeUp 0.8s 0.5s ease both', margin: 0 }}>
@@ -547,7 +547,7 @@ export default function LandingPage() {
         {/* FOOTER */}
         <footer className="folium-footer" style={{ borderTop: '1px solid rgba(139,161,139,0.1)', padding: '2rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={foliumLogoGold} alt="Codex" style={{ height: 26, width: 'auto', display: 'block' }} />
+            <img src={owlGold} alt="Codex" style={{ height: 26, width: 'auto', display: 'block' }} />
           </div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
             <button type="button" onClick={() => setModal('termsPrivacy')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_terms_privacy}</button>
