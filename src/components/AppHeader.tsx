@@ -1,11 +1,11 @@
 import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { useTheme } from '@/hooks/useTheme';
-import { isCodexDarkTheme } from '@/lib/foliumTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function AppHeader() {
   const { currentTheme } = useTheme();
-  const isDark = isCodexDarkTheme(currentTheme.id);
+  const isDark = isFoliumDarkTheme(currentTheme.id);
   const logo = isDark ? foliumLogoGold : foliumLogo;
 
   return (

@@ -74,7 +74,7 @@ function targetForStep(step: number, activeTab: string, bookDetailOpen: boolean)
   return null;
 }
 
-export function CodexTutorialProvider({ children }: { children: ReactNode }) {
+export function FoliumTutorialProvider({ children }: { children: ReactNode }) {
   const { user, profile, refreshProfile } = useAuth();
   const { theme, currentTheme, setTheme } = useTheme();
   const [isActive, setIsActive] = useState(false);
@@ -498,6 +498,6 @@ function ChapterMap(props: any) {
 
 export function useCodexTutorial() {
   const context = useContext(TutorialContext);
-  if (!context) throw new Error('useCodexTutorial must be used within CodexTutorialProvider');
+  if (!context) throw new Error('useCodexTutorial must be used within FoliumTutorialProvider');
   return context;
 }

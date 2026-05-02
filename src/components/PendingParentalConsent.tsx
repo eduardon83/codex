@@ -7,14 +7,14 @@ import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { Mail, RefreshCw, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
-import { isCodexDarkTheme } from '@/lib/foliumTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 export default function PendingParentalConsent() {
   const { profile, signOut, refreshProfile } = useAuth();
   const { currentTheme } = useTheme();
   const [resending, setResending] = useState(false);
   const [checking, setChecking] = useState(false);
-  const logo = isCodexDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
+  const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
 
   const resend = async () => {
     setResending(true);

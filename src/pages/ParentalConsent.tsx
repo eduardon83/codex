@@ -6,7 +6,7 @@ import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { Loader2, Check, X } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
-import { isCodexDarkTheme } from '@/lib/foliumTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 
 interface ConsentRequest {
   first_name: string | null;
@@ -20,7 +20,7 @@ export default function ParentalConsent() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'success' | 'invalid'>('loading');
   const [request, setRequest] = useState<ConsentRequest | null>(null);
   const [approving, setApproving] = useState(false);
-  const logo = isCodexDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
+  const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
   const token = new URLSearchParams(window.location.search).get('token') || '';
 
   useEffect(() => {

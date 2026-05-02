@@ -195,7 +195,7 @@ const LANG_OPTIONS: { code: LandingLang; flag: string; name: string }[] = [
   { code: 'fr', flag: '🇫🇷', name: 'Français' },
 ];
 
-const CodexLeafSVG = ({ size = 28, strokeWidth = 2, minimal = false }: { size?: number; strokeWidth?: number; minimal?: boolean }) => (
+const FoliumLeafSVG = ({ size = 28, strokeWidth = 2, minimal = false }: { size?: number; strokeWidth?: number; minimal?: boolean }) => (
   <svg viewBox="0 0 200 260" width={size} height={size * 1.3} fill="none" stroke={GOLD} strokeLinecap="round" strokeLinejoin="round" strokeWidth={strokeWidth} aria-hidden="true">
     <path d="M 100,20 Q 158,70 160,135 Q 160,195 100,210 Q 40,195 40,135 Q 42,70 100,20 Z" />
     <line x1="100" y1="22" x2="100" y2="208" />

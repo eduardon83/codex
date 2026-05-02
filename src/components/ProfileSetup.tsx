@@ -17,7 +17,7 @@ import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
-import { isCodexDarkTheme } from '@/lib/foliumTheme';
+import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
 import AvatarPickerDialog from '@/components/AvatarPickerDialog';
 import { AVATARS, AvatarId, getAvatarById, resolveAvatarSrc } from '@/lib/avatars';
@@ -118,7 +118,7 @@ export default function ProfileSetup() {
   );
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
-  const logo = isCodexDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
+  const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
   const age = useMemo(() => calculateAge(dob), [dob]);
 

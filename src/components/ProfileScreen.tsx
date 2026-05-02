@@ -32,7 +32,7 @@ import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
 import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
-import { useCodexTutorial } from '@/components/tutorial/CodexTutorialProvider';
+import { useCodexTutorial } from '@/components/tutorial/FoliumTutorialProvider';
 import AvatarPickerDialog from '@/components/AvatarPickerDialog';
 import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
 

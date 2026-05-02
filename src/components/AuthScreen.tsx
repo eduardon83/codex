@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
 import { lovable } from '@/integrations/lovable/index';
 import AboutScreen from '@/components/AboutScreen';
-import CodexLeaf from '@/components/CodexLeaf';
+import FoliumLeaf from '@/components/FoliumLeaf';
 
 // Wilderness Hearth palette (matches LandingPage)
 const GOLD = '#C9A84C';
@@ -24,7 +24,7 @@ const LANG_OPTIONS = [
   { code: 'fr', flag: '🇫🇷', name: 'Français' },
 ] as const;
 
-// Codex leaf is provided by the shared <CodexLeaf /> component for visual consistency.
+// Codex leaf is provided by the shared <FoliumLeaf /> component for visual consistency.
 
 export default function AuthScreen() {
   const { t, i18n } = useTranslation();
@@ -184,7 +184,7 @@ export default function AuthScreen() {
             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
             aria-label="Codex - voltar à página inicial"
           >
-            <span className="float-leaf" style={{ display: 'inline-flex' }}><CodexLeaf width={28} height={36} stroke={GOLD} /></span>
+            <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeaf width={28} height={36} stroke={GOLD} /></span>
             <span
               className="brand-text"
               style={{
@@ -297,7 +297,7 @@ export default function AuthScreen() {
             {/* Heading block */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <div className="float-leaf" style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
-                <CodexLeaf width={32} height={42} stroke={GOLD} />
+                <FoliumLeaf width={32} height={42} stroke={GOLD} />
               </div>
               <p
                 style={{
