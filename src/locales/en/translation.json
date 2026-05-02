@@ -5,7 +5,7 @@
     "loading": "Loading...",
     "accountSuspended": "Account suspended",
     "accountSuspendedDesc": "Your account has been suspended. Please contact support for more information.",
-    "underageBlocked": "Sorry, Folium is for people over 12."
+    "underageBlocked": "Sorry, Codex is for people over 12."
   },
   "nav": {
     "library": "Library",
@@ -27,7 +27,7 @@
     "alreadyHaveAccount": "Already have an account? Sign in",
     "noAccount": "Don't have an account? Create one",
     "signInError": "Couldn't sign in. Check your details.",
-    "accountCreated": "A validation email was sent. Welcome to Folium!",
+    "accountCreated": "A validation email was sent. Welcome to Codex!",
     "welcomeBack": "Welcome back.",
     "emailNotConfirmed": "Email not confirmed. Please check your inbox.",
     "or": "or",
@@ -38,7 +38,7 @@
     "resetError": "Could not send the recovery email.",
     "backToSignIn": "Back to sign in",
     "resetPasswordTitle": "Set a new password",
-    "resetPasswordSubtitle": "Choose a new password to get back into Folium.",
+    "resetPasswordSubtitle": "Choose a new password to get back into Codex.",
     "newPassword": "New password",
     "confirmPassword": "Confirm password",
     "updatePassword": "Save new password",
@@ -50,7 +50,7 @@
     "password_label": "Password",
     "password_confirm_label": "Confirm password",
     "eyebrow_login": "Welcome back",
-    "eyebrow_signup": "Welcome to Folium",
+    "eyebrow_signup": "Welcome to Codex",
     "eyebrow_recover": "Recover access",
     "h1_login": "Welcome back",
     "h1_signup": "Create your account",
@@ -61,7 +61,7 @@
     "heading": "Get ready for a new chapter"
   },
   "profileSetup": {
-    "welcome": "Welcome to Folium",
+    "welcome": "Welcome to Codex",
     "tellUs": "Tell us a bit about yourself",
     "firstName": "First name",
     "lastName": "Last name",
@@ -70,10 +70,10 @@
     "bioPlaceholder": "A short bio about you and your reading habits...",
     "saving": "Saving...",
     "continue": "Continue",
-    "welcomeFolium": "Welcome to Folium",
+    "welcomeCodex": "Welcome to Codex",
     "back": "Back",
     "dateOfBirth": "Date of birth",
-    "underageTitle": "Sorry, Folium is for people over 12.",
+    "underageTitle": "Sorry, Codex is for people over 12.",
     "underageSubtitle": "Come back when you turn 12!",
     "parentalIntro": "Because you are under 18, we need consent from your parent or guardian.",
     "parentEmail": "Parent or guardian email",
@@ -90,7 +90,7 @@
     "noResults": "No results.",
     "chooseTheme": "Choose your theme",
     "finishing": "Finishing…",
-    "enterFolium": "Enter Folium",
+    "enterCodex": "Enter Codex",
     "usernameChecking": "Checking...",
     "usernameAvailable": "Username available",
     "usernameTaken": "This username is already taken. Try another.",
@@ -100,7 +100,7 @@
     "requiredFields": "Fill in all fields.",
     "consentRequired": "Enter the email and accept the conditions.",
     "schoolRequired": "Select district and school.",
-    "termsIntro": "Before continuing, read and accept Folium’s legal documents.",
+    "termsIntro": "Before continuing, read and accept Codex’s legal documents.",
     "acceptTerms": "I have read and accept the Terms and Conditions of Use",
     "acceptPrivacyPrefix": "I have read and accept the",
     "privacyPolicy": "Privacy Policy"
@@ -643,8 +643,8 @@
     "documentPreparing": "Document in preparation."
   },
   "consent": {
-    "title": "Authorise Folium account",
-    "intro": "{{name}} ({{age}} years old) wants to use Folium.",
+    "title": "Authorise Codex account",
+    "intro": "{{name}} ({{age}} years old) wants to use Codex.",
     "pointLibrary": "Organise a personal book library.",
     "pointLoans": "Request and lend books between schoolmates.",
     "pointSchool": "See books and lists linked to their school and district.",
@@ -692,7 +692,7 @@
     "confirm": "Confirm",
     "info": "Info",
     "setupIntro": "Choose an avatar for your profile.",
-    "defaultAlt": "Folium avatar"
+    "defaultAlt": "Codex avatar"
   },
   "add_book": {
     "search_placeholder": "Search by author, title or ISBN",

@@ -26,7 +26,7 @@ const LANDING_COPY = {
     eyebrow: 'Para jovens leitores · Portugal',
     hero_title_1: 'Cada livro é uma',
     hero_title_2: 'folha nova.',
-    hero_sub: 'O Folium é a tua biblioteca pessoal. Guarda os livros que tens, descobre o que os teus colegas estão a ler, empresta e pede emprestado — tudo num só lugar.',
+    hero_sub: 'O Codex é a tua biblioteca pessoal. Guarda os livros que tens, descobre o que os teus colegas estão a ler, empresta e pede emprestado — tudo num só lugar.',
     cta_primary: 'Criar conta gratuita',
     cta_secondary: 'Já tenho conta',
     scroll: 'Explorar',
@@ -46,7 +46,7 @@ const LANDING_COPY = {
     feat6_desc: '12 temas visuais inspirados nas Aldeias Históricas de Portugal, cada um com a sua árvore animada e história. Sem publicidade, sem distrações.',
     loan_eyebrow: 'Empréstimos',
     loan_title: 'Os livros que amas merecem circular.',
-    loan_desc: 'Quando um livro fica numa prateleira, só uma pessoa o lê. O Folium cria uma rede de leitores na tua escola e distrito para que os livros passem de mão em mão — com total controlo de quem pediu, quando, e quando devolve.',
+    loan_desc: 'Quando um livro fica numa prateleira, só uma pessoa o lê. O Codex cria uma rede de leitores na tua escola e distrito para que os livros passem de mão em mão — com total controlo de quem pediu, quando, e quando devolve.',
     loan_available: 'Disponível',
     loan_pending: 'Pedido pendente · devolução em 12 dias',
     cta_title_1: 'Pronto para plantar',
@@ -67,7 +67,7 @@ const LANDING_COPY = {
     eyebrow: 'For young readers · Portugal',
     hero_title_1: 'Every book is a',
     hero_title_2: 'new leaf.',
-    hero_sub: 'Folium is your personal library. Keep track of the books you own, discover what your classmates are reading, lend and borrow — all in one place.',
+    hero_sub: 'Codex is your personal library. Keep track of the books you own, discover what your classmates are reading, lend and borrow — all in one place.',
     cta_primary: 'Create free account',
     cta_secondary: 'I already have an account',
     scroll: 'Explore',
@@ -87,7 +87,7 @@ const LANDING_COPY = {
     feat6_desc: "12 visual themes inspired by Portugal's Historic Villages, each with an animated tree and story. No ads, no distractions.",
     loan_eyebrow: 'Book lending',
     loan_title: 'The books you love deserve to travel.',
-    loan_desc: "When a book sits on one shelf, only one person reads it. Folium builds a reader network at your school and district so books pass from hand to hand — with full tracking of who borrowed what and when it's due back.",
+    loan_desc: "When a book sits on one shelf, only one person reads it. Codex builds a reader network at your school and district so books pass from hand to hand — with full tracking of who borrowed what and when it's due back.",
     loan_available: 'Available',
     loan_pending: 'Requested · due back in 12 days',
     cta_title_1: 'Ready to plant',
@@ -108,7 +108,7 @@ const LANDING_COPY = {
     eyebrow: 'Para jóvenes lectores · Portugal',
     hero_title_1: 'Cada libro es una',
     hero_title_2: 'hoja nueva.',
-    hero_sub: 'Folium es tu biblioteca personal. Guarda los libros que tienes, descubre lo que leen tus compañeros, presta y pide prestado — todo en un solo lugar.',
+    hero_sub: 'Codex es tu biblioteca personal. Guarda los libros que tienes, descubre lo que leen tus compañeros, presta y pide prestado — todo en un solo lugar.',
     cta_primary: 'Crear cuenta gratuita',
     cta_secondary: 'Ya tengo una cuenta',
     scroll: 'Explorar',
@@ -128,7 +128,7 @@ const LANDING_COPY = {
     feat6_desc: '12 temas visuales inspirados en las Aldeas Históricas de Portugal, cada uno con su árbol animado e historia. Sin publicidad, sin distracciones.',
     loan_eyebrow: 'Préstamos',
     loan_title: 'Los libros que amas merecen circular.',
-    loan_desc: 'Cuando un libro se queda en una estantería, solo una persona lo lee. Folium crea una red de lectores en tu escuela y distrito para que los libros pasen de mano en mano — con control total de quién pidió, cuándo y cuándo devuelve.',
+    loan_desc: 'Cuando un libro se queda en una estantería, solo una persona lo lee. Codex crea una red de lectores en tu escuela y distrito para que los libros pasen de mano en mano — con control total de quién pidió, cuándo y cuándo devuelve.',
     loan_available: 'Disponible',
     loan_pending: 'Solicitud pendiente · devolución en 12 días',
     cta_title_1: '¿Listo para plantar',
@@ -149,7 +149,7 @@ const LANDING_COPY = {
     eyebrow: 'Pour les jeunes lecteurs · Portugal',
     hero_title_1: 'Chaque livre est une',
     hero_title_2: 'nouvelle feuille.',
-    hero_sub: 'Folium est ta bibliothèque personnelle. Garde une trace des livres que tu possèdes, découvre ce que lisent tes camarades, prête et emprunte — tout en un seul endroit.',
+    hero_sub: 'Codex est ta bibliothèque personnelle. Garde une trace des livres que tu possèdes, découvre ce que lisent tes camarades, prête et emprunte — tout en un seul endroit.',
     cta_primary: 'Créer un compte gratuit',
     cta_secondary: "J'ai déjà un compte",
     scroll: 'Explorer',
@@ -169,7 +169,7 @@ const LANDING_COPY = {
     feat6_desc: '12 thèmes visuels inspirés des Villages Historiques du Portugal, chacun avec son arbre animé et son histoire. Sans publicité, sans distraction.',
     loan_eyebrow: 'Prêts',
     loan_title: 'Les livres que tu aimes méritent de circuler.',
-    loan_desc: "Quand un livre reste sur une étagère, une seule personne le lit. Folium crée un réseau de lecteurs dans ton école et ton district pour que les livres passent de main en main — avec un suivi complet de qui a demandé, quand et quand il doit être rendu.",
+    loan_desc: "Quand un livre reste sur une étagère, une seule personne le lit. Codex crée un réseau de lecteurs dans ton école et ton district pour que les livres passent de main en main — avec un suivi complet de qui a demandé, quand et quand il doit être rendu.",
     loan_available: 'Disponible',
     loan_pending: 'Demande en attente · retour dans 12 jours',
     cta_title_1: 'Prêt à planter',
@@ -195,7 +195,7 @@ const LANG_OPTIONS: { code: LandingLang; flag: string; name: string }[] = [
   { code: 'fr', flag: '🇫🇷', name: 'Français' },
 ];
 
-const FoliumLeafSVG = ({ size = 28, strokeWidth = 2, minimal = false }: { size?: number; strokeWidth?: number; minimal?: boolean }) => (
+const CodexLeafSVG = ({ size = 28, strokeWidth = 2, minimal = false }: { size?: number; strokeWidth?: number; minimal?: boolean }) => (
   <svg viewBox="0 0 200 260" width={size} height={size * 1.3} fill="none" stroke={GOLD} strokeLinecap="round" strokeLinejoin="round" strokeWidth={strokeWidth} aria-hidden="true">
     <path d="M 100,20 Q 158,70 160,135 Q 160,195 100,210 Q 40,195 40,135 Q 42,70 100,20 Z" />
     <line x1="100" y1="22" x2="100" y2="208" />
@@ -277,7 +277,7 @@ export default function LandingPage() {
   };
 
   useEffect(() => {
-    document.title = 'Folium — A tua biblioteca de leituras';
+    document.title = 'Codex — A tua biblioteca de leituras';
     const prev = document.body.style.background;
     document.body.style.background = BG;
     return () => { document.body.style.background = prev; };
@@ -342,8 +342,8 @@ export default function LandingPage() {
           background: 'linear-gradient(to bottom, rgba(30,42,34,0.95) 0%, transparent 100%)',
           backdropFilter: 'blur(4px)',
         }}>
-          <a href="/" aria-label="Folium" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src={foliumLogoGold} alt="Folium" style={{ height: 36, width: 'auto', display: 'block' }} />
+          <a href="/" aria-label="Codex" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src={foliumLogoGold} alt="Codex" style={{ height: 36, width: 'auto', display: 'block' }} />
           </a>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <button type="button" onClick={() => setModal('about')} className="btn-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</button>
@@ -548,7 +548,7 @@ export default function LandingPage() {
         {/* FOOTER */}
         <footer className="folium-footer" style={{ borderTop: '1px solid rgba(139,161,139,0.1)', padding: '2rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={foliumLogoGold} alt="Folium" style={{ height: 26, width: 'auto', display: 'block' }} />
+            <img src={foliumLogoGold} alt="Codex" style={{ height: 26, width: 'auto', display: 'block' }} />
           </div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
             <button type="button" onClick={() => setModal('termsPrivacy')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_terms_privacy}</button>

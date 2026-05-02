@@ -43,7 +43,7 @@ function stripHtml(s: string): string {
 async function fetchHtml(url: string): Promise<string | null> {
   const response = await fetch(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; FoliumLibrary/1.0; +https://folium.kendirstudios.pt)',
+      'User-Agent': 'Mozilla/5.0 (compatible; CodexLibrary/1.0; +https://folium.kendirstudios.pt)',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
       'Accept-Language': 'en-US,en;q=0.9,pt;q=0.8',
     },

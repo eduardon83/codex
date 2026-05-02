@@ -5,7 +5,7 @@
     "loading": "Chargement...",
     "accountSuspended": "Compte suspendu",
     "accountSuspendedDesc": "Votre compte a été suspendu. Contactez le support pour plus d’informations.",
-    "underageBlocked": "Désolé, Folium est réservé aux plus de 12 ans."
+    "underageBlocked": "Désolé, Codex est réservé aux plus de 12 ans."
   },
   "nav": {
     "library": "Bibliothèque",
@@ -27,7 +27,7 @@
     "alreadyHaveAccount": "Déjà un compte ? Se connecter",
     "noAccount": "Pas de compte ? En créer un",
     "signInError": "Connexion impossible. Vérifiez vos informations.",
-    "accountCreated": "Un email de validation a été envoyé. Bienvenue sur Folium !",
+    "accountCreated": "Un email de validation a été envoyé. Bienvenue sur Codex !",
     "welcomeBack": "Bon retour.",
     "emailNotConfirmed": "Email non confirmé. Vérifiez votre boîte de réception.",
     "or": "ou",
@@ -38,7 +38,7 @@
     "resetError": "Impossible d’envoyer l’email de récupération.",
     "backToSignIn": "Retour à la connexion",
     "resetPasswordTitle": "Définir un nouveau mot de passe",
-    "resetPasswordSubtitle": "Choisissez un nouveau mot de passe pour revenir sur Folium.",
+    "resetPasswordSubtitle": "Choisissez un nouveau mot de passe pour revenir sur Codex.",
     "newPassword": "Nouveau mot de passe",
     "confirmPassword": "Confirmer le mot de passe",
     "updatePassword": "Enregistrer le nouveau mot de passe",
@@ -50,7 +50,7 @@
     "password_label": "Mot de passe",
     "password_confirm_label": "Confirmer le mot de passe",
     "eyebrow_login": "Bon retour",
-    "eyebrow_signup": "Bienvenue sur Folium",
+    "eyebrow_signup": "Bienvenue sur Codex",
     "eyebrow_recover": "Récupérer l’accès",
     "h1_login": "Bon retour",
     "h1_signup": "Crée ton compte",
@@ -61,7 +61,7 @@
     "heading": "Prépare-toi pour un nouveau chapitre"
   },
   "profileSetup": {
-    "welcome": "Bienvenue sur Folium",
+    "welcome": "Bienvenue sur Codex",
     "tellUs": "Parlez-nous un peu de vous",
     "firstName": "Prénom",
     "lastName": "Nom",
@@ -70,10 +70,10 @@
     "bioPlaceholder": "Une courte bio sur vous et vos habitudes de lecture...",
     "saving": "Enregistrement...",
     "continue": "Continuer",
-    "welcomeFolium": "Bienvenue sur Folium",
+    "welcomeCodex": "Bienvenue sur Codex",
     "back": "Retour",
     "dateOfBirth": "Date de naissance",
-    "underageTitle": "Désolé, Folium est réservé aux plus de 12 ans.",
+    "underageTitle": "Désolé, Codex est réservé aux plus de 12 ans.",
     "underageSubtitle": "Revenez quand vous aurez 12 ans !",
     "parentalIntro": "Comme vous avez moins de 18 ans, nous avons besoin du consentement de votre parent ou tuteur.",
     "parentEmail": "Email du parent ou tuteur",
@@ -90,7 +90,7 @@
     "noResults": "Aucun résultat.",
     "chooseTheme": "Choisissez votre thème",
     "finishing": "Finalisation…",
-    "enterFolium": "Entrer dans Folium",
+    "enterCodex": "Entrer dans Codex",
     "usernameChecking": "Vérification...",
     "usernameAvailable": "Nom d’utilisateur disponible",
     "usernameTaken": "Ce nom d’utilisateur est déjà utilisé. Essayez-en un autre.",
@@ -100,7 +100,7 @@
     "requiredFields": "Remplissez tous les champs.",
     "consentRequired": "Saisissez l’email et acceptez les conditions.",
     "schoolRequired": "Sélectionnez un district et une école.",
-    "termsIntro": "Avant de continuer, lisez et acceptez les documents légaux de Folium.",
+    "termsIntro": "Avant de continuer, lisez et acceptez les documents légaux de Codex.",
     "acceptTerms": "J’ai lu et j’accepte les Conditions d’utilisation",
     "acceptPrivacyPrefix": "J’ai lu et j’accepte la",
     "privacyPolicy": "Politique de confidentialité"
@@ -643,8 +643,8 @@
     "documentPreparing": "Document en préparation."
   },
   "consent": {
-    "title": "Autoriser le compte Folium",
-    "intro": "{{name}} ({{age}} ans) souhaite utiliser Folium.",
+    "title": "Autoriser le compte Codex",
+    "intro": "{{name}} ({{age}} ans) souhaite utiliser Codex.",
     "pointLibrary": "Organiser une bibliothèque personnelle de livres.",
     "pointLoans": "Demander et prêter des livres entre camarades.",
     "pointSchool": "Voir des livres et listes liés à son école et district.",
@@ -692,7 +692,7 @@
     "confirm": "Confirmer",
     "info": "Info",
     "setupIntro": "Choisissez un avatar pour votre profil.",
-    "defaultAlt": "Avatar Folium"
+    "defaultAlt": "Avatar Codex"
   },
   "add_book": {
     "search_placeholder": "Rechercher par auteur, titre ou ISBN",

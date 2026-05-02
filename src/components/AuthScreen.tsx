@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
 import { lovable } from '@/integrations/lovable/index';
 import AboutScreen from '@/components/AboutScreen';
-import FoliumLeaf from '@/components/FoliumLeaf';
+import CodexLeaf from '@/components/CodexLeaf';
 
 // Wilderness Hearth palette (matches LandingPage)
 const GOLD = '#C9A84C';
@@ -24,7 +24,7 @@ const LANG_OPTIONS = [
   { code: 'fr', flag: '🇫🇷', name: 'Français' },
 ] as const;
 
-// Folium leaf is provided by the shared <FoliumLeaf /> component for visual consistency.
+// Codex leaf is provided by the shared <CodexLeaf /> component for visual consistency.
 
 export default function AuthScreen() {
   const { t, i18n } = useTranslation();
@@ -57,7 +57,7 @@ export default function AuthScreen() {
   }, [searchParams]);
 
   useEffect(() => {
-    document.title = 'Folium — ' + t('auth.heading');
+    document.title = 'Codex — ' + t('auth.heading');
     const prevBg = document.body.style.background;
     document.body.style.background = BG;
     return () => { document.body.style.background = prevBg; };
@@ -182,9 +182,9 @@ export default function AuthScreen() {
             className="brand"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
             style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}
-            aria-label="Folium - voltar à página inicial"
+            aria-label="Codex - voltar à página inicial"
           >
-            <span className="float-leaf" style={{ display: 'inline-flex' }}><FoliumLeaf width={28} height={36} stroke={GOLD} /></span>
+            <span className="float-leaf" style={{ display: 'inline-flex' }}><CodexLeaf width={28} height={36} stroke={GOLD} /></span>
             <span
               className="brand-text"
               style={{
@@ -197,7 +197,7 @@ export default function AuthScreen() {
                 transition: 'color 0.2s',
               }}
             >
-              Folium
+              Codex
             </span>
           </a>
 
@@ -297,7 +297,7 @@ export default function AuthScreen() {
             {/* Heading block */}
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
               <div className="float-leaf" style={{ display: 'inline-flex', marginBottom: '1.25rem' }}>
-                <FoliumLeaf width={32} height={42} stroke={GOLD} />
+                <CodexLeaf width={32} height={42} stroke={GOLD} />
               </div>
               <p
                 style={{

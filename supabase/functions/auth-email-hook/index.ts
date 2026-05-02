@@ -21,7 +21,7 @@ const corsHeaders = {
 // Falls back to PT (default project language) for any unsupported lang.
 function subjectFor(emailType: string, lang: Lang): string {
   const subjects = tStrings(lang).subjects as Record<string, string>
-  return subjects[emailType] || tStrings('pt').subjects[emailType as keyof typeof subjects] || 'Folium'
+  return subjects[emailType] || tStrings('pt').subjects[emailType as keyof typeof subjects] || 'Codex'
 }
 
 // Template mapping

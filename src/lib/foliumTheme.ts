@@ -16,6 +16,6 @@ export const DARK_THEME_IDS = [
   'linhares',
 ];
 
-export function isFoliumDarkTheme(themeId: string) {
+export function isCodexDarkTheme(themeId: string) {
   return DARK_THEME_IDS.includes(themeId);
 }

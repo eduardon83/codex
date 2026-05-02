@@ -560,7 +560,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             />
           </div>
 
-          {/* Folium peer-to-peer lending toggle */}
+          {/* Codex peer-to-peer lending toggle */}
           {!book.is_borrowed && user?.id === (book as any).user_id !== false && (
             <div className="mb-4">
               <BookLendingToggle book={{

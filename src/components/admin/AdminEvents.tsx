@@ -3,15 +3,15 @@ import { Archive, Ban, Check, Eye, Search, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { EventDetail } from '@/components/EventsScreen';
-import { EVENT_SCOPE_LABELS_PT, EVENT_TYPE_KEYS, EVENT_TYPE_LABELS_PT, EventScope, EventType, FoliumEvent, creatorName, formatDate, scopeLabel } from '@/lib/events';
+import { EVENT_SCOPE_LABELS_PT, EVENT_TYPE_KEYS, EVENT_TYPE_LABELS_PT, EventScope, EventType, CodexEvent, creatorName, formatDate, scopeLabel } from '@/lib/events';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function AdminEvents() {
-  const [events, setEvents] = useState<FoliumEvent[]>([]);
-  const [selected, setSelected] = useState<FoliumEvent | null>(null);
+  const [events, setEvents] = useState<CodexEvent[]>([]);
+  const [selected, setSelected] = useState<CodexEvent | null>(null);
   const [filters, setFilters] = useState({ type: '', scope: '', creator: '' });
 
   const load = async () => {
@@ -20,7 +20,7 @@ export default function AdminEvents() {
       .select('*, event_media(*), entities(name, role_label, logo_url), schools(name), districts(name), reading_lists(name)')
       .order('created_at', { ascending: false });
     if (error) return toast.error(error.message);
-    setEvents((data as unknown as FoliumEvent[]) || []);
+    setEvents((data as unknown as CodexEvent[]) || []);
   };
 
   useEffect(() => { load(); }, []);
@@ -69,12 +69,12 @@ export default function AdminEvents() {
           <EventTable events={published} onReview={setSelected} empty="Sem eventos publicados." actions={(event) => <><Button size="sm" variant="outline" onClick={() => updateEvent(event.id, { status: 'archived' })}><Archive size={14} className="mr-1" />Arquivar</Button><Button size="sm" variant="outline" onClick={() => updateEvent(event.id, { status: 'cancelled' })}><Ban size={14} className="mr-1" />Cancelar</Button></>} />
         </TabsContent>
       </Tabs>
-      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}><DialogContent className="max-w-lg max-h-[92vh] overflow-y-auto p-0"><div className="bg-background"><EventDetail event={selected as FoliumEvent} adminActions={selected?.approval_status === 'pending' ? <div className="mt-6 grid grid-cols-2 gap-2"><Button onClick={() => updateEvent(selected.id, { approval_status: 'approved', status: 'published' })}><Check size={16} className="mr-2" />Aprovar</Button><Button variant="outline" onClick={() => updateEvent(selected.id, { approval_status: 'rejected', status: 'draft', rejection_note: 'Rejeitado pelo administrador.' })}><X size={16} className="mr-2" />Rejeitar com nota</Button></div> : null} /></div></DialogContent></Dialog>
+      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}><DialogContent className="max-w-lg max-h-[92vh] overflow-y-auto p-0"><div className="bg-background"><EventDetail event={selected as CodexEvent} adminActions={selected?.approval_status === 'pending' ? <div className="mt-6 grid grid-cols-2 gap-2"><Button onClick={() => updateEvent(selected.id, { approval_status: 'approved', status: 'published' })}><Check size={16} className="mr-2" />Aprovar</Button><Button variant="outline" onClick={() => updateEvent(selected.id, { approval_status: 'rejected', status: 'draft', rejection_note: 'Rejeitado pelo administrador.' })}><X size={16} className="mr-2" />Rejeitar com nota</Button></div> : null} /></div></DialogContent></Dialog>
     </div>
   );
 }
 
-function EventTable({ events, onReview, actionLabel = 'Ver', actions, empty }: { events: FoliumEvent[]; onReview: (e: FoliumEvent) => void; actionLabel?: string; actions?: (e: FoliumEvent) => React.ReactNode; empty: string }) {
+function EventTable({ events, onReview, actionLabel = 'Ver', actions, empty }: { events: CodexEvent[]; onReview: (e: CodexEvent) => void; actionLabel?: string; actions?: (e: CodexEvent) => React.ReactNode; empty: string }) {
   if (!events.length) return <div className="py-16 text-center text-sm text-muted-foreground font-['Josefin_Sans']">{empty}</div>;
   return <div className="border border-border rounded overflow-hidden"><table className="w-full text-sm"><thead className="bg-muted/30"><tr><th className="text-left p-3">Tipo</th><th className="text-left p-3">Título</th><th className="text-left p-3">Criador</th><th className="text-left p-3">Âmbito</th><th className="text-left p-3">Data</th><th className="text-right p-3">Ações</th></tr></thead><tbody>{events.map((event) => <tr key={event.id} className="border-t border-border"><td className="p-3 text-xs">{EVENT_TYPE_LABELS_PT[event.type as EventType]}</td><td className="p-3 font-medium">{event.title}</td><td className="p-3 text-muted-foreground">{creatorName(event)}</td><td className="p-3 text-muted-foreground">{scopeLabel(event)}</td><td className="p-3 text-muted-foreground">{formatDate(event.created_at)}</td><td className="p-3"><div className="flex justify-end gap-2"><Button size="sm" variant="outline" onClick={() => onReview(event)}><Eye size={14} className="mr-1" />{actionLabel}</Button>{actions?.(event)}</div></td></tr>)}</tbody></table></div>;
 }

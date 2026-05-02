@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
             'X-Requested-With': 'XMLHttpRequest',
             'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'User-Agent': 'Mozilla/5.0 (compatible; FoliumBot/1.0)',
+            'User-Agent': 'Mozilla/5.0 (compatible; CodexBot/1.0)',
           },
           body: body.toString(),
         })

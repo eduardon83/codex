@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { useTheme } from '@/hooks/useTheme';
-import { isFoliumDarkTheme } from '@/lib/foliumTheme';
+import { isCodexDarkTheme } from '@/lib/foliumTheme';
 
 export default function ResetPasswordScreen() {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ export default function ResetPasswordScreen() {
   const [loading, setLoading] = useState(false);
   const [checkingLink, setCheckingLink] = useState(true);
 
-  const logo = isFoliumDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
+  const logo = isCodexDarkTheme(currentTheme.id) ? foliumLogoGold : foliumLogo;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setCheckingLink(false), 900);
@@ -59,7 +59,7 @@ export default function ResetPasswordScreen() {
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-8">
-          <img src={logo} alt="Folium" className="w-60 min-w-[240px]" />
+          <img src={logo} alt="Codex" className="w-60 min-w-[240px]" />
           <h1 className="mt-4 text-center font-serif text-2xl text-foreground">
             {t('auth.resetPasswordTitle')}
           </h1>

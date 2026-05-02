@@ -1,4 +1,4 @@
-interface FoliumLeafProps {
+interface CodexLeafProps {
   width?: number;
   height?: number;
   stroke?: string;
@@ -8,17 +8,17 @@ interface FoliumLeafProps {
 }
 
 /**
- * Official Folium leaf mark — shared SVG used in nav, headers, auth, etc.
+ * Official Codex leaf mark — shared SVG used in nav, headers, auth, etc.
  * Mirrors src/assets/folium-icon.svg so visuals stay consistent everywhere.
  */
-export default function FoliumLeaf({
+export default function CodexLeaf({
   width = 28,
   height = 36,
   stroke = '#C9A84C',
   strokeWidth = 2,
   className,
   ariaHidden = true,
-}: FoliumLeafProps) {
+}: CodexLeafProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

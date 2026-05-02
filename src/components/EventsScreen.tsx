@@ -14,7 +14,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import foliumIcon from '@/assets/folium-icon.svg';
-import { EVENT_GROUP_LABELS, EVENT_GROUPS, EVENT_SCOPE_LABELS_PT, EVENT_TYPE_KEYS, EVENT_TYPE_LABELS_PT, EventMedia, EventRole, EventScope, EventType, FoliumEvent, creatorName, eventIcon, eventTone, formatDate, formatDateTime, isRegistrationEvent, scopeLabel } from '@/lib/events';
+import { EVENT_GROUP_LABELS, EVENT_GROUPS, EVENT_SCOPE_LABELS_PT, EVENT_TYPE_KEYS, EVENT_TYPE_LABELS_PT, EventMedia, EventRole, EventScope, EventType, CodexEvent, creatorName, eventIcon, eventTone, formatDate, formatDateTime, isRegistrationEvent, scopeLabel } from '@/lib/events';
 
 type UploadedMedia = { type: 'banner' | 'image' | 'attachment'; url: string; filename: string; mime_type: string; file_size: number; sort_order: number };
 type EventForm = { type: EventType | null; scope: EventScope; title: string; introduction: string; body: string; starts_at: string; ends_at: string; multiDay: boolean; registrations: boolean; registration_opens_at: string; registration_closes_at: string; registration_limit: string; location: string; online: boolean; online_link: string; linked_book_isbn: string; linked_reading_list_id: string; draft: boolean; media: UploadedMedia[] };
@@ -23,10 +23,10 @@ const emptyForm: EventForm = { type: null, scope: 'district', title: '', introdu
 
 export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEvent?: string | null }) {
   const { user } = useAuth();
-  const [events, setEvents] = useState<FoliumEvent[]>([]);
+  const [events, setEvents] = useState<CodexEvent[]>([]);
   const [roles, setRoles] = useState<EventRole[]>([]);
   const [activeGroup, setActiveGroup] = useState('all');
-  const [selected, setSelected] = useState<FoliumEvent | null>(null);
+  const [selected, setSelected] = useState<CodexEvent | null>(null);
   const [createOpen, setCreateOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState<{ type: string; scope: string; from: string; to: string }>({ type: '', scope: '', from: '', to: '' });
@@ -39,7 +39,7 @@ export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEv
       .from('events' as any)
       .select('*, event_media(*), entities(name, role_label, logo_url), schools(name), districts(name), reading_lists(name)')
       .order('starts_at', { ascending: true, nullsFirst: false });
-    const base = ((data as unknown as FoliumEvent[]) || []).map((e) => ({ ...e, registration_count: 0, my_registration: null }));
+    const base = ((data as unknown as CodexEvent[]) || []).map((e) => ({ ...e, registration_count: 0, my_registration: null }));
     const ids = base.map((e) => e.id);
     if (ids.length) {
       const { data: regs } = await supabase.from('event_registrations' as any).select('id, event_id, user_id, status').in('event_id', ids).neq('status', 'cancelled');
@@ -108,13 +108,13 @@ export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEv
 }
 
 function EmptyEvents() {
-  return <div className="py-10 text-center text-muted-foreground"><img src={foliumIcon} alt="Folium" className="h-10 w-10 mx-auto mb-3 opacity-70" /><p className="text-sm font-[Josefin_Sans]">Ainda não há eventos para mostrar.</p></div>;
+  return <div className="py-10 text-center text-muted-foreground"><img src={foliumIcon} alt="Codex" className="h-10 w-10 mx-auto mb-3 opacity-70" /><p className="text-sm font-[Josefin_Sans]">Ainda não há eventos para mostrar.</p></div>;
 }
 
-function bannerOf(event: FoliumEvent) { return event.event_media?.find((m) => m.type === 'banner')?.url; }
-function mediaOf(event: FoliumEvent, type: EventMedia['type']) { return (event.event_media || []).filter((m) => m.type === type).sort((a, b) => a.sort_order - b.sort_order); }
+function bannerOf(event: CodexEvent) { return event.event_media?.find((m) => m.type === 'banner')?.url; }
+function mediaOf(event: CodexEvent, type: EventMedia['type']) { return (event.event_media || []).filter((m) => m.type === type).sort((a, b) => a.sort_order - b.sort_order); }
 
-function EventBanner({ event, className }: { event: FoliumEvent; className?: string }) {
+function EventBanner({ event, className }: { event: CodexEvent; className?: string }) {
   const banner = bannerOf(event);
   const tone = eventTone(event.type);
   return banner ? <img src={banner} alt={event.title} className={cn('object-cover', className)} /> : <div className={cn('bg-gradient-to-br', tone.gradient, className)} />;
@@ -125,11 +125,11 @@ function TypeBadge({ type }: { type: EventType }) {
   return <span className={cn('inline-flex items-center rounded-full px-2 py-1 text-[10px] font-[Josefin_Sans] uppercase tracking-wider', tone.chip)}>{EVENT_TYPE_LABELS_PT[type]}</span>;
 }
 
-function FeaturedCard({ event, onClick }: { event: FoliumEvent; onClick: () => void }) {
+function FeaturedCard({ event, onClick }: { event: CodexEvent; onClick: () => void }) {
   return <button onClick={onClick} aria-label={`Ver evento: ${event.title}`} className="snap-center shrink-0 w-[88%] overflow-hidden rounded-md border border-border bg-card text-left"><div className="relative aspect-video"><EventBanner event={event} className="h-full w-full" /><div className="absolute left-3 top-3"><TypeBadge type={event.type} /></div></div><div className="p-4"><h3 className="font-['Cormorant_Garamond'] text-2xl leading-tight text-foreground">{event.title}</h3><p className="mt-2 text-sm text-muted-foreground font-[Josefin_Sans]">{formatDate(event.starts_at) || 'Sem data'} · {event.location || scopeLabel(event)}</p>{event.registration_limit && <p className="mt-2 text-xs text-muted-foreground font-[Josefin_Sans]">{event.registration_count || 0} / {event.registration_limit} inscritos</p>}</div></button>;
 }
 
-function CompactCard({ event, onClick }: { event: FoliumEvent; onClick: () => void }) {
+function CompactCard({ event, onClick }: { event: CodexEvent; onClick: () => void }) {
   const Icon = eventIcon(event.type); const tone = eventTone(event.type);
   return <button onClick={onClick} aria-label={`Ver evento: ${event.title}`} className="w-full rounded-md border border-border bg-card p-3 text-left flex gap-3"><div className={cn('h-10 w-10 rounded-md grid place-items-center shrink-0', tone.bg, tone.text)}><Icon size={18} /></div><div className="min-w-0 flex-1"><div className="flex items-center gap-2 mb-1"><span className="text-[10px] uppercase tracking-wider text-muted-foreground font-[Josefin_Sans]">{EVENT_TYPE_LABELS_PT[event.type]}</span><span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-foreground font-[Josefin_Sans]">{formatDate(event.starts_at) || EVENT_SCOPE_LABELS_PT[event.scope]}</span></div><h3 className="font-['Cormorant_Garamond'] text-lg leading-tight text-foreground">{event.title}</h3><p className="mt-1 text-xs text-muted-foreground line-clamp-2 font-[Josefin_Sans]">{event.introduction}</p><p className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground font-[Josefin_Sans]">{creatorName(event)} · {scopeLabel(event)}</p></div></button>;
 }
@@ -138,7 +138,7 @@ function FilterSheet({ open, onOpenChange, filters, setFilters }: any) {
   return <Sheet open={open} onOpenChange={onOpenChange}><SheetContent side="bottom" className="rounded-t-2xl"><SheetHeader><SheetTitle>Filtros</SheetTitle></SheetHeader><div className="mt-5 space-y-3"><select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={filters.type} onChange={(e) => setFilters((f: any) => ({ ...f, type: e.target.value }))}><option value="">Todos os tipos</option>{EVENT_TYPE_KEYS.map((type) => <option key={type} value={type}>{EVENT_TYPE_LABELS_PT[type]}</option>)}</select><select className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm" value={filters.scope} onChange={(e) => setFilters((f: any) => ({ ...f, scope: e.target.value }))}><option value="">Todos os âmbitos</option>{Object.entries(EVENT_SCOPE_LABELS_PT).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select><div className="grid grid-cols-2 gap-2"><Input type="date" value={filters.from} onChange={(e) => setFilters((f: any) => ({ ...f, from: e.target.value }))} /><Input type="date" value={filters.to} onChange={(e) => setFilters((f: any) => ({ ...f, to: e.target.value }))} /></div><Button variant="outline" className="w-full" onClick={() => setFilters({ type: '', scope: '', from: '', to: '' })}>Limpar filtros</Button></div></SheetContent></Sheet>;
 }
 
-export function EventDetail({ event, onBack, onChanged, adminActions }: { event: FoliumEvent; onBack?: () => void; onChanged?: () => void; adminActions?: React.ReactNode }) {
+export function EventDetail({ event, onBack, onChanged, adminActions }: { event: CodexEvent; onBack?: () => void; onChanged?: () => void; adminActions?: React.ReactNode }) {
   const { user } = useAuth();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [galleryImage, setGalleryImage] = useState<string | null>(null);

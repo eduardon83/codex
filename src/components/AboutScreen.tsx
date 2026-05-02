@@ -5,7 +5,7 @@ import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import foliumLogo from '@/assets/folium-logo.svg';
 import { LANDING_LEGAL, type LandingLegalLang, type LegalBlock } from '@/config/landingLegal';
 import { useAuth } from '@/hooks/useAuth';
-import { isFoliumDarkTheme } from '@/lib/foliumTheme';
+import { isCodexDarkTheme } from '@/lib/foliumTheme';
 
 // Wilderness Hearth fallback palette (used only when no authenticated user theme).
 const FALLBACK = {
@@ -54,7 +54,7 @@ export default function AboutScreen({ onBack }: AboutScreenProps) {
   const { BG, TEXT, MUTED, GOLD } = palette;
   // Use the gold logo for dark themes / pre-auth, light logo for the light "Claro" theme.
   const themeId = (typeof document !== 'undefined' ? document.documentElement.getAttribute('data-theme') : '') || '';
-  const logoSrc = !useThemeTokens || isFoliumDarkTheme(themeId) || themeId !== 'claro' ? foliumLogoGold : foliumLogo;
+  const logoSrc = !useThemeTokens || isCodexDarkTheme(themeId) || themeId !== 'claro' ? foliumLogoGold : foliumLogo;
 
   // Sync the body background only while no user theme is active (pre-auth).
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function AboutScreen({ onBack }: AboutScreenProps) {
         <header style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '2.5rem' }}>
           <img
             src={foliumLogoGold}
-            alt="Folium"
+            alt="Codex"
             style={{ height: 56, width: 'auto', display: 'block' }}
           />
         </header>

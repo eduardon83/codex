@@ -13,8 +13,8 @@ export default function AdminSystem() {
       const { data, error } = await supabase.functions.invoke('send-notification-email', {
         body: {
           to: 'folium@kendirstudios.pt',
-          subject: '[Folium] Teste de notificação',
-          body_html: 'Este é um email de teste do sistema de notificações do Folium. Se estás a ler isto, está tudo a funcionar.',
+          subject: '[Codex] Teste de notificação',
+          body_html: 'Este é um email de teste do sistema de notificações do Codex. Se estás a ler isto, está tudo a funcionar.',
           action_label: 'Abrir backoffice',
           action_url: 'https://folium.kendirstudios.pt/admin',
         },

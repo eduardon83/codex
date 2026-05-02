@@ -26,10 +26,10 @@ interface ConsentEmailBody {
 }
 
 const subjectByLanguage: Record<Language, string> = {
-  pt: 'O teu filho/educando quer criar uma conta no Folium',
-  en: 'Your child wants to create a Folium account',
-  fr: 'Votre enfant souhaite créer un compte Folium',
-  es: 'Tu hijo/a quiere crear una cuenta en Folium',
+  pt: 'O teu filho/educando quer criar uma conta no Codex',
+  en: 'Your child wants to create a Codex account',
+  fr: 'Votre enfant souhaite créer un compte Codex',
+  es: 'Tu hijo/a quiere crear una cuenta en Codex',
 };
 
 function json(body: Record<string, unknown>, status = 200) {
@@ -51,10 +51,10 @@ function textTemplate(lang: Language, childName: string, childAge: number, confi
   const privacy = `${APP_URL}/privacy`;
   const terms = `${APP_URL}/terms`;
   const templates: Record<Language, string> = {
-    pt: `Olá, ${childName} (${childAge} anos) criou uma conta no Folium — uma aplicação para gerir uma biblioteca pessoal e emprestar livros entre colegas da escola. Como ${childName} tem menos de 18 anos, precisamos da sua autorização antes de activar a conta. Para autorizar, clique aqui: ${confirmUrl}. Este link é válido durante 7 dias. Se não autorizar, a conta será automaticamente eliminada. Pode solicitar ver, alterar ou eliminar os dados do seu filho/educando a qualquer momento escrevendo para ${CONTACT_EMAIL}. Política de Privacidade completa: ${privacy} — Termos e Condições: ${terms}. Obrigado, A Equipa Folium.`,
-    en: `Hello, ${childName} (${childAge} years old) has created a Folium account — an app for managing a personal book library and lending books between schoolmates. As ${childName} is under 18, we need your authorisation before activating the account. To authorise, click here: ${confirmUrl}. This link is valid for 7 days. If you do not authorise, the account will be automatically deleted. You can request to view, edit or delete your child's data at any time by emailing ${CONTACT_EMAIL}. Full Privacy Policy: ${privacy} — Terms & Conditions: ${terms}. Thank you, The Folium Team.`,
-    fr: `Bonjour, ${childName} (${childAge} ans) a créé un compte sur Folium — une application pour gérer une bibliothèque personnelle et prêter des livres entre camarades. Comme ${childName} a moins de 18 ans, nous avons besoin de votre autorisation avant d'activer le compte. Pour autoriser, cliquez ici : ${confirmUrl}. Ce lien est valable 7 jours. Si vous n'autorisez pas, le compte sera automatiquement supprimé. Vous pouvez demander à consulter, modifier ou supprimer les données de votre enfant à tout moment en écrivant à ${CONTACT_EMAIL}. Politique de confidentialité complète : ${privacy} — Conditions d'utilisation : ${terms}. Merci, L'équipe Folium.`,
-    es: `Hola, ${childName} (${childAge} años) ha creado una cuenta en Folium — una aplicación para gestionar una biblioteca personal y prestar libros entre compañeros de escuela. Como ${childName} tiene menos de 18 años, necesitamos tu autorización antes de activar la cuenta. Para autorizar, haz clic aquí: ${confirmUrl}. Este enlace es válido durante 7 días. Si no autorizas, la cuenta se eliminará automáticamente. Puedes solicitar ver, modificar o eliminar los datos de tu hijo/a en cualquier momento escribiendo a ${CONTACT_EMAIL}. Política de privacidad completa: ${privacy} — Términos y condiciones: ${terms}. Gracias, El equipo de Folium.`,
+    pt: `Olá, ${childName} (${childAge} anos) criou uma conta no Codex — uma aplicação para gerir uma biblioteca pessoal e emprestar livros entre colegas da escola. Como ${childName} tem menos de 18 anos, precisamos da sua autorização antes de activar a conta. Para autorizar, clique aqui: ${confirmUrl}. Este link é válido durante 7 dias. Se não autorizar, a conta será automaticamente eliminada. Pode solicitar ver, alterar ou eliminar os dados do seu filho/educando a qualquer momento escrevendo para ${CONTACT_EMAIL}. Política de Privacidade completa: ${privacy} — Termos e Condições: ${terms}. Obrigado, A Equipa Codex.`,
+    en: `Hello, ${childName} (${childAge} years old) has created a Codex account — an app for managing a personal book library and lending books between schoolmates. As ${childName} is under 18, we need your authorisation before activating the account. To authorise, click here: ${confirmUrl}. This link is valid for 7 days. If you do not authorise, the account will be automatically deleted. You can request to view, edit or delete your child's data at any time by emailing ${CONTACT_EMAIL}. Full Privacy Policy: ${privacy} — Terms & Conditions: ${terms}. Thank you, The Codex Team.`,
+    fr: `Bonjour, ${childName} (${childAge} ans) a créé un compte sur Codex — une application pour gérer une bibliothèque personnelle et prêter des livres entre camarades. Comme ${childName} a moins de 18 ans, nous avons besoin de votre autorisation avant d'activer le compte. Pour autoriser, cliquez ici : ${confirmUrl}. Ce lien est valable 7 jours. Si vous n'autorisez pas, le compte sera automatiquement supprimé. Vous pouvez demander à consulter, modifier ou supprimer les données de votre enfant à tout moment en écrivant à ${CONTACT_EMAIL}. Politique de confidentialité complète : ${privacy} — Conditions d'utilisation : ${terms}. Merci, L'équipe Codex.`,
+    es: `Hola, ${childName} (${childAge} años) ha creado una cuenta en Codex — una aplicación para gestionar una biblioteca personal y prestar libros entre compañeros de escuela. Como ${childName} tiene menos de 18 años, necesitamos tu autorización antes de activar la cuenta. Para autorizar, haz clic aquí: ${confirmUrl}. Este enlace es válido durante 7 días. Si no autorizas, la cuenta se eliminará automáticamente. Puedes solicitar ver, modificar o eliminar los datos de tu hijo/a en cualquier momento escribiendo a ${CONTACT_EMAIL}. Política de privacidad completa: ${privacy} — Términos y condiciones: ${terms}. Gracias, El equipo de Codex.`,
   };
   return templates[lang];
 }
@@ -62,7 +62,7 @@ function textTemplate(lang: Language, childName: string, childAge: number, confi
 function htmlTemplate(lang: Language, childName: string, childAge: number, confirmUrl: string): string {
   const paragraphs = textTemplate(lang, childName, childAge, confirmUrl).split(/(?<=\.)\s+/);
   const cta = lang === 'fr' ? 'Autoriser le compte' : lang === 'es' ? 'Autorizar cuenta' : lang === 'en' ? 'Authorise account' : 'Autorizar conta';
-  return `<!DOCTYPE html><html><body style="margin:0;background:#ffffff;color:#2c2a26;font-family:Arial,sans-serif;padding:24px"><main style="max-width:560px;margin:0 auto;border:1px solid #e7e0d6;padding:32px"><h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 20px;color:#2c2a26">Folium</h1>${paragraphs.map((p) => `<p style="font-size:15px;line-height:1.6;margin:0 0 14px">${escapeHtml(p)}</p>`).join('')}<p style="text-align:center;margin:28px 0"><a href="${confirmUrl}" style="display:inline-block;background:#2c2a26;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:4px;font-size:14px">${cta}</a></p></main></body></html>`;
+  return `<!DOCTYPE html><html><body style="margin:0;background:#ffffff;color:#2c2a26;font-family:Arial,sans-serif;padding:24px"><main style="max-width:560px;margin:0 auto;border:1px solid #e7e0d6;padding:32px"><h1 style="font-family:Georgia,serif;font-size:28px;margin:0 0 20px;color:#2c2a26">Codex</h1>${paragraphs.map((p) => `<p style="font-size:15px;line-height:1.6;margin:0 0 14px">${escapeHtml(p)}</p>`).join('')}<p style="text-align:center;margin:28px 0"><a href="${confirmUrl}" style="display:inline-block;background:#2c2a26;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:4px;font-size:14px">${cta}</a></p></main></body></html>`;
 }
 
 Deno.serve(async (req) => {
@@ -93,7 +93,7 @@ Deno.serve(async (req) => {
         .maybeSingle();
       if (!profile?.parent_email || !profile?.parent_consent_token || !profile?.parent_consent_expires_at) return json({ error: 'No pending consent' }, 400);
       parentEmail = profile.parent_email;
-      childName = profile.first_name || 'Folium';
+      childName = profile.first_name || 'Codex';
       childLanguage = language(profile.language);
       token = profile.parent_consent_token;
       expiresAt = profile.parent_consent_expires_at;
@@ -117,7 +117,7 @@ Deno.serve(async (req) => {
       queue_name: 'transactional_emails',
       payload: {
         to: parentEmail,
-        from: `Folium <no-reply@${FROM_DOMAIN}>`,
+        from: `Codex <no-reply@${FROM_DOMAIN}>`,
         sender_domain: SENDER_DOMAIN,
         subject,
         html,

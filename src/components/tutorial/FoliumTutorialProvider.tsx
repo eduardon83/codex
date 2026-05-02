@@ -74,7 +74,7 @@ function targetForStep(step: number, activeTab: string, bookDetailOpen: boolean)
   return null;
 }
 
-export function FoliumTutorialProvider({ children }: { children: ReactNode }) {
+export function CodexTutorialProvider({ children }: { children: ReactNode }) {
   const { user, profile, refreshProfile } = useAuth();
   const { theme, currentTheme, setTheme } = useTheme();
   const [isActive, setIsActive] = useState(false);
@@ -297,7 +297,7 @@ export function FoliumTutorialProvider({ children }: { children: ReactNode }) {
   };
 
   const continueWithDummy = async () => {
-    const dummy = { title: 'Livro de exemplo', author: 'Folium', isbn: isbn || '9786556372419', cover_url: null };
+    const dummy = { title: 'Livro de exemplo', author: 'Codex', isbn: isbn || '9786556372419', cover_url: null };
     setDemoBook(dummy);
     await markAndMove('completed');
   };
@@ -305,7 +305,7 @@ export function FoliumTutorialProvider({ children }: { children: ReactNode }) {
   const addDemoToWishlist = async () => {
     if (!user) return;
     const libId = await ensureLibrary();
-    const book = demoBook || { title: 'Livro de exemplo', author: 'Folium', isbn: '9786556372419', cover_url: null };
+    const book = demoBook || { title: 'Livro de exemplo', author: 'Codex', isbn: '9786556372419', cover_url: null };
     if (!libId) return;
     await supabase.from('books').insert({ user_id: user.id, library_id: libId, title: book.title, author: book.author, isbn: book.isbn, cover_url: book.cover_url, is_wishlist: true } as any);
     setCelebration('Wishlist criada. Guardaste uma leitura para mais tarde.');
@@ -384,7 +384,7 @@ function ProgressIndicator({ step, statuses, style, setStyle }: { step: number; 
 function TutorialOverlay(props: any) {
   const heading = useContent(`tutorial.chapter_${props.step + 1}.heading`);
   const body = useContent(`tutorial.chapter_${props.step + 1}.body`);
-  const chapterLabel = `Tutorial do Folium — capítulo ${props.step + 1} de 10`;
+  const chapterLabel = `Tutorial do Codex — capítulo ${props.step + 1} de 10`;
   const spotlight = props.rect ? {
     top: Math.max(8, props.rect.top - 8),
     left: Math.max(8, props.rect.left - 8),
@@ -484,20 +484,20 @@ function ListsChapter(props: any) {
 
 function EventsChapter(props: any) {
   if (props.activeTab !== 'events') return <NavigatePrompt tab="events" label="Toca no separador Eventos" dispatchTab={props.dispatchTab} />;
-  return <div className="space-y-3"><p className="rounded-md border border-border p-3 text-xs text-muted-foreground">Ainda não há eventos publicados, mas em breve os teus professores e bibliotecas vão começar a usar o Folium.</p><Button className="w-full" onClick={props.next}>Continuar</Button></div>;
+  return <div className="space-y-3"><p className="rounded-md border border-border p-3 text-xs text-muted-foreground">Ainda não há eventos publicados, mas em breve os teus professores e bibliotecas vão começar a usar o Codex.</p><Button className="w-full" onClick={props.next}>Continuar</Button></div>;
 }
 
 function FinalChapter(props: any) {
   const tree = treeAssetFor(props.theme);
-  return <div className="text-center"><img src={tree} alt="Árvore Folium" className="mx-auto h-44 w-44 object-contain opacity-95" style={{ animation: 'folium-branch 2.5s ease-out both' }} /><h2 className="mt-4 font-['Cormorant_Garamond'] text-4xl leading-none text-foreground">{props.heading}</h2><p className="mt-3 text-sm leading-relaxed text-muted-foreground font-['Josefin_Sans']">{props.body}</p><div className="mt-5 space-y-2 rounded-md border border-border p-3 text-left text-xs text-muted-foreground">{props.libraryName && <p><Check size={13} className="mr-1 inline text-accent" />Criaste a estante: {props.libraryName}</p>}{props.demoBook?.title && <p><Check size={13} className="mr-1 inline text-accent" />Adicionaste o teu primeiro livro: {props.demoBook.title}</p>}{props.themeChanged && <p><Check size={13} className="mr-1 inline text-accent" />Escolheste o tema: {props.currentTheme.name}</p>}{((props.profile as any)?.school_id || props.selectedSchoolName) && <p><Check size={13} className="mr-1 inline text-accent" />Definiste a tua escola: {props.selectedSchoolName || 'Escola definida'}</p>}</div><Button className="mt-5 w-full" onClick={props.completeTutorial}>Entrar no Folium</Button><button onClick={() => props.setShowMap(true)} className="mt-3 text-xs text-muted-foreground hover:text-foreground">Ver resumo do tutorial</button></div>;
+  return <div className="text-center"><img src={tree} alt="Árvore Codex" className="mx-auto h-44 w-44 object-contain opacity-95" style={{ animation: 'folium-branch 2.5s ease-out both' }} /><h2 className="mt-4 font-['Cormorant_Garamond'] text-4xl leading-none text-foreground">{props.heading}</h2><p className="mt-3 text-sm leading-relaxed text-muted-foreground font-['Josefin_Sans']">{props.body}</p><div className="mt-5 space-y-2 rounded-md border border-border p-3 text-left text-xs text-muted-foreground">{props.libraryName && <p><Check size={13} className="mr-1 inline text-accent" />Criaste a estante: {props.libraryName}</p>}{props.demoBook?.title && <p><Check size={13} className="mr-1 inline text-accent" />Adicionaste o teu primeiro livro: {props.demoBook.title}</p>}{props.themeChanged && <p><Check size={13} className="mr-1 inline text-accent" />Escolheste o tema: {props.currentTheme.name}</p>}{((props.profile as any)?.school_id || props.selectedSchoolName) && <p><Check size={13} className="mr-1 inline text-accent" />Definiste a tua escola: {props.selectedSchoolName || 'Escola definida'}</p>}</div><Button className="mt-5 w-full" onClick={props.completeTutorial}>Entrar no Codex</Button><button onClick={() => props.setShowMap(true)} className="mt-3 text-xs text-muted-foreground hover:text-foreground">Ver resumo do tutorial</button></div>;
 }
 
 function ChapterMap(props: any) {
   return <div className="fixed inset-0 z-[130] bg-background/95 p-4" role="dialog" aria-modal="true" aria-label="Resumo do tutorial"><div className="mx-auto max-w-lg rounded-lg border border-border bg-background p-5"><div className="mb-4 flex items-center justify-between"><h2 className="font-['Cormorant_Garamond'] text-3xl text-foreground">Resumo do tutorial</h2><button onClick={props.close} className="text-muted-foreground"><X size={18} /></button></div><div className="space-y-2">{chapterNames.map((name, i) => { const status = props.statuses[i]; return <div key={name} className="flex items-center gap-3 rounded-md border border-border p-3"><span className={cn('grid h-7 w-7 place-items-center rounded-full text-xs', status === 'completed' ? 'bg-accent text-accent-foreground' : status === 'skipped' ? 'bg-secondary text-foreground' : 'border border-border text-muted-foreground')}>{status === 'completed' ? <Check size={14} /> : status === 'skipped' ? <CircleDashed size={14} /> : <Circle size={12} />}</span><div className="flex-1"><p className="text-sm text-foreground">Capítulo {i + 1} · {name}</p><p className="text-[11px] text-muted-foreground">{status === 'completed' ? 'Concluído' : status === 'skipped' ? 'Saltado' : 'Ainda não visto'}</p></div><Button size="sm" variant="outline" onClick={() => props.goToStep(i)}>Recomeçar este capítulo</Button></div>; })}</div><Button className="mt-5 w-full" onClick={() => props.goToStep(0)}><HelpCircle size={16} className="mr-2" />Revisitar tutorial</Button></div></div>;
 }
 
-export function useFoliumTutorial() {
+export function useCodexTutorial() {
   const context = useContext(TutorialContext);
-  if (!context) throw new Error('useFoliumTutorial must be used within FoliumTutorialProvider');
+  if (!context) throw new Error('useCodexTutorial must be used within CodexTutorialProvider');
   return context;
 }

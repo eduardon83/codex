@@ -5,7 +5,7 @@
     "loading": "A carregar...",
     "accountSuspended": "Conta suspensa",
     "accountSuspendedDesc": "A tua conta foi suspensa. Contacta o suporte para mais informações.",
-    "underageBlocked": "Desculpa, o Folium é para maiores de 12 anos."
+    "underageBlocked": "Desculpa, o Codex é para maiores de 12 anos."
   },
   "nav": {
     "library": "Biblioteca",
@@ -27,7 +27,7 @@
     "alreadyHaveAccount": "Já tem conta? Entrar",
     "noAccount": "Não tem conta? Criar uma",
     "signInError": "Não foi possível iniciar sessão. Verifique os seus dados.",
-    "accountCreated": "Um email de validação foi enviado. Bem-vindo a Folium!",
+    "accountCreated": "Um email de validação foi enviado. Bem-vindo a Codex!",
     "welcomeBack": "Bem-vindo de volta.",
     "emailNotConfirmed": "Email não confirmado. Verifique a sua caixa de entrada.",
     "or": "ou",
@@ -38,7 +38,7 @@
     "resetError": "Não foi possível enviar o email de recuperação.",
     "backToSignIn": "Voltar ao início de sessão",
     "resetPasswordTitle": "Definir nova palavra-passe",
-    "resetPasswordSubtitle": "Escolhe uma nova palavra-passe para voltares ao Folium.",
+    "resetPasswordSubtitle": "Escolhe uma nova palavra-passe para voltares ao Codex.",
     "newPassword": "Nova palavra-passe",
     "confirmPassword": "Confirmar palavra-passe",
     "updatePassword": "Guardar nova palavra-passe",
@@ -50,7 +50,7 @@
     "password_label": "Palavra-passe",
     "password_confirm_label": "Confirmar palavra-passe",
     "eyebrow_login": "Bem-vindo de volta",
-    "eyebrow_signup": "Bem-vindo ao Folium",
+    "eyebrow_signup": "Bem-vindo ao Codex",
     "eyebrow_recover": "Recuperar acesso",
     "h1_login": "Bem-vindo de volta",
     "h1_signup": "Cria a tua conta",
@@ -61,7 +61,7 @@
     "heading": "Prepara-te para um novo capítulo"
   },
   "profileSetup": {
-    "welcome": "Bem-vindo ao Folium",
+    "welcome": "Bem-vindo ao Codex",
     "tellUs": "Conta-nos um pouco sobre ti",
     "firstName": "Nome",
     "lastName": "Apelido",
@@ -70,10 +70,10 @@
     "bioPlaceholder": "Uma breve bio sobre si e os seus hábitos de leitura...",
     "saving": "A guardar...",
     "continue": "Continuar",
-    "welcomeFolium": "Bem-vindo ao Folium",
+    "welcomeCodex": "Bem-vindo ao Codex",
     "back": "Voltar",
     "dateOfBirth": "Data de nascimento",
-    "underageTitle": "Desculpa, o Folium é para maiores de 12 anos.",
+    "underageTitle": "Desculpa, o Codex é para maiores de 12 anos.",
     "underageSubtitle": "Volta a visitar-nos quando fizeres 12 anos!",
     "parentalIntro": "Como tens menos de 18 anos, precisamos do consentimento do teu encarregado de educação.",
     "parentEmail": "Email do encarregado de educação",
@@ -90,7 +90,7 @@
     "noResults": "Sem resultados.",
     "chooseTheme": "Escolhe o teu tema",
     "finishing": "A finalizar…",
-    "enterFolium": "Entrar no Folium",
+    "enterCodex": "Entrar no Codex",
     "usernameChecking": "A verificar...",
     "usernameAvailable": "Nome de utilizador disponível",
     "usernameTaken": "Este nome de utilizador já está a ser utilizado. Tenta outro.",
@@ -100,7 +100,7 @@
     "requiredFields": "Preenche todos os campos.",
     "consentRequired": "Preenche o email e aceita as condições.",
     "schoolRequired": "Selecciona distrito e escola.",
-    "termsIntro": "Antes de continuares, lê e aceita os documentos legais do Folium.",
+    "termsIntro": "Antes de continuares, lê e aceita os documentos legais do Codex.",
     "acceptTerms": "Li e aceito os Termos e Condições de Utilização",
     "acceptPrivacyPrefix": "Li e aceito a",
     "privacyPolicy": "Política de Privacidade"
@@ -643,8 +643,8 @@
     "documentPreparing": "Documento em preparação."
   },
   "consent": {
-    "title": "Autorizar conta Folium",
-    "intro": "{{name}} ({{age}} anos) quer usar o Folium.",
+    "title": "Autorizar conta Codex",
+    "intro": "{{name}} ({{age}} anos) quer usar o Codex.",
     "pointLibrary": "Organizar uma biblioteca pessoal de livros.",
     "pointLoans": "Pedir e emprestar livros entre colegas.",
     "pointSchool": "Ver livros e listas ligados à escola e ao distrito.",
@@ -692,7 +692,7 @@
     "confirm": "Confirmar",
     "info": "Info",
     "setupIntro": "Escolhe um avatar para o teu perfil.",
-    "defaultAlt": "Avatar Folium"
+    "defaultAlt": "Avatar Codex"
   },
   "add_book": {
     "search_placeholder": "Pesquisa por autor, título ou ISBN",
