@@ -110,60 +110,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
     await supabase.from('books').update({ notes }).eq('id', bookId);
   };
 
-  const createLoan = async () => {
-    if (!borrowerName.trim() && !borrowerUsername.trim()) return;
-    let borrowerUserId = null;
-    if (borrowerUsername.trim()) {
-      const { data: userId } = await supabase
-        .rpc('lookup_user_id_by_username', { _username: borrowerUsername.trim().replace('@', '') });
-      if (userId) borrowerUserId = userId;
-    }
-    const dueDate = loanDays > 0
-      ? new Date(Date.now() + loanDays * 86400000).toISOString()
-      : null;
-    await supabase.from('loans').insert({
-      book_id: bookId,
-      lender_id: user!.id,
-      borrower_name: borrowerName.trim() || borrowerUsername.trim(),
-      borrower_user_id: borrowerUserId,
-      loan_due_date: dueDate,
-      loan_notifications_enabled: loanNotify && loanDays > 0,
-    });
-    setShowLoanModal(false);
-    setBorrowerName('');
-    setBorrowerUsername('');
-    setLoanDays(0);
-    setLoanNotify(false);
-    showToast('Book marked as loaned.');
-    celebrate('loan');
-    loadActiveLoan();
-  };
-
-  const finishLoan = async () => {
-    if (!activeLoan) return;
-    await supabase.from('loans').update({
-      is_active: false,
-      return_date: new Date().toISOString(),
-    }).eq('id', activeLoan.id);
-    setShowReturnConfirm(false);
-    showToast('Loan closed.');
-    setActiveLoan(null);
-  };
-
-  const markAsLost = async () => {
-    if (activeLoan) {
-      await supabase.from('loans').update({ is_active: false }).eq('id', activeLoan.id);
-    }
-    await supabase.from('books').delete().eq('id', bookId);
-    setShowLostConfirm(false);
-    onBack();
-  };
-
-  const returnBorrowedBook = async () => {
-    await supabase.from('books').delete().eq('id', bookId);
-    setShowBorrowReturnConfirm(false);
-    onBack();
-  };
 
   const deleteBook = async () => {
     if (!book) return;
