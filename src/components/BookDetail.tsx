@@ -461,7 +461,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             <AlertDialogTitle>{t('bookDetail.deleteBookTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
               {t('bookDetail.deleteBookDesc')}
-              {activeLoan && <span className="mt-2 block">{t('bookDetail.deleteBookActiveLoan')}</span>}
+              
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
