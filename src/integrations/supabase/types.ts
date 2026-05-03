@@ -905,6 +905,7 @@ export type Database = {
           age_group: string
           avatar_url: string | null
           bio: string | null
+          birth_year: number | null
           country_code: string
           created_at: string
           date_of_birth: string | null
@@ -943,6 +944,7 @@ export type Database = {
           age_group?: string
           avatar_url?: string | null
           bio?: string | null
+          birth_year?: number | null
           country_code?: string
           created_at?: string
           date_of_birth?: string | null
@@ -981,6 +983,7 @@ export type Database = {
           age_group?: string
           avatar_url?: string | null
           bio?: string | null
+          birth_year?: number | null
           country_code?: string
           created_at?: string
           date_of_birth?: string | null
@@ -1757,6 +1760,7 @@ export type Database = {
         | "user"
         | "school_admin"
         | "global_admin"
+        | "reader"
       event_approval_status: "pending" | "approved" | "rejected"
       event_media_type: "banner" | "image" | "attachment"
       event_registration_status: "confirmed" | "waitlisted" | "cancelled"
@@ -1921,6 +1925,7 @@ export const Constants = {
         "user",
         "school_admin",
         "global_admin",
+        "reader",
       ],
       event_approval_status: ["pending", "approved", "rejected"],
       event_media_type: ["banner", "image", "attachment"],
