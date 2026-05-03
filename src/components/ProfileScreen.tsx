@@ -57,7 +57,9 @@ export default function ProfileScreen() {
   const [deleteError, setDeleteError] = useState('');
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [activeLoanCount, setActiveLoanCount] = useState(0);
-  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const photoUrl = /^https?:/.test(profile?.avatar_url || '') ? (profile?.avatar_url as string) : null;
   const hasPasswordProvider = Boolean(
     (user as any)?.identities?.some((identity: any) => identity.provider === 'email') ||
     (user as any)?.app_metadata?.provider === 'email'
@@ -110,11 +112,23 @@ export default function ProfileScreen() {
     }
   };
 
-  const saveAvatar = async (avatarId: AvatarId) => {
+  const uploadPhoto = async (file: File) => {
     if (!user) return;
-    await supabase.from('profiles').update({ avatar_url: avatarId } as any).eq('user_id', user.id);
+    if (!file.type.startsWith('image/')) { toast.error(t('profileSetup.photoMustBeImage', 'Carrega uma imagem')); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error(t('profileSetup.photoTooLarge', 'Imagem demasiado grande (máx 5MB)')); return; }
+    setUploadingPhoto(true);
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const url = await uploadFileToStorage('profile-photos', `${user.id}/avatar.${ext}`, file);
+    if (!url) { toast.error(t('profileSetup.photoUploadError', 'Não foi possível enviar a foto')); setUploadingPhoto(false); return; }
+    await supabase.from('profiles').update({ avatar_url: url } as any).eq('user_id', user.id);
     await refreshProfile();
-    setAvatarPickerOpen(false);
+    setUploadingPhoto(false);
+  };
+
+  const removePhoto = async () => {
+    if (!user) return;
+    await supabase.from('profiles').update({ avatar_url: null } as any).eq('user_id', user.id);
+    await refreshProfile();
   };
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
@@ -172,14 +186,33 @@ export default function ProfileScreen() {
       {/* 1. Header block */}
       <div className="flex items-start gap-4 mb-6">
         <div className="flex-shrink-0 space-y-2 text-center">
-          <img
-            src={resolveAvatarSrc((profile as any)?.avatar_url)}
-            alt={getAvatarById((profile as any)?.avatar_url)?.name || t('avatars.defaultAlt')}
-            className="h-20 w-20 rounded-full border border-border object-cover"
+          <UserAvatar
+            photoUrl={photoUrl}
+            firstName={profile?.first_name}
+            lastName={profile?.last_name}
+            username={profile?.username}
+            size={80}
           />
-          <Button type="button" variant="outline" size="sm" className="h-7 px-2 text-[11px]" onClick={() => setAvatarPickerOpen(true)}>
-            {t('avatars.choose')}
-          </Button>
+          <input
+            ref={fileInputRef} type="file" accept="image/*" className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) uploadPhoto(f);
+              if (fileInputRef.current) fileInputRef.current.value = '';
+            }}
+          />
+          <div className="flex flex-col gap-1">
+            <Button type="button" variant="outline" size="sm" className="h-7 px-2 text-[11px]"
+              onClick={() => fileInputRef.current?.click()} disabled={uploadingPhoto}>
+              <Upload className="w-3 h-3 mr-1" />
+              {photoUrl ? t('profile.changePhoto', 'Alterar') : t('profile.uploadPhoto', 'Enviar foto')}
+            </Button>
+            {photoUrl && (
+              <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-[11px]" onClick={removePhoto}>
+                <Trash2 className="w-3 h-3 mr-1" /> {t('profile.removePhoto', 'Remover')}
+              </Button>
+            )}
+          </div>
         </div>
 
         {!editing ? (
