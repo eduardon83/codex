@@ -276,7 +276,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
 
   const currentLib = libraries.find(l => l.id === activeLibrary);
   const canDeleteLibrary = libraries.length > 1;
-  const currentLibraryHasActiveLoans = books.some(book => onLoanBookIds.has(book.id));
+  const currentLibraryHasActiveLoans = false;
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'title_az', label: t('library.titleAZ') },
