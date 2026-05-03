@@ -81,7 +81,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('folium-book-detail', { detail: { open: true, bookId } }));
     loadBook();
-    loadActiveLoan();
     if (user) {
       supabase.from('libraries').select('id, name').eq('user_id', user.id).then(({ data }) => {
         if (data) setAllLibraries(data);
@@ -101,17 +100,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
     }
   };
 
-  const loadActiveLoan = async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from('loans')
-      .select('id, borrower_name, loan_date, loan_due_date, loan_notifications_enabled')
-      .eq('book_id', bookId)
-      .eq('lender_id', user.id)
-      .eq('is_active', true)
-      .maybeSingle();
-    setActiveLoan(data as ActiveLoan | null);
-  };
 
   const updateStatus = async (status: string) => {
     await supabase.from('books').update({
