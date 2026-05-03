@@ -25,12 +25,8 @@ import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
 import CalendarScreen from '@/components/CalendarScreen';
-import LoanHistoryScreen from '@/components/LoanHistoryScreen';
 import FavouritesSection from '@/components/profile/FavouritesSection';
 import CurrentlyReadingSection from '@/components/profile/CurrentlyReadingSection';
-import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
-import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
-import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
 
 import UserAvatar from '@/components/UserAvatar';
