@@ -16,7 +16,7 @@
   },
   "listas": {
     "planosHelp": "Aqui podes ver os teus planos de leitura, criar um novo à medida das tuas ambições de leitura ou seguir um plano recomendado pelo Professor! Podes também exportar ou importar um plano. Atenção, só podes ter um plano de cada vez!",
-    "listasHelp": "Importa listas de leitura recomendadas como o Plano Nacional de Leitura ou cria as tuas próprias listas de leitura!"
+    "listasHelp": "Importa listas de leitura recomendadas ou cria as tuas próprias!"
   },
   "auth": {
     "signIn": "Entrar",
@@ -627,7 +627,7 @@
     "readingLists": {
       "empty": "Ainda não há listas de leitura publicadas para ti.",
       "official": "Oficial",
-      "creatorFallback": "Plano Nacional de Leitura",
+      "creatorFallback": "Lista oficial",
       "bookCount": "{{count}} livros",
       "viewList": "Ver lista",
       "subscribe": "Subscrever",
