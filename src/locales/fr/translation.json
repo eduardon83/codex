@@ -11,8 +11,8 @@
     "library": "Bibliothèque",
     "lists": "Listes",
     "search": "Rechercher",
-    "events": "Événements",
-    "profile": "Profil"
+    "profile": "Profil",
+    "discover": "Découvrir"
   },
   "listas": {
     "planosHelp": "Ici, tu peux consulter tes plans de lecture, en créer un nouveau adapté à tes ambitions de lecture ou suivre un plan recommandé par ton professeur ! Tu peux aussi exporter ou importer un plan. Attention : tu ne peux avoir qu’un seul plan à la fois !",
@@ -704,5 +704,8 @@
     "isbn_help_link": "Tu ne connais pas l'ISBN ?",
     "isbn_disabled_tooltip": "ISBN obligatoire",
     "community_cache_badge": "Cache communautaire"
+  },
+  "help": {
+    "button": "Aide"
   }
 }

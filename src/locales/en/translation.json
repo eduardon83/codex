@@ -11,8 +11,8 @@
     "library": "Library",
     "lists": "Lists",
     "search": "Search",
-    "events": "Events",
-    "profile": "Profile"
+    "profile": "Profile",
+    "discover": "Discover"
   },
   "listas": {
     "planosHelp": "Here you can view your reading plans, create a new one tailored to your reading ambitions, or follow a plan recommended by your teacher! You can also export or import a plan. Please note: you can only have one plan at a time!",
@@ -704,5 +704,8 @@
     "isbn_help_link": "Don't know the ISBN?",
     "isbn_disabled_tooltip": "ISBN required",
     "community_cache_badge": "Community cache"
+  },
+  "help": {
+    "button": "Help"
   }
 }
