@@ -32,7 +32,7 @@ import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
 import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
-import { useCodexTutorial } from '@/components/tutorial/FoliumTutorialProvider';
+
 import AvatarPickerDialog from '@/components/AvatarPickerDialog';
 import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
 
@@ -40,7 +40,7 @@ export default function ProfileScreen() {
   const { t } = useTranslation();
   const { user, profile, signOut, refreshProfile } = useAuth();
   const { theme, availableThemes, setTheme } = useTheme();
-  const { openChapterMap } = useCodexTutorial();
+  
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ first_name: '', last_name: '', username: '', bio: '' });
   const [bookCount, setBookCount] = useState(0);
