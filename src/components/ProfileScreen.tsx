@@ -439,12 +439,6 @@ export default function ProfileScreen() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <AvatarPickerDialog
-        open={avatarPickerOpen}
-        value={(profile as any)?.avatar_url}
-        onOpenChange={setAvatarPickerOpen}
-        onConfirm={saveAvatar}
-      />
 
       <button
         onClick={signOut}
