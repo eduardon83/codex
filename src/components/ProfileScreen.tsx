@@ -337,9 +337,6 @@ export default function ProfileScreen() {
 
       <div className="mt-8 border-t border-border pt-5">
         <p className="text-sm text-muted-foreground mb-3">{t('about.title')}</p>
-        <Button variant="outline" className="w-full justify-start mb-3" onClick={openChapterMap}>
-          Revisitar tutorial
-        </Button>
         <Button variant="outline" className="w-full justify-start" onClick={() => setShowAbout(true)}>
           {t('about.title')}
         </Button>
