@@ -17,7 +17,7 @@ import { formatDate } from '@/i18n';
 import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
-import BookLendingToggle from '@/components/BookLendingToggle';
+
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 
 interface BookDetailProps {
@@ -44,19 +44,8 @@ interface Book {
   reading_status: string;
   rating: number | null;
   created_at: string;
-  is_borrowed: boolean;
-  borrowed_from: string | null;
-  return_by_date: string | null;
-  borrow_notifications_enabled: boolean;
 }
 
-interface ActiveLoan {
-  id: string;
-  borrower_name: string | null;
-  loan_date: string;
-  loan_due_date: string | null;
-  loan_notifications_enabled: boolean;
-}
 
 export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const { t } = useTranslation();
@@ -65,15 +54,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const { celebrate } = useCelebration();
   const [book, setBook] = useState<Book | null>(null);
   const [notes, setNotes] = useState('');
-  const [showLoanModal, setShowLoanModal] = useState(false);
-  const [borrowerName, setBorrowerName] = useState('');
-  const [borrowerUsername, setBorrowerUsername] = useState('');
-  const [loanDays, setLoanDays] = useState(0);
-  const [loanNotify, setLoanNotify] = useState(false);
-  const [activeLoan, setActiveLoan] = useState<ActiveLoan | null>(null);
-  const [showReturnConfirm, setShowReturnConfirm] = useState(false);
-  const [showLostConfirm, setShowLostConfirm] = useState(false);
-  const [showBorrowReturnConfirm, setShowBorrowReturnConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<Record<string, string>>({});
@@ -92,7 +72,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('folium-book-detail', { detail: { open: true, bookId } }));
     loadBook();
-    loadActiveLoan();
     if (user) {
       supabase.from('libraries').select('id, name').eq('user_id', user.id).then(({ data }) => {
         if (data) setAllLibraries(data);
@@ -112,17 +91,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
     }
   };
 
-  const loadActiveLoan = async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from('loans')
-      .select('id, borrower_name, loan_date, loan_due_date, loan_notifications_enabled')
-      .eq('book_id', bookId)
-      .eq('lender_id', user.id)
-      .eq('is_active', true)
-      .maybeSingle();
-    setActiveLoan(data as ActiveLoan | null);
-  };
 
   const updateStatus = async (status: string) => {
     await supabase.from('books').update({
@@ -142,73 +110,11 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
     await supabase.from('books').update({ notes }).eq('id', bookId);
   };
 
-  const createLoan = async () => {
-    if (!borrowerName.trim() && !borrowerUsername.trim()) return;
-    let borrowerUserId = null;
-    if (borrowerUsername.trim()) {
-      const { data: userId } = await supabase
-        .rpc('lookup_user_id_by_username', { _username: borrowerUsername.trim().replace('@', '') });
-      if (userId) borrowerUserId = userId;
-    }
-    const dueDate = loanDays > 0
-      ? new Date(Date.now() + loanDays * 86400000).toISOString()
-      : null;
-    await supabase.from('loans').insert({
-      book_id: bookId,
-      lender_id: user!.id,
-      borrower_name: borrowerName.trim() || borrowerUsername.trim(),
-      borrower_user_id: borrowerUserId,
-      loan_due_date: dueDate,
-      loan_notifications_enabled: loanNotify && loanDays > 0,
-    });
-    setShowLoanModal(false);
-    setBorrowerName('');
-    setBorrowerUsername('');
-    setLoanDays(0);
-    setLoanNotify(false);
-    showToast('Book marked as loaned.');
-    celebrate('loan');
-    loadActiveLoan();
-  };
-
-  const finishLoan = async () => {
-    if (!activeLoan) return;
-    await supabase.from('loans').update({
-      is_active: false,
-      return_date: new Date().toISOString(),
-    }).eq('id', activeLoan.id);
-    setShowReturnConfirm(false);
-    showToast('Loan closed.');
-    setActiveLoan(null);
-  };
-
-  const markAsLost = async () => {
-    if (activeLoan) {
-      await supabase.from('loans').update({ is_active: false }).eq('id', activeLoan.id);
-    }
-    await supabase.from('books').delete().eq('id', bookId);
-    setShowLostConfirm(false);
-    onBack();
-  };
-
-  const returnBorrowedBook = async () => {
-    await supabase.from('books').delete().eq('id', bookId);
-    setShowBorrowReturnConfirm(false);
-    onBack();
-  };
 
   const deleteBook = async () => {
     if (!book) return;
     setDeletingBook(true);
 
-    if (activeLoan) {
-      await supabase.from('loans').update({
-        is_active: false,
-        return_date: new Date().toISOString(),
-      }).eq('id', activeLoan.id);
-    }
-
-    await supabase.from('book_availability' as any).delete().eq('book_id', bookId);
     if (book.isbn) {
       await supabase.from('reading_list_books').delete().eq('isbn', book.isbn);
     }
@@ -321,10 +227,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
     [t('bookDetail.series'), book.series_name ? `${book.series_name}${book.volume_number ? ` #${book.volume_number}` : ''}` : null],
     [t('bookDetail.language'), book.language],
     [t('bookDetail.pages'), book.page_count?.toString()],
-    ...(book.is_borrowed ? [
-      [t('bookDetail.borrowedFrom'), book.borrowed_from],
-      [t('bookDetail.returnBy'), book.return_by_date ? formatDate(book.return_by_date) : null],
-    ] : []),
   ].filter(([, val]) => val);
 
   const updateField = (field: string, value: string) => setEditForm(prev => ({ ...prev, [field]: value }));
@@ -367,16 +269,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             <div className="w-36 h-56 bg-secondary rounded flex items-center justify-center group-hover:bg-secondary/70 transition-colors">
               <BookOpen size={32} className="text-muted-foreground" strokeWidth={1} />
             </div>
-          )}
-          {activeLoan && (
-            <Badge className="absolute -top-2 -right-2 text-[10px]" variant="secondary">
-              {t('bookDetail.onLoan')}
-            </Badge>
-          )}
-          {book.is_borrowed && (
-            <Badge className="absolute -top-2 -right-2 text-[10px] bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border-emerald-600/30">
-              {t('bookDetail.borrowed')}
-            </Badge>
           )}
         </button>
       </div>
@@ -560,138 +452,8 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             />
           </div>
 
-          {/* Codex peer-to-peer lending toggle */}
-          {!book.is_borrowed && user?.id === (book as any).user_id !== false && (
-            <div className="mb-4">
-              <BookLendingToggle book={{
-                id: book.id,
-                user_id: user!.id,
-                title: book.title,
-                author: book.author,
-                isbn: book.isbn,
-                cover_url: book.cover_url,
-              }} />
-            </div>
-          )}
-
-          {/* Loan / Borrowed section */}
-          {book.is_borrowed ? (
-            <Button variant="secondary" className="w-full" onClick={() => setShowBorrowReturnConfirm(true)}>
-              {t('bookDetail.returnBorrowedBook')}
-            </Button>
-          ) : activeLoan ? (
-            <div className="space-y-3">
-              <div className="text-xs text-muted-foreground text-center mb-1">
-                {t('bookDetail.loanedTo', { name: activeLoan.borrower_name })}
-                {activeLoan.loan_due_date && (
-                  <> · {t('bookDetail.dueBack')} {formatDate(activeLoan.loan_due_date)}</>
-                )}
-              </div>
-              <Button variant="secondary" className="w-full" onClick={() => setShowReturnConfirm(true)}>
-                {t('bookDetail.finishLoan')}
-              </Button>
-              <button
-                onClick={() => setShowLostConfirm(true)}
-                className="w-full text-center text-xs text-destructive hover:underline"
-              >
-                {t('bookDetail.markAsLost')}
-              </button>
-            </div>
-          ) : (
-            <Button variant="outline" className="w-full" onClick={() => setShowLoanModal(true)}>
-              {t('bookDetail.loanBook')}
-            </Button>
-          )}
         </>
       )}
-
-      {/* Loan modal */}
-      <Dialog open={showLoanModal} onOpenChange={setShowLoanModal}>
-        <DialogContent className="bg-background border-border">
-          <DialogHeader>
-            <DialogTitle className="font-serif">{t('bookDetail.loanTitle', { title: book.title })}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-3">
-            <Input
-              placeholder={t('bookDetail.borrowerName')}
-              value={borrowerName}
-              onChange={e => setBorrowerName(e.target.value)}
-              className="bg-background border-border text-sm"
-            />
-            <p className="text-xs text-muted-foreground text-center">{t('bookDetail.or')}</p>
-            <Input
-              placeholder={t('bookDetail.borrowerUsername')}
-              value={borrowerUsername}
-              onChange={e => setBorrowerUsername(e.target.value)}
-              className="bg-background border-border text-sm"
-            />
-            <div>
-              <label className="text-xs text-muted-foreground">{t('bookDetail.loanDaysLabel')}</label>
-              <Input
-                type="number"
-                min={0}
-                value={loanDays}
-                onChange={e => setLoanDays(Math.max(0, parseInt(e.target.value) || 0))}
-                className="bg-background border-border text-sm mt-1"
-              />
-              <p className="text-[10px] text-muted-foreground mt-0.5">{t('bookDetail.loanDaysHint')}</p>
-            </div>
-            {loanDays > 0 && (
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-muted-foreground">{t('bookDetail.notificationsToggle')}</label>
-                <Switch checked={loanNotify} onCheckedChange={setLoanNotify} />
-              </div>
-            )}
-            <Button onClick={createLoan} className="w-full">{t('bookDetail.confirmLoan')}</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Return confirmation */}
-      <AlertDialog open={showReturnConfirm} onOpenChange={setShowReturnConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('bookDetail.returnConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('bookDetail.returnConfirmDesc')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('profile.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={finishLoan}>{t('bookDetail.confirmReturn')}</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Lost confirmation */}
-      <AlertDialog open={showLostConfirm} onOpenChange={setShowLostConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('bookDetail.lostConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('bookDetail.lostConfirmDesc')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('profile.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={markAsLost} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {t('bookDetail.confirmLost')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Borrowed return confirmation */}
-      <AlertDialog open={showBorrowReturnConfirm} onOpenChange={setShowBorrowReturnConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('bookDetail.borrowReturnTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('bookDetail.borrowReturnDesc')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('profile.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={returnBorrowedBook}>
-              {t('bookDetail.confirmReturn')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent>
@@ -699,7 +461,7 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
             <AlertDialogTitle>{t('bookDetail.deleteBookTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
               {t('bookDetail.deleteBookDesc')}
-              {activeLoan && <span className="mt-2 block">{t('bookDetail.deleteBookActiveLoan')}</span>}
+              
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

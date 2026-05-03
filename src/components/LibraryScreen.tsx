@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, CheckSquare, Square, CalendarDays, Trash2, MoreVertical } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,7 @@ import { GENRE_OPTIONS, parseGenres } from '@/components/GenreMultiSelect';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
 import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
 import HelpButton from '@/components/tutorial/HelpButton';
-import LibraryCardExpiryBanner from '@/components/LibraryCardExpiryBanner';
+
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
@@ -48,19 +48,6 @@ interface Book {
   format: string | null;
   created_at: string;
   publish_date: string | null;
-  is_borrowed: boolean;
-  return_by_date: string | null;
-  borrow_notifications_enabled: boolean;
-}
-
-interface Loan {
-  id: string;
-  borrower_name: string | null;
-  is_active: boolean;
-  book_id: string;
-  loan_due_date: string | null;
-  loan_notifications_enabled: boolean;
-  books: { title: string; author: string | null; cover_url: string | null } | null;
 }
 
 interface LibraryScreenProps {
@@ -84,14 +71,10 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [books, setBooks] = useState<Book[]>([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [newLibraryName, setNewLibraryName] = useState('');
-  const [loansToOthers, setLoansToOthers] = useState<Loan[]>([]);
-  const [loansFromOthers, setLoansFromOthers] = useState<Loan[]>([]);
   const [editingName, setEditingName] = useState(false);
   const [editName, setEditName] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingLibrary, setDeletingLibrary] = useState(false);
-  const [dismissedBanner, setDismissedBanner] = useState(false);
-  const [dismissedBorrowBanner, setDismissedBorrowBanner] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
   const [showPlanSheet, setShowPlanSheet] = useState(false);
@@ -109,10 +92,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [sortBy, setSortBy] = useState<SortOption>('date_newest');
 
   useEffect(() => {
-    if (user) {
-      loadLibraries();
-      loadLoans();
-    }
+    if (user) loadLibraries();
   }, [user]);
 
   useEffect(() => {
@@ -144,65 +124,12 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const loadBooks = async () => {
     const { data } = await supabase
       .from('books')
-      .select('id, title, author, cover_url, is_wishlist, reading_status, genre, format, created_at, publish_date, is_borrowed, return_by_date, borrow_notifications_enabled')
+      .select('id, title, author, cover_url, is_wishlist, reading_status, genre, format, created_at, publish_date')
       .eq('library_id', activeLibrary)
       .eq('is_wishlist', false)
       .order('created_at', { ascending: false });
     setBooks((data as Book[]) || []);
   };
-
-  const loadLoans = async () => {
-    const { data: lentOut } = await supabase
-      .from('loans')
-      .select('id, borrower_name, is_active, book_id, loan_due_date, loan_notifications_enabled, books(title, author, cover_url)')
-      .eq('lender_id', user!.id)
-      .eq('is_active', true);
-    setLoansToOthers((lentOut as unknown as Loan[]) || []);
-
-    const { data: borrowed } = await supabase
-      .from('loans')
-      .select('id, borrower_name, is_active, book_id, loan_due_date, loan_notifications_enabled, books(title, author, cover_url)')
-      .eq('borrower_user_id', user!.id)
-      .eq('is_active', true);
-    setLoansFromOthers((borrowed as unknown as Loan[]) || []);
-  };
-
-  // Loan notification banner logic
-  const loanBannerInfo = useMemo(() => {
-    if (dismissedBanner) return null;
-    const now = Date.now();
-    let overdueCount = 0;
-    let soonCount = 0;
-    for (const loan of loansToOthers) {
-      if (!loan.loan_due_date || !loan.loan_notifications_enabled) continue;
-      const daysRemaining = Math.ceil((new Date(loan.loan_due_date).getTime() - now) / 86400000);
-      if (daysRemaining < 0) overdueCount++;
-      else if (daysRemaining < 10) soonCount++;
-    }
-    if (overdueCount > 0) return { type: 'overdue' as const, count: overdueCount };
-    if (soonCount > 0) return { type: 'soon' as const, count: soonCount };
-    return null;
-  }, [loansToOthers, dismissedBanner]);
-
-  // Borrow notification banner logic
-  const borrowBannerInfo = useMemo(() => {
-    if (dismissedBorrowBanner) return null;
-    const now = Date.now();
-    let overdueCount = 0;
-    let soonCount = 0;
-    for (const b of books) {
-      if (!b.is_borrowed || !b.return_by_date || !b.borrow_notifications_enabled) continue;
-      const daysRemaining = Math.ceil((new Date(b.return_by_date).getTime() - now) / 86400000);
-      if (daysRemaining < 0) overdueCount++;
-      else if (daysRemaining < 10) soonCount++;
-    }
-    if (overdueCount > 0) return { type: 'overdue' as const, count: overdueCount };
-    if (soonCount > 0) return { type: 'soon' as const, count: soonCount };
-    return null;
-  }, [books, dismissedBorrowBanner]);
-
-  // Set of book IDs currently on loan
-  const onLoanBookIds = useMemo(() => new Set(loansToOthers.map(l => l.book_id)), [loansToOthers]);
 
   const createLibrary = async () => {
     if (!newLibraryName.trim()) return;
@@ -243,9 +170,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       .eq('library_id', libraryId);
     const bookIds = ((libraryBooks as { id: string }[] | null) || []).map(b => b.id);
 
-    if (bookIds.length > 0) {
-      await supabase.from('book_availability' as any).delete().in('book_id', bookIds);
-    }
     await supabase.from('books').delete().eq('library_id', libraryId);
     await supabase.from('libraries').delete().eq('id', libraryId);
 
@@ -352,7 +276,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
 
   const currentLib = libraries.find(l => l.id === activeLibrary);
   const canDeleteLibrary = libraries.length > 1;
-  const currentLibraryHasActiveLoans = books.some(book => onLoanBookIds.has(book.id));
+  const currentLibraryHasActiveLoans = false;
 
   const sortOptions: { value: SortOption; label: string }[] = [
     { value: 'title_az', label: t('library.titleAZ') },
@@ -473,50 +397,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
         </div>
       )}
 
-      {/* Library card expiry banner */}
-      <LibraryCardExpiryBanner onGoToProfile={onGoToProfile} />
-
-      {/* Loan notification banner */}
-      {loanBannerInfo && (
-        <div className={`mb-4 flex items-center gap-2 px-3 py-2.5 rounded text-sm ${
-          loanBannerInfo.type === 'overdue'
-            ? 'bg-destructive/10 text-destructive border border-destructive/20'
-            : 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border border-yellow-500/20'
-        }`}>
-          <AlertTriangle size={16} className="flex-shrink-0" />
-          <span className="flex-1">
-            {loanBannerInfo.type === 'overdue'
-              ? (loanBannerInfo.count === 1
-                  ? t('library.overdueOne')
-                  : t('library.overdueMany', { count: loanBannerInfo.count }))
-              : t('library.returningSoon')
-            }
-          </span>
-          <button onClick={() => setDismissedBanner(true)} className="hover:opacity-70">
-            <X size={14} />
-          </button>
-        </div>
-      )}
-
-      {/* Borrow notification banner */}
-      {borrowBannerInfo && (
-        <div className={`mb-4 flex items-center gap-2 px-3 py-2.5 rounded text-sm ${
-          borrowBannerInfo.type === 'overdue'
-            ? 'bg-destructive/10 text-destructive border border-destructive/20'
-            : 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border border-yellow-500/20'
-        }`}>
-          <AlertTriangle size={16} className="flex-shrink-0" />
-          <span className="flex-1">
-            {borrowBannerInfo.type === 'overdue'
-              ? t('library.borrowOverdue')
-              : t('library.borrowReturnSoon')
-            }
-          </span>
-          <button onClick={() => setDismissedBorrowBanner(true)} className="hover:opacity-70">
-            <X size={14} />
-          </button>
-        </div>
-      )}
 
       {books.length > 0 && (
         <div className="mb-4">
@@ -681,16 +561,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <p className="text-sm text-foreground truncate">{book.title}</p>
-                  {onLoanBookIds.has(book.id) && (
-                    <Badge variant="secondary" className="text-[9px] px-1.5 py-0 flex-shrink-0">
-                      {t('library.onLoan')}
-                    </Badge>
-                  )}
-                  {book.is_borrowed && (
-                    <Badge className="text-[9px] px-1.5 py-0 flex-shrink-0 bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border-emerald-600/30">
-                      {t('library.borrowed')}
-                    </Badge>
-                  )}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{book.author || t('library.unknownAuthor')}</p>
               </div>
@@ -714,32 +584,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
         </div>
       )}
 
-      {/* On loan to others */}
-      {loansToOthers.length > 0 && (
-        <div className="mt-8">
-          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.onLoanToOthers')}</h2>
-          {loansToOthers.map(loan => (
-            <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
-              <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
-              <span className="text-foreground">{loan.books?.title}</span>
-              <span className="text-muted-foreground ml-auto text-xs">→ {loan.borrower_name}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* On loan from others */}
-      {loansFromOthers.length > 0 && (
-        <div className="mt-6">
-          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.borrowedFromOthers')}</h2>
-          {loansFromOthers.map(loan => (
-            <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
-              <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
-              <span className="text-foreground">{loan.books?.title}</span>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* FABs or Selection toolbar */}
       {selectMode ? (

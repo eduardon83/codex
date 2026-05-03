@@ -25,12 +25,8 @@ import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
 import CalendarScreen from '@/components/CalendarScreen';
-import LoanHistoryScreen from '@/components/LoanHistoryScreen';
 import FavouritesSection from '@/components/profile/FavouritesSection';
 import CurrentlyReadingSection from '@/components/profile/CurrentlyReadingSection';
-import LibraryCardsSection from '@/components/profile/LibraryCardsSection';
-import PendingRequestsSection from '@/components/profile/PendingRequestsSection';
-import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
 
 import UserAvatar from '@/components/UserAvatar';
@@ -50,13 +46,13 @@ export default function ProfileScreen() {
   const [showAbout, setShowAbout] = useState(false);
   const [showReadingHistory, setShowReadingHistory] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [showLoanHistory, setShowLoanHistory] = useState(false);
+  
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteStep, setDeleteStep] = useState<'warning' | 'confirm'>('warning');
   const [deletePassword, setDeletePassword] = useState('');
   const [deleteError, setDeleteError] = useState('');
   const [deletingAccount, setDeletingAccount] = useState(false);
-  const [activeLoanCount, setActiveLoanCount] = useState(0);
+  const activeLoanCount = 0;
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const photoUrl = /^https?:/.test(profile?.avatar_url || '') ? (profile?.avatar_url as string) : null;
@@ -83,7 +79,7 @@ export default function ProfileScreen() {
     if (user) {
       supabase.from('books').select('id', { count: 'exact', head: true }).eq('user_id', user.id).eq('is_wishlist', false).then(({ count }) => setBookCount(count || 0));
       supabase.from('libraries').select('id', { count: 'exact', head: true }).eq('user_id', user.id).then(({ count }) => setLibraryCount(count || 0));
-      supabase.from('loans').select('id', { count: 'exact', head: true }).eq('lender_id', user.id).eq('is_active', true).then(({ count }) => setActiveLoanCount(count || 0));
+      
     }
   }, [profile, user]);
 
@@ -169,7 +165,7 @@ export default function ProfileScreen() {
   if (showAbout) return <AboutScreen onBack={() => setShowAbout(false)} />;
   if (showReadingHistory) return <ReadingHistoryScreen onBack={() => setShowReadingHistory(false)} />;
   if (showCalendar) return <CalendarScreen onBack={() => setShowCalendar(false)} />;
-  if (showLoanHistory) return <LoanHistoryScreen onBack={() => setShowLoanHistory(false)} />;
+  
 
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
@@ -284,10 +280,6 @@ export default function ProfileScreen() {
       {/* 4. Currently reading */}
       <CurrentlyReadingSection />
 
-      {/* 4.5 Pending loan requests + active loans (Codex) */}
-      <PendingRequestsSection />
-      <ActiveLoansSection />
-
       {/* 5. Reading List button */}
       <Button
         data-tutorial="profile-reading-list"
@@ -309,18 +301,6 @@ export default function ProfileScreen() {
         {t('calendar.title', 'Calendário')}
       </Button>
 
-      {/* 6.6 Loan history */}
-      <Button
-        variant="outline"
-        onClick={() => setShowLoanHistory(true)}
-        className="w-full mt-3 flex items-center gap-2"
-      >
-        <History size={16} />
-        {t('loanHistory.title', 'Histórico de empréstimos')}
-      </Button>
-
-      {/* 6.5 Library cards */}
-      <LibraryCardsSection />
 
       {/* 7. Stats grid */}
       <ProfileStats />
