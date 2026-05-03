@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, User, Search, BookMarked, CalendarDays } from 'lucide-react';
+import { BookOpen, User, Search, BookMarked } from 'lucide-react';
 
-type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile';
+export type Tab = 'library' | 'lists' | 'find' | 'profile';
 
 interface BottomNavProps {
   active: Tab;
@@ -14,8 +14,7 @@ interface BottomNavProps {
 const tabConfig: { id: Tab; labelKey: string; icon: React.ElementType }[] = [
   { id: 'library', labelKey: 'nav.library', icon: BookOpen },
   { id: 'lists', labelKey: 'nav.lists', icon: BookMarked },
-  { id: 'find', labelKey: 'nav.search', icon: Search },
-  { id: 'events', labelKey: 'nav.events', icon: CalendarDays },
+  { id: 'find', labelKey: 'nav.discover', icon: Search },
   { id: 'profile', labelKey: 'nav.profile', icon: User },
 ];
 
@@ -36,8 +35,6 @@ export default function BottomNav({ active, onChange }: BottomNavProps) {
       setRequestCount(count || 0);
     };
     loadCount();
-
-    // Subscribe to changes
     const channel = supabase
       .channel('loan_requests_badge')
       .on(
@@ -46,7 +43,6 @@ export default function BottomNav({ active, onChange }: BottomNavProps) {
         () => loadCount()
       )
       .subscribe();
-
     return () => { supabase.removeChannel(channel); };
   }, [userId]);
 
