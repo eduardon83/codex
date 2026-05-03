@@ -71,8 +71,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [books, setBooks] = useState<Book[]>([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [newLibraryName, setNewLibraryName] = useState('');
-  const [loansToOthers, setLoansToOthers] = useState<Loan[]>([]);
-  const [loansFromOthers, setLoansFromOthers] = useState<Loan[]>([]);
   const [editingName, setEditingName] = useState(false);
   const [editName, setEditName] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -172,9 +170,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
       .eq('library_id', libraryId);
     const bookIds = ((libraryBooks as { id: string }[] | null) || []).map(b => b.id);
 
-    if (bookIds.length > 0) {
-      await supabase.from('book_availability' as any).delete().in('book_id', bookIds);
-    }
     await supabase.from('books').delete().eq('library_id', libraryId);
     await supabase.from('libraries').delete().eq('id', libraryId);
 
