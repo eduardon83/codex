@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,87 +10,88 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
-import { useEffect } from 'react';
-import { Loader2, Search, ArrowLeft, CheckCircle2, XCircle, Check } from 'lucide-react';
+import { Loader2, ArrowLeft, CheckCircle2, XCircle, Check, Upload, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
 import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
-import AvatarPickerDialog from '@/components/AvatarPickerDialog';
-import { AVATARS, AvatarId, getAvatarById, resolveAvatarSrc } from '@/lib/avatars';
+import UserAvatar from '@/components/UserAvatar';
+import { uploadFileToStorage } from '@/lib/storage';
 
-type Step = 'age_gate' | 'terms' | 'basics' | 'underage_block' | 'parental_consent' | 'school' | 'avatar' | 'theme';
+type Step = 'terms' | 'basics' | 'photo' | 'theme';
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'error';
 
-interface District { id: string; name: string; }
-interface School { id: string; name: string; concelho: string | null; me_code?: string | null; }
+interface District { id: string; name: string }
 
-function calculateAge(dob: string): number {
-  if (!dob) return 0;
-  const birth = new Date(dob);
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const m = today.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-  return age;
-}
-
-const STORAGE_KEY = 'folium_profile_setup_state';
+const STORAGE_KEY = 'codex_profile_setup_state';
+const CURRENT_YEAR = new Date().getFullYear();
+const MIN_BIRTH_YEAR = 1920;
+const MAX_BIRTH_YEAR = CURRENT_YEAR - 13;
+const BIRTH_YEARS = Array.from(
+  { length: MAX_BIRTH_YEAR - MIN_BIRTH_YEAR + 1 },
+  (_, i) => MAX_BIRTH_YEAR - i,
+);
 
 type PersistedState = {
   step?: Step;
   firstName?: string;
   lastName?: string;
   username?: string;
-  dob?: string;
-  parentEmail?: string;
+  countryCode?: string;
   districtId?: string;
-  schoolId?: string;
+  birthYear?: number;
   themeId?: string;
-  avatarId?: AvatarId;
 };
 
 function loadPersisted(): PersistedState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? (JSON.parse(raw) as PersistedState) : {};
-  } catch {
-    return {};
-  }
+  } catch { return {}; }
 }
+
+const COUNTRIES = [
+  { code: 'PT', name: 'Portugal' },
+  { code: 'ES', name: 'España' },
+  { code: 'FR', name: 'France' },
+  { code: 'GB', name: 'United Kingdom' },
+  { code: 'BR', name: 'Brasil' },
+  { code: 'US', name: 'United States' },
+];
 
 export default function ProfileSetup() {
   const { t, i18n } = useTranslation();
   const { user, profile, refreshProfile, signOut } = useAuth();
   const { currentTheme } = useTheme();
-  const persistedRef = useRef<PersistedState>(loadPersisted());
-  const persisted = persistedRef.current;
-  const [step, setStep] = useState<Step>(persisted.step || 'age_gate');
-  const [saving, setSaving] = useState(false);
-  const usernameInputRef = useRef<HTMLInputElement>(null);
+  const persisted = useRef<PersistedState>(loadPersisted()).current;
 
-  // Step 1: basics — hydrate from profile (or persisted draft) so a refresh /
-  // back-and-forth doesn't wipe what the user already entered.
+  const [step, setStep] = useState<Step>(persisted.step || (profile?.terms_accepted_at ? 'basics' : 'terms'));
+  const [saving, setSaving] = useState(false);
+
   const [firstName, setFirstName] = useState(persisted.firstName ?? profile?.first_name ?? '');
   const [lastName, setLastName] = useState(persisted.lastName ?? profile?.last_name ?? '');
   const [username, setUsername] = useState(persisted.username ?? profile?.username ?? '');
   const [usernameStatus, setUsernameStatus] = useState<UsernameStatus>('idle');
   const [usernameMessage, setUsernameMessage] = useState('');
-  const [dob, setDob] = useState(persisted.dob ?? profile?.date_of_birth ?? '');
+  const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Re-hydrate when the profile finishes loading after mount.
-  useEffect(() => {
-    if (profile?.first_name && !firstName) setFirstName(profile.first_name);
-    if (profile?.last_name && !lastName) setLastName(profile.last_name);
-    if (profile?.username && !username) setUsername(profile.username);
-    if (profile?.date_of_birth && !dob) setDob(profile.date_of_birth);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.first_name, profile?.last_name, profile?.username, profile?.date_of_birth]);
+  const [countryCode, setCountryCode] = useState<string>(persisted.countryCode ?? (profile as any)?.country_code ?? 'PT');
+  const [districtId, setDistrictId] = useState<string>(persisted.districtId ?? (profile as any)?.district_id ?? '');
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [birthYear, setBirthYear] = useState<number | undefined>(
+    persisted.birthYear ?? (profile as any)?.birth_year ?? undefined,
+  );
 
-  // Legal acceptance
+  // Photo
+  const [photoUrl, setPhotoUrl] = useState<string | null>(
+    /^https?:/.test(profile?.avatar_url || '') ? (profile?.avatar_url as string) : null,
+  );
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Legal
   const [termsDocument, setTermsDocument] = useState<LegalDocumentRecord | null>(null);
   const [privacyDocument, setPrivacyDocument] = useState<LegalDocumentRecord | null>(null);
   const [loadingLegal, setLoadingLegal] = useState(false);
@@ -98,116 +99,58 @@ export default function ProfileSetup() {
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
-  // Step 3a: parental consent
-  const [parentEmail, setParentEmail] = useState(persisted.parentEmail ?? '');
-  const [consentAge, setConsentAge] = useState(false);
-  const [consentTerms, setConsentTerms] = useState(false);
-
-  // Step 4: school
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [districtId, setDistrictId] = useState<string>(persisted.districtId ?? '');
-  const [schoolQuery, setSchoolQuery] = useState('');
-  const [schoolResults, setSchoolResults] = useState<School[]>([]);
-  const [schoolId, setSchoolId] = useState<string>(persisted.schoolId ?? '');
-  const [searching, setSearching] = useState(false);
-
-  // Step 5: theme
+  // Theme
   const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
-  const [avatarId, setAvatarId] = useState<AvatarId>(
-    persisted.avatarId ?? ((profile?.avatar_url as AvatarId) || AVATARS[0].id)
-  );
-  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
   const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
 
-  const age = useMemo(() => calculateAge(dob), [dob]);
-
-  // Persist setup progress so navigating away / refreshing doesn't reset it.
+  // Persist setup progress
   useEffect(() => {
     try {
-      const snapshot: PersistedState = {
-        step, firstName, lastName, username, dob,
-        parentEmail, districtId, schoolId, themeId, avatarId,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-    } catch { /* ignore quota */ }
-  }, [step, firstName, lastName, username, dob, parentEmail, districtId, schoolId, themeId, avatarId]);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        step, firstName, lastName, username, countryCode, districtId, birthYear, themeId,
+      }));
+    } catch { /* ignore */ }
+  }, [step, firstName, lastName, username, countryCode, districtId, birthYear, themeId]);
 
-  const showUsernameTaken = () => {
-    setUsernameStatus('error');
-    setUsernameMessage(t('profileSetup.usernameTaken'));
-    setStep('basics');
-    window.setTimeout(() => {
-      usernameInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      usernameInputRef.current?.focus();
-    }, 50);
-  };
+  // Re-hydrate when profile arrives
+  useEffect(() => {
+    if (profile?.first_name && !firstName) setFirstName(profile.first_name);
+    if (profile?.last_name && !lastName) setLastName(profile.last_name);
+    if (profile?.username && !username) setUsername(profile.username);
+    if (/^https?:/.test(profile?.avatar_url || '') && !photoUrl) setPhotoUrl(profile?.avatar_url || null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.first_name, profile?.last_name, profile?.username, profile?.avatar_url]);
 
-  const isUsernameConflict = (error: unknown) => {
-    const err = error as { code?: string; message?: string; details?: string; constraint?: string } | null;
-    const text = `${err?.constraint || ''} ${err?.message || ''} ${err?.details || ''}`.toLowerCase();
-    return err?.code === '23505' && text.includes('username');
-  };
-
-  const handleProfileSaveError = (error: unknown) => {
-    if (isUsernameConflict(error)) {
-      showUsernameTaken();
-      return true;
-    }
-    toast.error((error as { message?: string })?.message || t('profileSetup.saveError'));
-    return true;
-  };
-
+  // Username check
   useEffect(() => {
     const trimmed = username.trim();
     if (step !== 'basics') return;
-    if (!trimmed) {
-      setUsernameStatus('idle');
-      setUsernameMessage('');
-      return;
-    }
-
+    if (!trimmed) { setUsernameStatus('idle'); setUsernameMessage(''); return; }
     if (!/^[a-z0-9_.]{3,}$/.test(trimmed)) {
       setUsernameStatus('error');
       setUsernameMessage(t('profileSetup.usernameInvalid'));
       return;
     }
-
     setUsernameStatus('checking');
     setUsernameMessage(t('profileSetup.usernameChecking'));
-    const debounceId = window.setTimeout(async () => {
+    const id = window.setTimeout(async () => {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('user_id')
-        .eq('username', trimmed)
-        .maybeSingle();
-
-      if (error) {
-        setUsernameStatus('error');
-        setUsernameMessage(t('profileSetup.usernameCheckError'));
-        return;
-      }
-
+        .from('profiles').select('user_id').eq('username', trimmed).maybeSingle();
+      if (error) { setUsernameStatus('error'); setUsernameMessage(t('profileSetup.usernameCheckError')); return; }
       if (data && data.user_id !== user?.id) {
-        setUsernameStatus('error');
-        setUsernameMessage(t('profileSetup.usernameTaken'));
-        return;
+        setUsernameStatus('error'); setUsernameMessage(t('profileSetup.usernameTaken')); return;
       }
-
-      setUsernameStatus('available');
-      setUsernameMessage(t('profileSetup.usernameAvailable'));
+      setUsernameStatus('available'); setUsernameMessage(t('profileSetup.usernameAvailable'));
     }, 600);
+    return () => clearTimeout(id);
+  }, [step, username, user?.id, t]);
 
-    return () => clearTimeout(debounceId);
-  }, [step, username, user?.id]);
-
+  // Load legal docs on terms step
   useEffect(() => {
     if (step !== 'terms') return;
     let active = true;
     setLoadingLegal(true);
-    // Use the language currently selected in the UI (i18n) so the displayed
-    // terms always match the language the user picked on the auth screen.
-    // Fallback chain inside fetchCurrentLegalDocument is PT.
     const supported = ['pt', 'en', 'es', 'fr'];
     const uiLang = (i18n.language || 'pt').slice(0, 2).toLowerCase();
     const language = supported.includes(uiLang) ? uiLang : 'pt';
@@ -216,66 +159,26 @@ export default function ProfileSetup() {
       fetchCurrentLegalDocument('privacy', language),
     ]).then(([terms, privacy]) => {
       if (!active) return;
-      setTermsDocument(terms);
-      setPrivacyDocument(privacy);
-    }).finally(() => {
-      if (active) setLoadingLegal(false);
-    });
+      setTermsDocument(terms); setPrivacyDocument(privacy);
+    }).finally(() => { if (active) setLoadingLegal(false); });
     return () => { active = false; };
   }, [step, i18n.language]);
 
-  // Load districts when reaching school step
+  // Load districts when country selected
   useEffect(() => {
-    if (step !== 'school') return;
-    supabase.from('districts').select('id, name').eq('country_code', 'PT').order('name')
+    if (!countryCode) { setDistricts([]); return; }
+    supabase.from('districts')
+      .select('id, name')
+      .eq('country_code', countryCode)
+      .order('name')
       .then(({ data }) => setDistricts((data || []) as District[]));
-  }, [step]);
+  }, [countryCode]);
 
-  // Search schools
-  useEffect(() => {
-    if (step !== 'school' || !districtId) { setSchoolResults([]); return; }
-    let active = true;
-    setSearching(true);
-    const t = setTimeout(async () => {
-      let q = supabase.from('schools').select('id, name, concelho').eq('district_id', districtId).order('name').limit(20);
-      if (schoolQuery.trim()) q = q.ilike('name', `%${schoolQuery.trim()}%`);
-      const { data } = await q;
-      const districtName = districts.find(d => d.id === districtId)?.name;
-      const fallback = districtName
-        ? (FALLBACK_SCHOOLS_BY_DISTRICT[districtName] || [])
-            .filter(s => !schoolQuery.trim() || s.name.toLowerCase().includes(schoolQuery.trim().toLowerCase()))
-            .slice(0, 20)
-            .map((s, i) => ({ id: `${districtId}-fallback-${s.me_code || i}`, name: s.name, concelho: s.concelho, me_code: s.me_code }))
-        : [];
-      if (active) {
-        setSchoolResults(((data && data.length > 0 ? data : fallback) || []) as School[]);
-        setSearching(false);
-      }
-    }, 200);
-    return () => { active = false; clearTimeout(t); };
-  }, [step, districtId, schoolQuery, districts]);
-
-  const submitAgeGate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!dob) {
-      toast.error(t('profileSetup.requiredFields'));
-      return;
-    }
-    if (age < 13) { setStep('underage_block'); return; }
-    // Persist DOB right away so it survives a reload / step navigation.
-    if (user) {
-      await supabase.from('profiles').update({ date_of_birth: dob } as any).eq('user_id', user.id);
-    }
-    setStep(profile?.terms_accepted_at ? 'basics' : 'terms');
-  };
-
-  // Language selector — also persists the choice on the profile so future
-  // emails and screens use the same language.
   const changeLanguage = async (lang: string) => {
     await i18n.changeLanguage(lang);
     if (user) {
       await supabase.from('profiles').update({ language: lang } as any).eq('user_id', user.id);
-      try { await supabase.auth.updateUser({ data: { language: lang } }); } catch (_) { /* ignore */ }
+      try { await supabase.auth.updateUser({ data: { language: lang } }); } catch { /* ignore */ }
     }
   };
 
@@ -292,126 +195,63 @@ export default function ProfileSetup() {
     setStep('basics');
   };
 
-  // ---- Basics → next ----
-  const submitBasics = (e: React.FormEvent) => {
+  const submitBasics = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName.trim() || !username.trim()) {
+    if (!firstName.trim() || !username.trim() || !countryCode || !birthYear) {
       toast.error(t('profileSetup.requiredFields'));
       return;
     }
-    if (usernameStatus !== 'available') {
-      usernameInputRef.current?.focus();
+    if (usernameStatus !== 'available') { usernameInputRef.current?.focus(); return; }
+    if (!user) return;
+    setSaving(true);
+    const { error } = await supabase.from('profiles').update({
+      first_name: firstName.trim(),
+      last_name: lastName.trim() || null,
+      username: username.trim(),
+      country_code: countryCode,
+      district_id: districtId || null,
+      birth_year: birthYear,
+    } as any).eq('user_id', user.id);
+    setSaving(false);
+    if (error) {
+      const msg = (error as any)?.message || '';
+      if (msg.toLowerCase().includes('username')) {
+        setUsernameStatus('error'); setUsernameMessage(t('profileSetup.usernameTaken'));
+      } else { toast.error(msg); }
       return;
     }
-    if (age >= 13 && age < 18) { setStep('avatar'); return; }
-    setStep('school');
+    setStep('photo');
   };
 
-  // ---- Step 3a → submit consent ----
-  const submitConsent = async () => {
+  const handlePhotoUpload = async (file: File) => {
     if (!user) return;
-    if (!parentEmail.trim() || !consentAge || !consentTerms) {
-      toast.error(t('profileSetup.consentRequired'));
-      return;
-    }
-    setSaving(true);
-    const token = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '');
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-    try {
-      const { error } = await supabase.from('profiles').update({
-        first_name: firstName,
-        last_name: lastName,
-        username,
-        date_of_birth: dob,
-        parent_email: parentEmail.trim(),
-        parent_consent_token: token,
-        parent_consent_expires_at: expiresAt,
-        parent_consent_sent_at: new Date().toISOString(),
-        account_status: 'pending_parental_consent',
-        profile_completed: true,
-        age_group: 'under_18',
-      } as any).eq('user_id', user.id);
-      if (error) throw error;
-
-      const { error: emailError } = await supabase.functions.invoke('send-parental-consent-email', {
-        body: {
-          parent_email: parentEmail.trim(),
-          child_name: firstName,
-          child_age: age,
-          child_language: profile?.language || 'pt',
-          consent_token: token,
-          consent_expires_at: expiresAt,
-        },
-      });
-      if (emailError) throw emailError;
-    } catch (error) {
-      handleProfileSaveError(error);
-      setSaving(false);
-      return;
-    }
-
-    setSaving(false);
-    try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    if (!file.type.startsWith('image/')) { toast.error(t('profileSetup.photoMustBeImage', 'Carrega uma imagem')); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error(t('profileSetup.photoTooLarge', 'Imagem demasiado grande (máx 5MB)')); return; }
+    setUploadingPhoto(true);
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+    const path = `${user.id}/avatar.${ext}`;
+    const url = await uploadFileToStorage('profile-photos', path, file);
+    if (!url) { toast.error(t('profileSetup.photoUploadError', 'Não foi possível enviar a foto')); setUploadingPhoto(false); return; }
+    await supabase.from('profiles').update({ avatar_url: url } as any).eq('user_id', user.id);
+    setPhotoUrl(url);
+    setUploadingPhoto(false);
     await refreshProfile();
   };
 
-  // ---- Step 4 → next ----
-  const submitSchool = async () => {
-    if (!user || !districtId || !schoolId) { toast.error(t('profileSetup.schoolRequired')); return; }
-    setSaving(true);
-
-    let resolvedSchoolId = schoolId;
-    if (schoolId.includes('-fallback-')) {
-      const sel = schoolResults.find(s => s.id === schoolId);
-      if (sel) {
-        const { data: created, error: cErr } = await supabase.from('schools').insert({
-          name: sel.name, concelho: sel.concelho, district_id: districtId,
-          me_code: sel.me_code ?? null, school_type: 'public', education_levels: [],
-          is_verified: false, submitted_by_user_id: user.id,
-        } as any).select('id').single();
-        if (cErr) { toast.error(cErr.message); setSaving(false); return; }
-        resolvedSchoolId = created.id;
-      }
-    }
-
-    try {
-      const { error } = await supabase.from('profiles').update({
-        first_name: firstName,
-        last_name: lastName,
-        username,
-        date_of_birth: dob,
-        country_code: 'PT',
-        district_id: districtId,
-        school_id: resolvedSchoolId,
-        age_group: age < 18 ? 'under_18' : 'over_18',
-      } as any).eq('user_id', user.id);
-      if (error) throw error;
-    } catch (error) {
-      handleProfileSaveError(error);
-      setSaving(false);
-      return;
-    }
-    setSaving(false);
-    setStep('avatar');
-  };
-
-  const saveSetupAvatar = async (nextAvatarId: AvatarId) => {
+  const removePhoto = async () => {
     if (!user) return;
-    setSaving(true);
-    const { error } = await supabase.from('profiles').update({ avatar_url: nextAvatarId } as any).eq('user_id', user.id);
-    setSaving(false);
-    if (error) { toast.error(error.message); return; }
-    setAvatarId(nextAvatarId);
-    setAvatarPickerOpen(false);
+    await supabase.from('profiles').update({ avatar_url: null } as any).eq('user_id', user.id);
+    setPhotoUrl(null);
     await refreshProfile();
   };
 
-  const continueFromAvatar = async () => {
-    if (!profile?.avatar_url) await saveSetupAvatar(avatarId);
-    setStep(age >= 13 && age < 18 ? 'parental_consent' : 'theme');
+  const previewTheme = (id: string) => {
+    const theme = THEMES.find(th => th.id === id);
+    if (!theme) return;
+    setThemeId(id);
+    applyTheme(theme);
   };
 
-  // ---- Step 5 → finalize ----
   const finalize = async () => {
     if (!user) return;
     setSaving(true);
@@ -426,18 +266,9 @@ export default function ProfileSetup() {
     await refreshProfile();
   };
 
-  const previewTheme = (id: string) => {
-    const theme = THEMES.find(th => th.id === id);
-    if (!theme) return;
-    setThemeId(id);
-    applyTheme(theme);
-  };
-
-  const LANGS: Array<{ code: string; label: string }> = [
-    { code: 'pt', label: 'PT' },
-    { code: 'en', label: 'EN' },
-    { code: 'es', label: 'ES' },
-    { code: 'fr', label: 'FR' },
+  const LANGS = [
+    { code: 'pt', label: 'PT' }, { code: 'en', label: 'EN' },
+    { code: 'es', label: 'ES' }, { code: 'fr', label: 'FR' },
   ];
   const currentLang = (i18n.language || 'pt').slice(0, 2).toLowerCase();
 
@@ -461,60 +292,25 @@ export default function ProfileSetup() {
                   ? 'text-foreground border-foreground'
                   : 'text-muted-foreground border-transparent hover:text-foreground'
               }`}
-            >
-              {l.label}
-            </button>
+            >{l.label}</button>
           ))}
         </div>
       </div>
       <img src={logo} alt="Codex" className="w-40 mb-4" />
-      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">{t('profileSetup.welcomeCodex')}</h1>
-      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">{t('profileSetup.tellUs')}</p>
+      <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">
+        {t('profileSetup.welcomeCodex')}
+      </h1>
+      <p className="text-sm text-muted-foreground text-center mt-1 font-['Josefin_Sans']">
+        {t('profileSetup.tellUs')}
+      </p>
     </div>
   );
-
-  // ===== STEP RENDERS =====
-
-  if (step === 'age_gate') {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-sm">
-          <Header />
-          <form onSubmit={submitAgeGate} className="space-y-4">
-            <div className="space-y-1">
-              <Label className="text-xs text-muted-foreground">{t('profileSetup.dateOfBirth')}</Label>
-              <Input type="date" value={dob} onChange={e => setDob(e.target.value)} required
-                max={new Date().toISOString().slice(0, 10)} className="h-11 text-sm" />
-            </div>
-            <Button type="submit" className="w-full h-11">{t('profileSetup.continue')}</Button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  if (step === 'underage_block') {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6">
-        <div className="w-full max-w-sm text-center">
-          <img src={logo} alt="Codex" className="w-40 mx-auto mb-6" />
-          <h1 className="font-['Cormorant_Garamond'] text-2xl text-foreground mb-3">
-            {t('profileSetup.underageTitle')}
-          </h1>
-          <p className="text-sm text-muted-foreground mb-6">
-            {t('profileSetup.underageSubtitle')}
-          </p>
-          <Button onClick={signOut} variant="outline" className="w-full h-11">{t('profile.signOut')}</Button>
-        </div>
-      </div>
-    );
-  }
 
   if (step === 'terms') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-sm">
-          <Header onBack={() => setStep('age_gate')} />
+          <Header />
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('profileSetup.termsIntro')}</p>
             <div className="max-h-[320px] overflow-y-auto rounded-md border border-border bg-card p-3 text-sm leading-relaxed text-card-foreground whitespace-pre-wrap">
@@ -536,12 +332,13 @@ export default function ProfileSetup() {
             <Button onClick={submitTerms} disabled={saving || loadingLegal || !acceptedTerms || !acceptedPrivacy} className="w-full h-11">
               {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
             </Button>
+            <button onClick={signOut} className="w-full text-xs text-muted-foreground hover:text-foreground">
+              {t('profile.signOut')}
+            </button>
           </div>
           <Dialog open={showPrivacy} onOpenChange={setShowPrivacy}>
             <DialogContent className="bg-background border-border max-w-lg">
-              <DialogHeader>
-                <DialogTitle className="font-serif">{t('legal.privacyTitle')}</DialogTitle>
-              </DialogHeader>
+              <DialogHeader><DialogTitle className="font-serif">{t('legal.privacyTitle')}</DialogTitle></DialogHeader>
               <div className="max-h-[60vh] overflow-y-auto rounded-md border border-border p-3 text-sm leading-relaxed whitespace-pre-wrap">
                 {privacyDocument?.content || t('legal.documentPreparing')}
               </div>
@@ -552,79 +349,46 @@ export default function ProfileSetup() {
     );
   }
 
-  if (step === 'parental_consent') {
+  if (step === 'photo') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-sm">
           <Header onBack={() => setStep('basics')} />
-          <div className="space-y-4">
+          <div className="space-y-5 text-center">
             <p className="text-sm text-muted-foreground font-['Josefin_Sans']">
-              {t('profileSetup.parentalIntro')}
+              {t('profileSetup.photoIntro', 'Adiciona uma foto de perfil (opcional)')}
             </p>
-            <div className="space-y-1">
-              <Label className="text-xs">{t('profileSetup.parentEmail')}</Label>
-              <Input type="email" value={parentEmail} onChange={e => setParentEmail(e.target.value)}
-                placeholder="email@exemplo.pt" className="h-11 text-sm" />
+            <div className="flex justify-center">
+              <UserAvatar photoUrl={photoUrl} firstName={firstName} lastName={lastName} username={username} size={112} />
             </div>
-            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
-              <Checkbox checked={consentAge} onCheckedChange={v => setConsentAge(!!v)} className="mt-0.5" />
-              <span>{t('profileSetup.confirmAge')}</span>
-            </label>
-            <label className="flex items-start gap-2 text-xs text-muted-foreground cursor-pointer">
-              <Checkbox checked={consentTerms} onCheckedChange={v => setConsentTerms(!!v)} className="mt-0.5" />
-              <span>{t('profileSetup.confirmConsentEmail')}</span>
-            </label>
-            <Button onClick={submitConsent} disabled={saving} className="w-full h-11">
-              {saving ? t('profileSetup.sending') : t('profileSetup.sendConsent')}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (step === 'school') {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-sm">
-          <Header onBack={() => setStep('basics')} />
-          <div className="space-y-4">
-            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('profileSetup.yourSchool')}</p>
-            <div className="space-y-1">
-              <Label className="text-xs">{t('profileSetup.district')}</Label>
-              <Select value={districtId} onValueChange={v => { setDistrictId(v); setSchoolId(''); setSchoolQuery(''); }}>
-                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder={t('profileSetup.selectDistrict')} /></SelectTrigger>
-                <SelectContent>
-                  {districts.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <Label className="text-xs">{t('profileSetup.school')}</Label>
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
-                <Input value={schoolQuery} onChange={e => { setSchoolQuery(e.target.value); setSchoolId(''); }}
-                  placeholder={districtId ? t('profileSetup.searchSchool') : t('profileSetup.selectDistrictFirst')}
-                  disabled={!districtId} className="h-11 text-sm pl-7" />
-              </div>
-              {districtId && (
-                <div className="border border-border rounded-md max-h-48 overflow-y-auto bg-background">
-                  {searching ? (
-                    <div className="flex justify-center py-3"><Loader2 className="w-4 h-4 animate-spin text-muted-foreground" /></div>
-                  ) : schoolResults.length === 0 ? (
-                    <p className="text-xs text-muted-foreground text-center py-3">{t('profileSetup.noResults')}</p>
-                  ) : schoolResults.map(s => (
-                    <button key={s.id} type="button" onClick={() => { setSchoolId(s.id); setSchoolQuery(s.name); }}
-                      className={`w-full text-left px-3 py-2 text-sm hover:bg-muted/50 border-b border-border last:border-0 ${schoolId === s.id ? 'bg-muted/40' : ''}`}>
-                      <div className="text-foreground">{s.name}</div>
-                      {s.concelho && <div className="text-xs text-muted-foreground">{s.concelho}</div>}
-                    </button>
-                  ))}
-                </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handlePhotoUpload(f);
+                if (fileInputRef.current) fileInputRef.current.value = '';
+              }}
+            />
+            <div className="flex gap-2">
+              <Button
+                type="button" variant="outline" className="flex-1 h-11"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingPhoto}
+              >
+                {uploadingPhoto ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4 mr-2" />}
+                {photoUrl ? t('profileSetup.changePhoto', 'Alterar foto') : t('profileSetup.uploadPhoto', 'Enviar foto')}
+              </Button>
+              {photoUrl && (
+                <Button type="button" variant="ghost" className="h-11" onClick={removePhoto}>
+                  <Trash2 className="w-4 h-4" />
+                </Button>
               )}
             </div>
-            <Button onClick={submitSchool} disabled={saving || !districtId || !schoolId} className="w-full h-11">
-              {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
+            <Button onClick={() => setStep('theme')} className="w-full h-11">
+              {t('profileSetup.continue')}
             </Button>
           </div>
         </div>
@@ -636,7 +400,7 @@ export default function ProfileSetup() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md">
-          <Header />
+          <Header onBack={() => setStep('photo')} />
           <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
           <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
             {THEMES.map(th => {
@@ -667,47 +431,18 @@ export default function ProfileSetup() {
     );
   }
 
-  if (step === 'avatar') {
-    const selectedAvatar = getAvatarById(avatarId);
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
-        <div className="w-full max-w-sm">
-          <Header onBack={() => setStep(age >= 13 && age < 18 ? 'basics' : 'school')} />
-          <div className="space-y-4 text-center">
-            <p className="text-sm text-muted-foreground font-['Josefin_Sans']">{t('avatars.setupIntro')}</p>
-            <img
-              src={resolveAvatarSrc(avatarId)}
-              alt={selectedAvatar?.name || t('avatars.defaultAlt')}
-              className="mx-auto h-28 w-28 rounded-full border border-border object-cover"
-            />
-            <p className="text-sm text-foreground">{selectedAvatar?.name}</p>
-            <Button type="button" variant="outline" onClick={() => setAvatarPickerOpen(true)} className="w-full h-11">
-              {t('avatars.choose')}
-            </Button>
-            <Button onClick={continueFromAvatar} disabled={saving} className="w-full h-11">
-              {t('profileSetup.continue')}
-            </Button>
-          </div>
-          <AvatarPickerDialog
-            open={avatarPickerOpen}
-            value={avatarId}
-            onOpenChange={setAvatarPickerOpen}
-            onConfirm={saveSetupAvatar}
-          />
-        </div>
-      </div>
-    );
-  }
-
   // STEP: basics
+  const districtsForCountry = districts;
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-sm">
-        <Header />
+        <Header onBack={profile?.terms_accepted_at ? undefined : () => setStep('terms')} />
         <form onSubmit={submitBasics} className="space-y-3">
           <div className="flex gap-2">
-            <Input placeholder={t('profileSetup.firstName')} value={firstName} onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
-            <Input placeholder={t('profileSetup.lastName')} value={lastName} onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
+            <Input placeholder={t('profileSetup.firstName')} value={firstName}
+              onChange={e => setFirstName(e.target.value)} required className="h-11 text-sm" />
+            <Input placeholder={t('profileSetup.lastName')} value={lastName}
+              onChange={e => setLastName(e.target.value)} className="h-11 text-sm" />
           </div>
           <div className="space-y-1">
             <Input ref={usernameInputRef} placeholder={t('profileSetup.username')} value={username}
@@ -715,7 +450,8 @@ export default function ProfileSetup() {
               required className="h-11 text-sm" />
             {usernameMessage && (
               <p className={`flex items-center gap-1.5 text-xs font-['Josefin_Sans'] ${
-                usernameStatus === 'available' ? 'text-green-600' : usernameStatus === 'error' ? 'text-destructive' : 'text-muted-foreground'
+                usernameStatus === 'available' ? 'text-green-600'
+                  : usernameStatus === 'error' ? 'text-destructive' : 'text-muted-foreground'
               }`}>
                 {usernameStatus === 'checking' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 {usernameStatus === 'available' && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -724,7 +460,42 @@ export default function ProfileSetup() {
               </p>
             )}
           </div>
-          <Button type="submit" disabled={usernameStatus !== 'available'} className="w-full h-11">{t('profileSetup.continue')}</Button>
+
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground">{t('profileSetup.country', 'País')}</Label>
+            <Select value={countryCode} onValueChange={(v) => { setCountryCode(v); setDistrictId(''); }}>
+              <SelectTrigger className="h-11 text-sm"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {COUNTRIES.map(c => <SelectItem key={c.code} value={c.code}>{c.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {districtsForCountry.length > 0 && (
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">{t('profileSetup.district')}</Label>
+              <Select value={districtId} onValueChange={setDistrictId}>
+                <SelectTrigger className="h-11 text-sm"><SelectValue placeholder={t('profileSetup.selectDistrict')} /></SelectTrigger>
+                <SelectContent>
+                  {districtsForCountry.map(d => <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className="space-y-1">
+            <Label className="text-xs text-muted-foreground">{t('profileSetup.birthYear', 'Ano de nascimento')}</Label>
+            <Select value={birthYear ? String(birthYear) : ''} onValueChange={(v) => setBirthYear(parseInt(v, 10))}>
+              <SelectTrigger className="h-11 text-sm"><SelectValue placeholder={t('profileSetup.selectYear', 'Escolhe um ano')} /></SelectTrigger>
+              <SelectContent className="max-h-[260px]">
+                {BIRTH_YEARS.map(y => <SelectItem key={y} value={String(y)}>{y}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button type="submit" disabled={saving || usernameStatus !== 'available'} className="w-full h-11">
+            {saving ? t('profileSetup.saving') : t('profileSetup.continue')}
+          </Button>
         </form>
       </div>
     </div>
