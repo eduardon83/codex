@@ -77,8 +77,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [editName, setEditName] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deletingLibrary, setDeletingLibrary] = useState(false);
-  const [dismissedBanner, setDismissedBanner] = useState(false);
-  const [dismissedBorrowBanner, setDismissedBorrowBanner] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
   const [showPlanSheet, setShowPlanSheet] = useState(false);
@@ -96,10 +94,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [sortBy, setSortBy] = useState<SortOption>('date_newest');
 
   useEffect(() => {
-    if (user) {
-      loadLibraries();
-      loadLoans();
-    }
+    if (user) loadLibraries();
   }, [user]);
 
   useEffect(() => {
@@ -131,65 +126,12 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const loadBooks = async () => {
     const { data } = await supabase
       .from('books')
-      .select('id, title, author, cover_url, is_wishlist, reading_status, genre, format, created_at, publish_date, is_borrowed, return_by_date, borrow_notifications_enabled')
+      .select('id, title, author, cover_url, is_wishlist, reading_status, genre, format, created_at, publish_date')
       .eq('library_id', activeLibrary)
       .eq('is_wishlist', false)
       .order('created_at', { ascending: false });
     setBooks((data as Book[]) || []);
   };
-
-  const loadLoans = async () => {
-    const { data: lentOut } = await supabase
-      .from('loans')
-      .select('id, borrower_name, is_active, book_id, loan_due_date, loan_notifications_enabled, books(title, author, cover_url)')
-      .eq('lender_id', user!.id)
-      .eq('is_active', true);
-    setLoansToOthers((lentOut as unknown as Loan[]) || []);
-
-    const { data: borrowed } = await supabase
-      .from('loans')
-      .select('id, borrower_name, is_active, book_id, loan_due_date, loan_notifications_enabled, books(title, author, cover_url)')
-      .eq('borrower_user_id', user!.id)
-      .eq('is_active', true);
-    setLoansFromOthers((borrowed as unknown as Loan[]) || []);
-  };
-
-  // Loan notification banner logic
-  const loanBannerInfo = useMemo(() => {
-    if (dismissedBanner) return null;
-    const now = Date.now();
-    let overdueCount = 0;
-    let soonCount = 0;
-    for (const loan of loansToOthers) {
-      if (!loan.loan_due_date || !loan.loan_notifications_enabled) continue;
-      const daysRemaining = Math.ceil((new Date(loan.loan_due_date).getTime() - now) / 86400000);
-      if (daysRemaining < 0) overdueCount++;
-      else if (daysRemaining < 10) soonCount++;
-    }
-    if (overdueCount > 0) return { type: 'overdue' as const, count: overdueCount };
-    if (soonCount > 0) return { type: 'soon' as const, count: soonCount };
-    return null;
-  }, [loansToOthers, dismissedBanner]);
-
-  // Borrow notification banner logic
-  const borrowBannerInfo = useMemo(() => {
-    if (dismissedBorrowBanner) return null;
-    const now = Date.now();
-    let overdueCount = 0;
-    let soonCount = 0;
-    for (const b of books) {
-      if (!b.is_borrowed || !b.return_by_date || !b.borrow_notifications_enabled) continue;
-      const daysRemaining = Math.ceil((new Date(b.return_by_date).getTime() - now) / 86400000);
-      if (daysRemaining < 0) overdueCount++;
-      else if (daysRemaining < 10) soonCount++;
-    }
-    if (overdueCount > 0) return { type: 'overdue' as const, count: overdueCount };
-    if (soonCount > 0) return { type: 'soon' as const, count: soonCount };
-    return null;
-  }, [books, dismissedBorrowBanner]);
-
-  // Set of book IDs currently on loan
-  const onLoanBookIds = useMemo(() => new Set(loansToOthers.map(l => l.book_id)), [loansToOthers]);
 
   const createLibrary = async () => {
     if (!newLibraryName.trim()) return;
