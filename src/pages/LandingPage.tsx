@@ -23,8 +23,8 @@ const LANDING_COPY = {
     nav_about: 'Sobre',
     nav_enter: 'Entrar',
     eyebrow: 'Para amantes de estantes · Estabelecido MMXXIV',
-    hero_title_1: 'Construímos a nossa biblioteca,',
-    hero_title_2: 'um livro de cada vez.',
+    hero_title_1: 'Constroi a tua biblioteca,',
+    hero_title_2: 'um livro de cada vez!',
     hero_sub: 'O Codex foi pensado como a tua biblioteca pessoal. Guarda os livros que tens, centraliza a tua wishlist e cria listas e planos de leitura para te manteres a par das tuas leituras. E acompanha eventos de autores e das tuas livrarias favoritas — tudo num só lugar!',
     cta_primary: 'Criar conta gratuita',
     cta_secondary: 'Já tenho conta',
@@ -64,7 +64,7 @@ const LANDING_COPY = {
     nav_about: 'About',
     nav_enter: 'Sign in',
     eyebrow: 'For bookcase lovers · Established MMXXIV',
-    hero_title_1: 'Building our own library,',
+    hero_title_1: 'Building your own library,',
     hero_title_2: 'one book at a time.',
     hero_sub: 'Codex was built as your own personal library. Store the books you have, centralize your wishlist and create reading lists and plans to keep you on track with your reading. And keep up with events from authors and your favourite bookstores — all in one place!',
     cta_primary: 'Create a free account',
@@ -105,7 +105,7 @@ const LANDING_COPY = {
     nav_about: 'Sobre',
     nav_enter: 'Entrar',
     eyebrow: 'Para amantes de las estanterías · Establecido MMXXIV',
-    hero_title_1: 'Construimos nuestra biblioteca,',
+    hero_title_1: 'Construye tu propia biblioteca,',
     hero_title_2: 'un libro a la vez.',
     hero_sub: 'Codex es tu biblioteca personal. Guarda los libros que tienes, centraliza tu wishlist y crea listas y planes de lectura para mantenerte al día con tus lecturas. Y sigue eventos de autores y tus librerías favoritas — ¡todo en un solo lugar!',
     cta_primary: 'Crear cuenta gratuita',
@@ -146,7 +146,7 @@ const LANDING_COPY = {
     nav_about: 'À propos',
     nav_enter: 'Se connecter',
     eyebrow: 'Pour les amoureux des bibliothèques · Établi MMXXIV',
-    hero_title_1: 'Construisons notre bibliothèque,',
+    hero_title_1: 'Construis ta propre bibliothèque,',
     hero_title_2: 'un livre à la fois.',
     hero_sub: "Codex est ta bibliothèque personnelle. Garde les livres que tu possèdes, centralise ta wishlist et crée des listes et plans de lecture pour rester sur la bonne voie. Et suis les événements d'auteurs et de tes librairies préférées — tout en un seul endroit !",
     cta_primary: 'Créer un compte gratuit',
@@ -341,8 +341,9 @@ export default function LandingPage() {
           background: 'linear-gradient(to bottom, rgba(30,42,34,0.95) 0%, transparent 100%)',
           backdropFilter: 'blur(4px)',
         }}>
-          <a href="/" aria-label="Codex" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-            <img src={owlGold} alt="Codex" style={{ height: 36, width: 'auto', display: 'block' }} />
+          <a href="/" aria-label="Codex" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+            <img src={owlGold} alt="" aria-hidden="true" style={{ height: 36, width: 'auto', display: 'block' }} />
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.6rem', fontWeight: 500, color: GOLD, letterSpacing: '0.02em', lineHeight: 1 }}>Codex</span>
           </a>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <button type="button" onClick={() => setModal('about')} className="btn-ghost" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: MUTED, background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px 16px', borderRadius: 2, transition: 'color 0.2s' }}>{t.nav_about}</button>
@@ -537,7 +538,7 @@ export default function LandingPage() {
             <p style={{ fontSize: '0.82rem', fontWeight: 300, color: MUTED, marginBottom: '2.5rem' }}>{t.cta_sub}</p>
             <button onClick={goSignup} className="btn-hero" style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.14em', textTransform: 'uppercase', background: GOLD, color: BG, border: 'none', cursor: 'pointer', padding: '14px 32px', borderRadius: 2, transition: 'background 0.2s, transform 0.15s, box-shadow 0.2s', boxShadow: '0 4px 24px rgba(201,168,76,0.25)' }}>{t.cta_primary}</button>
             <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap', marginTop: '2.5rem' }}>
-              {[t.badge1, t.badge2, t.badge3, t.badge4].map((b) => (
+              {[t.badge2, t.badge3, t.badge4].map((b) => (
                 <span key={b} style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: MUTED, padding: '5px 12px', border: '0.5px solid rgba(160,152,128,0.25)', borderRadius: 20 }}>{b}</span>
               ))}
             </div>
@@ -552,7 +553,7 @@ export default function LandingPage() {
           <div style={{ display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap' }}>
             <button type="button" onClick={() => setModal('termsPrivacy')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_terms_privacy}</button>
             <button type="button" onClick={() => setModal('about')} className="footer-link" style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, padding: 0, transition: 'color 0.2s' }}>{t.footer_about}</button>
-            <a href="mailto:folium@kendirstudios.pt" className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>folium@kendirstudios.pt</a>
+            <a href="mailto:codex@kendirstudios.pt" className="footer-link" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED, textDecoration: 'none', transition: 'color 0.2s' }}>codex@kendirstudios.pt</a>
           </div>
           <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
             <p style={{ fontSize: '0.68rem', color: MUTED, margin: 0 }}>© 2026 Worlds4Education — Kendir Studios · Vila Nova de Gaia · Portugal</p>

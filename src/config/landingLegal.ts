@@ -24,10 +24,10 @@ const pt: LandingLegalContent = {
       { type: 'eyebrow', text: 'Versão 1.0.0' },
       { type: 'lead', text: 'Um sistema de gestão de bibliotecas pessoais e promoção da leitura.' },
       { type: 'h2', text: 'Sobre' },
-      { type: 'p', text: 'Codex é a versão educacional de Biblioteca, um projeto da Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), construído do nosso amor por livros e pelo prazer de construir a nossa pequena biblioteca, um livro de cada vez. Somos enormes fãs de leitura e acreditamos que os livros nos dão algo que não encontramos em mais nenhum lugar. Mas os hábitos de leitura estão a desaparecer, lentamente, dos nossos jovens e alunos.' },
-      { type: 'p', text: 'Procuramos ajudar através de Codex, permitindo aos alunos descobrir livros, explorar planos de leitura, encontrar bibliotecas, partilhar livros e leituras com colegas e fazer evoluir uma biblioteca pessoal que possa ser um local de refúgio e crescimento durante os anos formativos.' },
+      { type: 'p', text: 'Codex é um projeto da Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), construído do nosso amor por livros e pelo prazer de construir a nossa pequena biblioteca, um livro de cada vez. Somos enormes fãs de leitura e acreditamos que os livros nos dão algo que não encontramos em mais nenhum lugar. Mas os hábitos de leitura estão a desaparecer, lentamente, em todo o lado.' },
+      { type: 'p', text: 'Procuramos ajudar através de Codex, permitindo a qualquer pessoa catalogar as suas bibliotecas, descobrir novos livros, explorar planos de leitura, encontrar bibliotecas, partilhar livros e leituras com amigos, e fazer evoluir uma biblioteca pessoal que possa ser um local de refúgio, amor e crescimento.' },
       { type: 'h2', text: 'A nossa intenção' },
-      { type: 'p', text: 'A nossa intenção é simples: dar aos alunos um local onde possam catalogar os seus livros, partilhá-los com amigos e colegas e descobrir novas leituras. Sem algoritmos, publicidade ou ruído – apenas o aluno e as suas folhas!' },
+      { type: 'p', text: 'A nossa intenção é simples: dar a qualquer pessoa um local onde possa catalogar os seus livros, partilhá-los com amigos e descobrir novas leituras. Sem algoritmos, publicidade ou ruído – apenas tu e os teus livros!' },
       { type: 'p', text: 'Worlds4Education – Jogos e Ambientes Educativos, Lda.' },
       { type: 'p', text: 'Avenida da República 1629 – 2.º Esquerdo' },
       { type: 'p', text: '4430-206 Vila Nova de Gaia · Portugal' },
@@ -65,14 +65,14 @@ const pt: LandingLegalContent = {
       { type: 'p', text: 'Podemos atualizar estes termos. Se houver mudanças importantes, avisamos-te por email ou no próprio Codex. Continuar a usar o Codex após as alterações significa que aceitas os novos termos.' },
 
       { type: 'h3', text: '9. Lei aplicável' },
-      { type: 'p', text: 'Estes termos são regidos pela lei portuguesa. Para questões, contacta: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Estes termos são regidos pela lei portuguesa. Para questões, contacta: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '10. Contactos' },
-      { type: 'p', text: 'Codex é operado por Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, sediada em Avenida da República 1629, 2.º Esquerdo – 4430-206 Vila Nova de Gaia, Portugal. Email: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Codex é operado por Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, sediada em Avenida da República 1629, 2.º Esquerdo – 4430-206 Vila Nova de Gaia, Portugal. Email: codex@kendirstudios.pt' },
 
       { type: 'h2', text: 'Política de Privacidade' },
       { type: 'eyebrow', text: 'Última atualização: 20 de Abril de 2026' },
-      { type: 'lead', text: 'Esta política explica que informação recolhemos sobre ti, porque é que a recolhemos, e o que podes fazer para controlar a tua informação. Se algo não for claro, escreve-nos: folium@kendirstudios.pt' },
+      { type: 'lead', text: 'Esta política explica que informação recolhemos sobre ti, porque é que a recolhemos, e o que podes fazer para controlar a tua informação. Se algo não for claro, escreve-nos: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '1. Quem somos' },
       { type: 'p', text: 'Codex é operado por Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, sediada em Avenida da República 1629, 2.º Esquerdo – 4430-206 Vila Nova de Gaia, Portugal. Somos os responsáveis pelo tratamento dos teus dados, nos termos do RGPD.' },
@@ -95,10 +95,10 @@ const pt: LandingLegalContent = {
       { type: 'p', text: 'Conta ativa: enquanto usares o Codex. Conta apagada: removemos tudo em até 30 dias. Registos de empréstimo fechados: 2 anos. Logs técnicos: 90 dias.' },
 
       { type: 'h3', text: '6. Os teus direitos (RGPD)' },
-      { type: 'p', text: 'Tens o direito de aceder aos teus dados, corrigir dados errados, apagar a tua conta e dados, limitar como usamos os teus dados, opor-te a certos tratamentos, e levar os teus dados para outra aplicação (portabilidade). Para exercer qualquer destes direitos, escreve-nos: folium@kendirstudios.pt. Respondemos em até 30 dias. Se não ficares satisfeito, podes reclamar junto da CNPD: www.cnpd.pt' },
+      { type: 'p', text: 'Tens o direito de aceder aos teus dados, corrigir dados errados, apagar a tua conta e dados, limitar como usamos os teus dados, opor-te a certos tratamentos, e levar os teus dados para outra aplicação (portabilidade). Para exercer qualquer destes direitos, escreve-nos: codex@kendirstudios.pt. Respondemos em até 30 dias. Se não ficares satisfeito, podes reclamar junto da CNPD: www.cnpd.pt' },
 
       { type: 'h3', text: '7. Menores de 18 anos' },
-      { type: 'p', text: 'Aplicamos proteções extra: precisamos da autorização de um encarregado de educação antes de ativar a conta; os teus dados ficam menos visíveis por predefinição; não te mostramos publicidade; podemos recusar pedidos de empréstimo suspeitos. Se és pai, mãe ou encarregado e queres pedir informação sobre o teu educando, escreve-nos: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Aplicamos proteções extra: precisamos da autorização de um encarregado de educação antes de ativar a conta; os teus dados ficam menos visíveis por predefinição; não te mostramos publicidade; podemos recusar pedidos de empréstimo suspeitos. Se és pai, mãe ou encarregado e queres pedir informação sobre o teu educando, escreve-nos: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '8. Segurança' },
       { type: 'p', text: 'Usamos encriptação (HTTPS), palavras-passe encriptadas, acesso restrito à base de dados, e fazemos cópias de segurança regulares. Nenhum sistema é 100% seguro — se soubermos de uma violação que te afete, avisamos-te em até 72 horas.' },
@@ -110,7 +110,7 @@ const pt: LandingLegalContent = {
       { type: 'p', text: 'Se mudarmos esta política, avisamos-te no Codex e por email. Alterações substanciais que afetem menores terão novo consentimento dos encarregados.' },
 
       { type: 'h3', text: '11. Contactos' },
-      { type: 'p', text: 'Responsável pelo tratamento: Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2.º Esquerdo – 4430-206 Vila Nova de Gaia, Portugal. Email: folium@kendirstudios.pt. DPO: Catarina Pinto – folium@kendirstudios.pt' },
+      { type: 'p', text: 'Responsável pelo tratamento: Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2.º Esquerdo – 4430-206 Vila Nova de Gaia, Portugal. Email: codex@kendirstudios.pt. DPO: Catarina Pinto – codex@kendirstudios.pt' },
     ],
   },
 };
@@ -123,10 +123,10 @@ const en: LandingLegalContent = {
       { type: 'eyebrow', text: 'Version 1.0.0' },
       { type: 'lead', text: 'A system for managing personal libraries and promoting reading.' },
       { type: 'h2', text: 'About' },
-      { type: 'p', text: "Codex is the educational version of Biblioteca, a project by Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), built from our love for books and the pleasure of building our small library, one book at a time. We're huge fans of reading, and we believe that books give us something we can't find anywhere else. But reading habits are slowly disappearing from our young people and students." },
-      { type: 'p', text: 'We seek to help through Codex, allowing students to discover books, explore reading plans, find libraries, share books and readings with peers, and evolve a personal library that can be a place of refuge and growth during the formative years.' },
+      { type: 'p', text: "Codex is a project by Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), built from our love for books and the pleasure of building our small library, one book at a time. We're huge fans of reading, and we believe that books give us something we can't find anywhere else. But reading habits are slowly disappearing everywhere." },
+      { type: 'p', text: 'We seek to help through Codex, allowing anyone to catalogue their libraries, discover new books, explore reading plans, find libraries, share books and readings with peers, and evolve a personal library that can be a place of refuge, love and growth.' },
       { type: 'h2', text: 'Our intention' },
-      { type: 'p', text: 'Our intention is simple: to give students a place where they can catalogue their books, share them with friends and colleagues and discover new readings. No algorithms, advertising or noise – just the student and their sheets!' },
+      { type: 'p', text: 'Our intention is simple: to give anyone a place where they can catalogue their books, share them with friends and discover new readings. No algorithms, advertising or noise - just you and your books!' },
       { type: 'p', text: 'Worlds4Education – Jogos e Ambientes Educativos, Lda.' },
       { type: 'p', text: 'Avenida da República 1629 – 2nd Left' },
       { type: 'p', text: '4430-206 Vila Nova de Gaia · Portugal' },
@@ -164,14 +164,14 @@ const en: LandingLegalContent = {
       { type: 'p', text: 'We may update these terms. If there are major changes, we will let you know by email or in Codex itself. Continuing to use Codex after the changes means you accept the new terms.' },
 
       { type: 'h3', text: '9. Governing law' },
-      { type: 'p', text: 'These terms are governed by Portuguese law. For questions, contact: folium@kendirstudios.pt' },
+      { type: 'p', text: 'These terms are governed by Portuguese law. For questions, contact: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '10. Contacts' },
-      { type: 'p', text: 'Codex is operated by Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, headquartered at Avenida da República 1629, 2nd Left – 4430-206 Vila Nova de Gaia, Portugal. Email: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Codex is operated by Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, headquartered at Avenida da República 1629, 2nd Left – 4430-206 Vila Nova de Gaia, Portugal. Email: codex@kendirstudios.pt' },
 
       { type: 'h2', text: 'Privacy Policy' },
       { type: 'eyebrow', text: 'Last updated: April 20, 2026' },
-      { type: 'lead', text: 'This policy explains what information we collect about you, why we collect it, and what you can do to control your information. If something is not clear, write to us: folium@kendirstudios.pt' },
+      { type: 'lead', text: 'This policy explains what information we collect about you, why we collect it, and what you can do to control your information. If something is not clear, write to us: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '1. Who we are' },
       { type: 'p', text: 'Codex is operated by Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, headquartered at Avenida da República 1629, 2nd Left – 4430-206 Vila Nova de Gaia, Portugal. We are the controllers of your data, under the terms of the GDPR.' },
@@ -194,10 +194,10 @@ const en: LandingLegalContent = {
       { type: 'p', text: 'Active account: while you use Codex. Deleted account: we remove everything within 30 days. Closed loan records: 2 years. Technical logs: 90 days.' },
 
       { type: 'h3', text: '6. Your rights (GDPR)' },
-      { type: 'p', text: 'You have the right to access your data, correct erroneous data, delete your account and data, limit how we use your data, oppose certain processing, and take your data to another application (portability). To exercise any of these rights, write to us: folium@kendirstudios.pt. We respond within 30 days. If you are not satisfied, you can complain to the CNPD: www.cnpd.pt' },
+      { type: 'p', text: 'You have the right to access your data, correct erroneous data, delete your account and data, limit how we use your data, oppose certain processing, and take your data to another application (portability). To exercise any of these rights, write to us: codex@kendirstudios.pt. We respond within 30 days. If you are not satisfied, you can complain to the CNPD: www.cnpd.pt' },
 
       { type: 'h3', text: '7. Under 18 years of age' },
-      { type: 'p', text: 'We apply extra protections: we need permission from a parent before activating your account; your data is less visible by default; we do not show you advertising; we may refuse loan requests that seem suspicious. If you are a parent or guardian and want to request information about your child, write to us: folium@kendirstudios.pt' },
+      { type: 'p', text: 'We apply extra protections: we need permission from a parent before activating your account; your data is less visible by default; we do not show you advertising; we may refuse loan requests that seem suspicious. If you are a parent or guardian and want to request information about your child, write to us: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '8. Security' },
       { type: 'p', text: 'We use encryption (HTTPS), encrypted passwords, restricted database access, and make regular backups. No system is 100% secure — if we learn of a violation that affects you, we will let you know within 72 hours.' },
@@ -209,7 +209,7 @@ const en: LandingLegalContent = {
       { type: 'p', text: 'If we change this policy, we will let you know on Codex and by email. Substantial changes that affect minors will require new consent from guardians.' },
 
       { type: 'h3', text: '11. Contacts' },
-      { type: 'p', text: 'Data controller: Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2nd Left – 4430-206 Vila Nova de Gaia, Portugal. Email: folium@kendirstudios.pt. DPO: Catarina Pinto – folium@kendirstudios.pt' },
+      { type: 'p', text: 'Data controller: Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2nd Left – 4430-206 Vila Nova de Gaia, Portugal. Email: codex@kendirstudios.pt. DPO: Catarina Pinto – codex@kendirstudios.pt' },
     ],
   },
 };
@@ -222,10 +222,10 @@ const es: LandingLegalContent = {
       { type: 'eyebrow', text: 'Versión 1.0.0' },
       { type: 'lead', text: 'Un sistema para gestionar bibliotecas personales y promover la lectura.' },
       { type: 'h2', text: 'Acerca de' },
-      { type: 'p', text: 'Codex es la versión educativa de Biblioteca, un proyecto de Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), construido a partir de nuestro amor por los libros y el placer de construir nuestra pequeña biblioteca, libro a libro. Somos grandes aficionados a la lectura y creemos que los libros nos ofrecen algo que no encontramos en ningún otro sitio. Pero los hábitos de lectura están desapareciendo poco a poco de nuestros jóvenes y estudiantes.' },
-      { type: 'p', text: 'Buscamos ayudar a través de Codex, permitiendo a los estudiantes descubrir libros, explorar planes de lectura, encontrar bibliotecas, compartir libros y lecturas con sus compañeros, y desarrollar una biblioteca personal que pueda ser un lugar de refugio y crecimiento durante los años formativos.' },
+      { type: 'p', text: 'Codex es un proyecto de Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), construido a partir de nuestro amor por los libros y el placer de construir nuestra pequeña biblioteca, libro a libro. Somos grandes aficionados a la lectura y creemos que los libros nos ofrecen algo que no encontramos en ningún otro sitio. Pero los hábitos de lectura están desapareciendo poco a poco en todas partes.' },
+      { type: 'p', text: 'Buscamos ayudar a través de Codex, permitiendo a cualquiera catalogar sus bibliotecas, descubrir nuevos libros, explorar planes de lectura, encontrar bibliotecas, compartir libros y lecturas con amigos, y desarrollar una biblioteca personal que pueda ser un lugar de refugio, amor y crecimiento.' },
       { type: 'h2', text: 'Nuestra intención' },
-      { type: 'p', text: 'Nuestra intención es sencilla: ofrecer a los estudiantes un lugar donde puedan catalogar sus libros, compartirlos con amigos y compañeros y descubrir nuevas lecturas. Sin algoritmos, publicidad ni ruido — ¡solo el estudiante y sus hojas!' },
+      { type: 'p', text: 'Nuestra intención es sencilla: ofrecer a cualquiera un lugar donde pueda catalogar sus libros, compartirlos con amigos y descubrir nuevas lecturas. Sin algoritmos, publicidad ni ruido — ¡solo tú y tus libros!' },
       { type: 'p', text: 'Worlds4Education – Jogos e Ambientes Educativos, Lda.' },
       { type: 'p', text: 'Avenida da República 1629 – 2ª izquierda' },
       { type: 'p', text: '4430-206 Vila Nova de Gaia · Portugal' },
@@ -263,14 +263,14 @@ const es: LandingLegalContent = {
       { type: 'p', text: 'Podemos actualizar estos términos. Si hay cambios importantes, te lo comunicaremos por correo electrónico o en Codex. Seguir usando Codex tras los cambios significa que aceptas los nuevos términos.' },
 
       { type: 'h3', text: '9. Derecho aplicable' },
-      { type: 'p', text: 'Estos términos están regulados por la ley portuguesa. Para preguntas: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Estos términos están regulados por la ley portuguesa. Para preguntas: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '10. Contactos' },
-      { type: 'p', text: 'Codex está gestionado por Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2ª izquierda – 4430-206 Vila Nova de Gaia, Portugal. Email: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Codex está gestionado por Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2ª izquierda – 4430-206 Vila Nova de Gaia, Portugal. Email: codex@kendirstudios.pt' },
 
       { type: 'h2', text: 'Política de Privacidad' },
       { type: 'eyebrow', text: 'Última actualización: 20 de abril de 2026' },
-      { type: 'lead', text: 'Esta política explica qué información recopilamos sobre ti, por qué la recopilamos y qué puedes hacer para controlar tu información. Si algo no está claro, escríbenos: folium@kendirstudios.pt' },
+      { type: 'lead', text: 'Esta política explica qué información recopilamos sobre ti, por qué la recopilamos y qué puedes hacer para controlar tu información. Si algo no está claro, escríbenos: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '1. Quiénes somos' },
       { type: 'p', text: 'Codex está gestionado por Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2ª izquierda – 4430-206 Vila Nova de Gaia, Portugal. Somos los responsables de tus datos conforme al RGPD.' },
@@ -292,10 +292,10 @@ const es: LandingLegalContent = {
       { type: 'p', text: 'Cuenta activa: mientras uses Codex. Cuenta eliminada: borramos todo en 30 días. Préstamos cerrados: 2 años. Logs técnicos: 90 días.' },
 
       { type: 'h3', text: '6. Tus derechos (RGPD)' },
-      { type: 'p', text: 'Tienes derecho a acceder a tus datos, corregirlos, eliminar tu cuenta, limitar cómo los usamos, oponerte a ciertos tratamientos y portabilidad. Escríbenos: folium@kendirstudios.pt. Respondemos en 30 días. Si no estás satisfecho, puedes reclamar ante la CNPD: www.cnpd.pt' },
+      { type: 'p', text: 'Tienes derecho a acceder a tus datos, corregirlos, eliminar tu cuenta, limitar cómo los usamos, oponerte a ciertos tratamientos y portabilidad. Escríbenos: codex@kendirstudios.pt. Respondemos en 30 días. Si no estás satisfecho, puedes reclamar ante la CNPD: www.cnpd.pt' },
 
       { type: 'h3', text: '7. Menores de 18 años' },
-      { type: 'p', text: 'Aplicamos protecciones adicionales: necesitamos permiso de un tutor antes de activar tu cuenta; tus datos son menos visibles por defecto; no te mostramos publicidad; podemos rechazar préstamos sospechosos. Padres/tutores: folium@kendirstudios.pt' },
+      { type: 'p', text: 'Aplicamos protecciones adicionales: necesitamos permiso de un tutor antes de activar tu cuenta; tus datos son menos visibles por defecto; no te mostramos publicidad; podemos rechazar préstamos sospechosos. Padres/tutores: codex@kendirstudios.pt' },
 
       { type: 'h3', text: '8. Seguridad' },
       { type: 'p', text: 'Usamos cifrado (HTTPS), contraseñas cifradas, acceso restringido a la base de datos y copias de seguridad regulares. Ningún sistema es 100% seguro — si nos enteramos de una infracción que te afecte, te informaremos en 72 horas.' },
@@ -307,7 +307,7 @@ const es: LandingLegalContent = {
       { type: 'p', text: 'Si cambiamos esta política, te lo comunicaremos en Codex y por email. Cambios sustanciales que afecten a menores requerirán nuevo consentimiento de los tutores.' },
 
       { type: 'h3', text: '11. Contactos' },
-      { type: 'p', text: 'Responsable del tratamiento: Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2ª izquierda – 4430-206 Vila Nova de Gaia, Portugal. Email: folium@kendirstudios.pt. DPO: Catarina Pinto – folium@kendirstudios.pt' },
+      { type: 'p', text: 'Responsable del tratamiento: Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2ª izquierda – 4430-206 Vila Nova de Gaia, Portugal. Email: codex@kendirstudios.pt. DPO: Catarina Pinto – codex@kendirstudios.pt' },
     ],
   },
 };
@@ -320,10 +320,10 @@ const fr: LandingLegalContent = {
       { type: 'eyebrow', text: 'Version 1.0.0' },
       { type: 'lead', text: 'Un système pour gérer les bibliothèques personnelles et promouvoir la lecture.' },
       { type: 'h2', text: 'À propos' },
-      { type: 'p', text: "Codex est la version éducative de Biblioteca, un projet de Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), né de notre amour des livres et du plaisir de construire notre petite bibliothèque, un livre à la fois. Nous sommes de grands amateurs de lecture, et nous croyons que les livres nous offrent quelque chose que nous ne trouvons nulle part ailleurs. Mais les habitudes de lecture disparaissent lentement chez nos jeunes et nos élèves." },
-      { type: 'p', text: "Nous cherchons à aider via Codex, permettant aux élèves de découvrir des livres, d'explorer des plans de lecture, de trouver des bibliothèques, de partager des livres et des lectures avec leurs pairs, et de développer une bibliothèque personnelle pouvant être un lieu de refuge et de croissance durant les années formatrices." },
+      { type: 'p', text: "Codex est un projet de Kendir Studios (Worlds4Education – Jogos e Ambientes Educativos, Lda.), né de notre amour des livres et du plaisir de construire notre petite bibliothèque, un livre à la fois. Nous sommes de grands amateurs de lecture, et nous croyons que les livres nous offrent quelque chose que nous ne trouvons nulle part ailleurs. Mais les habitudes de lecture disparaissent lentement partout." },
+      { type: 'p', text: "Nous cherchons à aider via Codex, permettant à chacun de cataloguer ses bibliothèques, de découvrir de nouveaux livres, d'explorer des plans de lecture, de trouver des bibliothèques, de partager des livres et des lectures avec ses amis, et de développer une bibliothèque personnelle pouvant être un lieu de refuge, d'amour et de croissance." },
       { type: 'h2', text: 'Notre intention' },
-      { type: 'p', text: "Notre intention est simple : offrir aux élèves un espace où ils peuvent cataloguer leurs livres, les partager avec des amis et des collègues et découvrir de nouvelles lectures. Pas d'algorithmes, de publicité ni de bruit — juste l'élève et ses feuilles !" },
+      { type: 'p', text: "Notre intention est simple : offrir à chacun un espace où il peut cataloguer ses livres, les partager avec ses amis et découvrir de nouvelles lectures. Pas d'algorithmes, de publicité ni de bruit — juste toi et tes livres !" },
       { type: 'p', text: 'Worlds4Education – Jogos e Ambientes Educativos, Lda.' },
       { type: 'p', text: 'Avenida da República 1629 – 2e à gauche' },
       { type: 'p', text: '4430-206 Vila Nova de Gaia · Portugal' },
@@ -361,14 +361,14 @@ const fr: LandingLegalContent = {
       { type: 'p', text: 'Nous pouvons mettre à jour ces conditions. En cas de changements majeurs, nous vous informerons par email ou dans Codex. Continuer à utiliser Codex vaut acceptation.' },
 
       { type: 'h3', text: '9. Droit applicable' },
-      { type: 'p', text: 'Ces conditions sont régies par la loi portugaise. Contact : folium@kendirstudios.pt' },
+      { type: 'p', text: 'Ces conditions sont régies par la loi portugaise. Contact : codex@kendirstudios.pt' },
 
       { type: 'h3', text: '10. Contacts' },
-      { type: 'p', text: 'Codex est géré par Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2e à gauche – 4430-206 Vila Nova de Gaia, Portugal. Email : folium@kendirstudios.pt' },
+      { type: 'p', text: 'Codex est géré par Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2e à gauche – 4430-206 Vila Nova de Gaia, Portugal. Email : codex@kendirstudios.pt' },
 
       { type: 'h2', text: 'Politique de Confidentialité' },
       { type: 'eyebrow', text: 'Dernière mise à jour : 20 avril 2026' },
-      { type: 'lead', text: "Cette politique explique quelles informations nous recueillons à votre sujet, pourquoi nous les recueillons, et ce que vous pouvez faire pour les contrôler. Si quelque chose n'est pas clair : folium@kendirstudios.pt" },
+      { type: 'lead', text: "Cette politique explique quelles informations nous recueillons à votre sujet, pourquoi nous les recueillons, et ce que vous pouvez faire pour les contrôler. Si quelque chose n'est pas clair : codex@kendirstudios.pt" },
 
       { type: 'h3', text: '1. Qui nous sommes' },
       { type: 'p', text: "Codex est géré par Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2e à gauche – 4430-206 Vila Nova de Gaia, Portugal. Nous sommes les responsables du traitement, conformément au RGPD." },
@@ -390,10 +390,10 @@ const fr: LandingLegalContent = {
       { type: 'p', text: 'Compte actif : tant que vous utilisez Codex. Compte supprimé : tout supprimé sous 30 jours. Prêts clos : 2 ans. Journaux techniques : 90 jours.' },
 
       { type: 'h3', text: '6. Vos droits (RGPD)' },
-      { type: 'p', text: "Vous avez le droit d'accéder à vos données, de les corriger, de supprimer votre compte, de limiter leur usage, de vous opposer à certains traitements et à la portabilité. Écrivez à : folium@kendirstudios.pt. Réponse sous 30 jours. Réclamation possible auprès de la CNPD : www.cnpd.pt" },
+      { type: 'p', text: "Vous avez le droit d'accéder à vos données, de les corriger, de supprimer votre compte, de limiter leur usage, de vous opposer à certains traitements et à la portabilité. Écrivez à : codex@kendirstudios.pt. Réponse sous 30 jours. Réclamation possible auprès de la CNPD : www.cnpd.pt" },
 
       { type: 'h3', text: '7. Moins de 18 ans' },
-      { type: 'p', text: "Protections supplémentaires : autorisation d'un parent requise ; données moins visibles par défaut ; aucune publicité ; demandes de prêt suspectes refusées. Parents/tuteurs : folium@kendirstudios.pt" },
+      { type: 'p', text: "Protections supplémentaires : autorisation d'un parent requise ; données moins visibles par défaut ; aucune publicité ; demandes de prêt suspectes refusées. Parents/tuteurs : codex@kendirstudios.pt" },
 
       { type: 'h3', text: '8. Sécurité' },
       { type: 'p', text: "Nous utilisons le chiffrement (HTTPS), des mots de passe chiffrés, un accès restreint à la base de données et des sauvegardes régulières. Aucun système n'est 100% sûr — en cas d'infraction vous concernant, nous vous informerons sous 72 heures." },
@@ -405,7 +405,7 @@ const fr: LandingLegalContent = {
       { type: 'p', text: 'Si nous modifions cette politique, nous vous en informerons via Codex et par email. Les changements substantiels touchant des mineurs nécessiteront un nouveau consentement des tuteurs.' },
 
       { type: 'h3', text: '11. Contacts' },
-      { type: 'p', text: 'Responsable du traitement : Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2e à gauche – 4430-206 Vila Nova de Gaia, Portugal. Email : folium@kendirstudios.pt. DPO : Catarina Pinto – folium@kendirstudios.pt' },
+      { type: 'p', text: 'Responsable du traitement : Worlds4Education – Jogos e Ambientes Educativos, Lda., NIPC 516583824, Avenida da República 1629, 2e à gauche – 4430-206 Vila Nova de Gaia, Portugal. Email : codex@kendirstudios.pt. DPO : Catarina Pinto – codex@kendirstudios.pt' },
     ],
   },
 };
