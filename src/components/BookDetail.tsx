@@ -54,15 +54,6 @@ export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const { celebrate } = useCelebration();
   const [book, setBook] = useState<Book | null>(null);
   const [notes, setNotes] = useState('');
-  const [showLoanModal, setShowLoanModal] = useState(false);
-  const [borrowerName, setBorrowerName] = useState('');
-  const [borrowerUsername, setBorrowerUsername] = useState('');
-  const [loanDays, setLoanDays] = useState(0);
-  const [loanNotify, setLoanNotify] = useState(false);
-  const [activeLoan, setActiveLoan] = useState<ActiveLoan | null>(null);
-  const [showReturnConfirm, setShowReturnConfirm] = useState(false);
-  const [showLostConfirm, setShowLostConfirm] = useState(false);
-  const [showBorrowReturnConfirm, setShowBorrowReturnConfirm] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState<Record<string, string>>({});
