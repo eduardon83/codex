@@ -17,7 +17,7 @@ import { formatDate } from '@/i18n';
 import { useAppToast } from '@/components/ToastNotification';
 import { useCelebration } from '@/components/CelebrationOverlay';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
-import BookLendingToggle from '@/components/BookLendingToggle';
+
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 
 interface BookDetailProps {
@@ -44,19 +44,8 @@ interface Book {
   reading_status: string;
   rating: number | null;
   created_at: string;
-  is_borrowed: boolean;
-  borrowed_from: string | null;
-  return_by_date: string | null;
-  borrow_notifications_enabled: boolean;
 }
 
-interface ActiveLoan {
-  id: string;
-  borrower_name: string | null;
-  loan_date: string;
-  loan_due_date: string | null;
-  loan_notifications_enabled: boolean;
-}
 
 export default function BookDetail({ bookId, onBack }: BookDetailProps) {
   const { t } = useTranslation();
