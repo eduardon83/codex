@@ -148,7 +148,8 @@
     "deleteAccountDeleting": "Deleting…",
     "deleteAccountPasswordError": "Incorrect password. Try again.",
     "deleteAccountError": "Could not delete the account. Try again.",
-    "accountDeleted": "Your account has been deleted."
+    "accountDeleted": "Your account has been deleted.",
+    "proRoleSection": "Professional account"
   },
   "libraryCard": {
     "sectionTitle": "Library Card",
@@ -603,7 +604,31 @@
     "invalidCode": "Invalid code. Please try again.",
     "verify": "Verify",
     "setupFailed": "Failed to set up 2FA",
-    "qrAlt": "QR Code for 2FA setup"
+    "qrAlt": "QR Code for 2FA setup",
+    "roleRequests": {
+      "title": "Account requests",
+      "subtitle": "Approve or reject Bookstore, Author and Influencer requests.",
+      "user": "User",
+      "requestedRole": "Requested role",
+      "message": "Message",
+      "status": "Status",
+      "date": "Date",
+      "empty": "No requests to show.",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approved": "Request approved.",
+      "rejected": "Request rejected.",
+      "approveTitle": "Approve request",
+      "rejectTitle": "Reject request",
+      "notePlaceholder": "Internal note (optional)",
+      "filter": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "all": "All"
+      }
+    },
+    "system": "System"
   },
   "search": {
     "title": "Search",
@@ -707,5 +732,30 @@
   },
   "help": {
     "button": "Help"
+  },
+  "roleRequest": {
+    "title": "Request a professional account",
+    "subtitle": "Tell us what you do — we review and respond within a few days.",
+    "bookstore": {
+      "title": "Bookstore",
+      "desc": "I run an independent or chain bookstore."
+    },
+    "author": {
+      "title": "Author",
+      "desc": "I am a published writer."
+    },
+    "influencer": {
+      "title": "Influencer",
+      "desc": "I create content about books."
+    },
+    "messageLabel": "Tell us a bit",
+    "messagePlaceholder": "Who you are, where to find you online, why this fits…",
+    "submit": "Submit request",
+    "success": "Request sent. We will review shortly.",
+    "pendingNotice": "You already have a pending request. We will notify you when reviewed.",
+    "openButton": "Request a Bookstore, Author or Influencer account",
+    "errors": {
+      "tooShort": "Your message is too short."
+    }
   }
 }
