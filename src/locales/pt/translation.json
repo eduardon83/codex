@@ -16,7 +16,7 @@
   },
   "listas": {
     "planosHelp": "Aqui podes ver os teus planos de leitura, criar um novo à medida das tuas ambições de leitura ou seguir um plano recomendado pelo Professor! Podes também exportar ou importar um plano. Atenção, só podes ter um plano de cada vez!",
-    "listasHelp": "Importa listas de leitura recomendadas como o Plano Nacional de Leitura ou cria as tuas próprias listas de leitura!"
+    "listasHelp": "Importa listas de leitura recomendadas ou cria as tuas próprias!"
   },
   "auth": {
     "signIn": "Entrar",
@@ -148,7 +148,8 @@
     "deleteAccountDeleting": "A apagar…",
     "deleteAccountPasswordError": "Palavra-passe incorrecta. Tenta novamente.",
     "deleteAccountError": "Não foi possível apagar a conta. Tenta novamente.",
-    "accountDeleted": "A tua conta foi eliminada."
+    "accountDeleted": "A tua conta foi eliminada.",
+    "proRoleSection": "Conta profissional"
   },
   "libraryCard": {
     "sectionTitle": "Cartão de Biblioteca",
@@ -603,7 +604,31 @@
     "invalidCode": "Código inválido. Tenta novamente.",
     "verify": "Verificar",
     "setupFailed": "Não foi possível configurar 2FA",
-    "qrAlt": "QR Code para configurar 2FA"
+    "qrAlt": "QR Code para configurar 2FA",
+    "roleRequests": {
+      "title": "Pedidos de conta",
+      "subtitle": "Aprovar ou rejeitar pedidos de Livraria, Autor e Influencer.",
+      "user": "Utilizador",
+      "requestedRole": "Papel pedido",
+      "message": "Mensagem",
+      "status": "Estado",
+      "date": "Data",
+      "empty": "Sem pedidos para mostrar.",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "approved": "Pedido aprovado.",
+      "rejected": "Pedido rejeitado.",
+      "approveTitle": "Aprovar pedido",
+      "rejectTitle": "Rejeitar pedido",
+      "notePlaceholder": "Nota interna (opcional)",
+      "filter": {
+        "pending": "Pendentes",
+        "approved": "Aprovados",
+        "rejected": "Rejeitados",
+        "all": "Todos"
+      }
+    },
+    "system": "Sistema"
   },
   "search": {
     "title": "Procurar",
@@ -627,7 +652,7 @@
     "readingLists": {
       "empty": "Ainda não há listas de leitura publicadas para ti.",
       "official": "Oficial",
-      "creatorFallback": "Plano Nacional de Leitura",
+      "creatorFallback": "Lista oficial",
       "bookCount": "{{count}} livros",
       "viewList": "Ver lista",
       "subscribe": "Subscrever",
@@ -707,5 +732,30 @@
   },
   "help": {
     "button": "Ajuda"
+  },
+  "roleRequest": {
+    "title": "Pedir conta profissional",
+    "subtitle": "Diz-nos o que fazes — vamos rever e responder em alguns dias.",
+    "bookstore": {
+      "title": "Livraria",
+      "desc": "Sou livraria independente ou cadeia."
+    },
+    "author": {
+      "title": "Autor",
+      "desc": "Sou escritor publicado."
+    },
+    "influencer": {
+      "title": "Influencer",
+      "desc": "Crio conteúdo sobre livros."
+    },
+    "messageLabel": "Conta-nos um pouco",
+    "messagePlaceholder": "Quem és, onde te encontramos online, porque é que faz sentido…",
+    "submit": "Enviar pedido",
+    "success": "Pedido enviado. Vamos rever em breve.",
+    "pendingNotice": "Já tens um pedido pendente. Avisamos-te quando for revisto.",
+    "openButton": "Pedir conta de Livraria, Autor ou Influencer",
+    "errors": {
+      "tooShort": "A mensagem é demasiado curta."
+    }
   }
 }

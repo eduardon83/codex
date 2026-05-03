@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
+import RoleRequestModal from '@/components/RoleRequestModal';
 import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
@@ -44,6 +45,7 @@ export default function ProfileScreen() {
   const [bookCount, setBookCount] = useState(0);
   const [libraryCount, setLibraryCount] = useState(0);
   const [showAbout, setShowAbout] = useState(false);
+  const [showRoleRequest, setShowRoleRequest] = useState(false);
   const [showReadingHistory, setShowReadingHistory] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   
@@ -350,12 +352,21 @@ export default function ProfileScreen() {
         </div>
       </div>
 
+      <div className="mt-8 border-t border-border pt-5 space-y-2">
+        <p className="text-sm text-muted-foreground mb-3">{t('profile.proRoleSection', 'Conta profissional')}</p>
+        <Button variant="outline" className="w-full justify-start" onClick={() => setShowRoleRequest(true)}>
+          {t('roleRequest.openButton', 'Pedir conta de Livraria, Autor ou Influencer')}
+        </Button>
+      </div>
+
       <div className="mt-8 border-t border-border pt-5">
         <p className="text-sm text-muted-foreground mb-3">{t('about.title')}</p>
         <Button variant="outline" className="w-full justify-start" onClick={() => setShowAbout(true)}>
           {t('about.title')}
         </Button>
       </div>
+
+      <RoleRequestModal open={showRoleRequest} onOpenChange={setShowRoleRequest} />
 
       <div className="mt-8 border-t border-border pt-5">
         <button

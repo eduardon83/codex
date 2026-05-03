@@ -148,7 +148,8 @@
     "deleteAccountDeleting": "Suppression…",
     "deleteAccountPasswordError": "Mot de passe incorrect. Réessayez.",
     "deleteAccountError": "Impossible de supprimer le compte. Réessayez.",
-    "accountDeleted": "Votre compte a été supprimé."
+    "accountDeleted": "Votre compte a été supprimé.",
+    "proRoleSection": "Compte professionnel"
   },
   "libraryCard": {
     "sectionTitle": "Carte de Bibliothèque",
@@ -603,7 +604,31 @@
     "invalidCode": "Code invalide. Réessayez.",
     "verify": "Vérifier",
     "setupFailed": "Impossible de configurer 2FA",
-    "qrAlt": "QR Code pour configurer 2FA"
+    "qrAlt": "QR Code pour configurer 2FA",
+    "roleRequests": {
+      "title": "Demandes de compte",
+      "subtitle": "Approuver ou rejeter les demandes Librairie, Auteur et Influenceur.",
+      "user": "Utilisateur",
+      "requestedRole": "Rôle demandé",
+      "message": "Message",
+      "status": "Statut",
+      "date": "Date",
+      "empty": "Aucune demande.",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "approved": "Demande approuvée.",
+      "rejected": "Demande rejetée.",
+      "approveTitle": "Approuver la demande",
+      "rejectTitle": "Rejeter la demande",
+      "notePlaceholder": "Note interne (facultatif)",
+      "filter": {
+        "pending": "En attente",
+        "approved": "Approuvées",
+        "rejected": "Rejetées",
+        "all": "Toutes"
+      }
+    },
+    "system": "Système"
   },
   "search": {
     "title": "Rechercher",
@@ -707,5 +732,30 @@
   },
   "help": {
     "button": "Aide"
+  },
+  "roleRequest": {
+    "title": "Demander un compte professionnel",
+    "subtitle": "Dites-nous ce que vous faites — nous répondons sous quelques jours.",
+    "bookstore": {
+      "title": "Librairie",
+      "desc": "Je tiens une librairie indépendante ou de chaîne."
+    },
+    "author": {
+      "title": "Auteur",
+      "desc": "Je suis écrivain publié."
+    },
+    "influencer": {
+      "title": "Influenceur",
+      "desc": "Je crée du contenu sur les livres."
+    },
+    "messageLabel": "Dites-nous un mot",
+    "messagePlaceholder": "Qui vous êtes, où vous trouver, pourquoi cela correspond…",
+    "submit": "Envoyer la demande",
+    "success": "Demande envoyée. Nous la reverrons bientôt.",
+    "pendingNotice": "Vous avez déjà une demande en attente. Nous vous préviendrons.",
+    "openButton": "Demander un compte Librairie, Auteur ou Influenceur",
+    "errors": {
+      "tooShort": "Votre message est trop court."
+    }
   }
 }

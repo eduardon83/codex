@@ -1761,6 +1761,9 @@ export type Database = {
         | "school_admin"
         | "global_admin"
         | "reader"
+        | "bookstore"
+        | "author"
+        | "influencer"
       event_approval_status: "pending" | "approved" | "rejected"
       event_media_type: "banner" | "image" | "attachment"
       event_registration_status: "confirmed" | "waitlisted" | "cancelled"
@@ -1926,6 +1929,9 @@ export const Constants = {
         "school_admin",
         "global_admin",
         "reader",
+        "bookstore",
+        "author",
+        "influencer",
       ],
       event_approval_status: ["pending", "approved", "rejected"],
       event_media_type: ["banner", "image", "attachment"],
