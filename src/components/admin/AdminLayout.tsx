@@ -1,19 +1,18 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database, School, CalendarDays, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, Download, ScrollText, ArrowLeft, FileText, Database, Settings, UserCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { path: '/admin', labelKey: 'admin.dashboard', icon: LayoutDashboard, exact: true },
   { path: '/admin/users', labelKey: 'admin.users', icon: Users },
+  { path: '/admin/role-requests', labelKey: 'admin.roleRequests.title', icon: UserCheck },
   { path: '/admin/content', labelKey: 'admin.content', icon: FileText },
-  { path: '/admin/schools', labelKey: 'admin.schools', icon: School },
-  { path: '/admin/events', labelKey: 'admin.events', icon: CalendarDays },
   { path: '/admin/backups', labelKey: 'admin.backups', icon: Database },
   { path: '/admin/export', labelKey: 'admin.export', icon: Download },
   { path: '/admin/audit', labelKey: 'admin.auditLog', icon: ScrollText },
-  { path: '/admin/system', labelKey: 'Sistema', icon: Settings },
+  { path: '/admin/system', labelKey: 'admin.system', icon: Settings },
 ];
 
 interface Props {

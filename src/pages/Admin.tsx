@@ -10,6 +10,7 @@ import AdminBackups from '@/components/admin/AdminBackups';
 import AdminSchools from '@/components/admin/AdminSchools';
 import AdminEvents from '@/components/admin/AdminEvents';
 import AdminSystem from '@/components/admin/AdminSystem';
+import AdminRoleRequests from '@/components/admin/AdminRoleRequests';
 
 export default function Admin() {
   return (
@@ -25,6 +26,7 @@ export default function Admin() {
           <Route path="export" element={<AdminExport />} />
           <Route path="audit" element={<AdminAuditLog />} />
           <Route path="system" element={<AdminSystem />} />
+          <Route path="role-requests" element={<AdminRoleRequests />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
       </AdminLayout>
