@@ -75,7 +75,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
   const [owners, setOwners] = useState<Record<string, OwnerInfo>>({});
   const [reputations, setReputations] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
-  const [requestTarget, setRequestTarget] = useState<RequestableBook | null>(null);
+  
   const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
   const [showPlanSheet, setShowPlanSheet] = useState(false);
 
@@ -122,8 +122,6 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
         map[r.owner_user_id] = { username: p?.username ?? null, first_name: p?.first_name ?? null, avatar_url: p?.avatar_url ?? null, school_name: r.school_id ? schoolMap.get(r.school_id) ?? null : null };
       });
       setOwners(map);
-      const reps = await fetchPublicReputations(ownerIds);
-      if (active) setReputations(reps);
       setLoading(false);
     }, 200);
     return () => { active = false; clearTimeout(timer); };
@@ -181,9 +179,6 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
                             <img src={resolveAvatarSrc(owner?.avatar_url)} alt="" className="h-4 w-4 rounded-full border border-border object-cover" /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}{reputations[r.owner_user_id] !== undefined ? ` · ${t('search.books.returnRate', { rate: reputations[r.owner_user_id] })}` : ''}
                           </p>
                           <div className="mt-2 flex items-center gap-2">
-                            <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => setRequestTarget({ availability_id: r.id, book_id: r.book_id, owner_user_id: r.owner_user_id, title: r.title, author: r.author, cover_url: r.cover_url, isbn: r.isbn })}>
-                              {t('search.books.requestLoan')}
-                            </Button>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <button className="h-7 w-7 grid place-items-center rounded-full border border-border text-muted-foreground">
@@ -214,7 +209,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
         </TabsContent>
       </Tabs>
 
-      <LoanRequestModal book={requestTarget} open={!!requestTarget} onOpenChange={(open) => !open && setRequestTarget(null)} />
+      
       <AddToPlanSheet
         book={planBook}
         open={showPlanSheet}
