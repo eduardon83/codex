@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, AlertTriangle, CheckSquare, Square, CalendarDays, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, ChevronRight, BookOpen, Pencil, Check, Search, SlidersHorizontal, X, CheckSquare, Square, CalendarDays, Trash2, MoreVertical } from 'lucide-react';
 import CalendarScreen from '@/components/CalendarScreen';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,7 @@ import { GENRE_OPTIONS, parseGenres } from '@/components/GenreMultiSelect';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
 import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
 import HelpButton from '@/components/tutorial/HelpButton';
-import LibraryCardExpiryBanner from '@/components/LibraryCardExpiryBanner';
+
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
@@ -48,19 +48,6 @@ interface Book {
   format: string | null;
   created_at: string;
   publish_date: string | null;
-  is_borrowed: boolean;
-  return_by_date: string | null;
-  borrow_notifications_enabled: boolean;
-}
-
-interface Loan {
-  id: string;
-  borrower_name: string | null;
-  is_active: boolean;
-  book_id: string;
-  loan_due_date: string | null;
-  loan_notifications_enabled: boolean;
-  books: { title: string; author: string | null; cover_url: string | null } | null;
 }
 
 interface LibraryScreenProps {
