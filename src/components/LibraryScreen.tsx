@@ -397,50 +397,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
         </div>
       )}
 
-      {/* Library card expiry banner */}
-      <LibraryCardExpiryBanner onGoToProfile={onGoToProfile} />
-
-      {/* Loan notification banner */}
-      {loanBannerInfo && (
-        <div className={`mb-4 flex items-center gap-2 px-3 py-2.5 rounded text-sm ${
-          loanBannerInfo.type === 'overdue'
-            ? 'bg-destructive/10 text-destructive border border-destructive/20'
-            : 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border border-yellow-500/20'
-        }`}>
-          <AlertTriangle size={16} className="flex-shrink-0" />
-          <span className="flex-1">
-            {loanBannerInfo.type === 'overdue'
-              ? (loanBannerInfo.count === 1
-                  ? t('library.overdueOne')
-                  : t('library.overdueMany', { count: loanBannerInfo.count }))
-              : t('library.returningSoon')
-            }
-          </span>
-          <button onClick={() => setDismissedBanner(true)} className="hover:opacity-70">
-            <X size={14} />
-          </button>
-        </div>
-      )}
-
-      {/* Borrow notification banner */}
-      {borrowBannerInfo && (
-        <div className={`mb-4 flex items-center gap-2 px-3 py-2.5 rounded text-sm ${
-          borrowBannerInfo.type === 'overdue'
-            ? 'bg-destructive/10 text-destructive border border-destructive/20'
-            : 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border border-yellow-500/20'
-        }`}>
-          <AlertTriangle size={16} className="flex-shrink-0" />
-          <span className="flex-1">
-            {borrowBannerInfo.type === 'overdue'
-              ? t('library.borrowOverdue')
-              : t('library.borrowReturnSoon')
-            }
-          </span>
-          <button onClick={() => setDismissedBorrowBanner(true)} className="hover:opacity-70">
-            <X size={14} />
-          </button>
-        </div>
-      )}
 
       {books.length > 0 && (
         <div className="mb-4">
@@ -605,16 +561,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <p className="text-sm text-foreground truncate">{book.title}</p>
-                  {onLoanBookIds.has(book.id) && (
-                    <Badge variant="secondary" className="text-[9px] px-1.5 py-0 flex-shrink-0">
-                      {t('library.onLoan')}
-                    </Badge>
-                  )}
-                  {book.is_borrowed && (
-                    <Badge className="text-[9px] px-1.5 py-0 flex-shrink-0 bg-emerald-600/20 text-emerald-700 dark:text-emerald-400 border-emerald-600/30">
-                      {t('library.borrowed')}
-                    </Badge>
-                  )}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{book.author || t('library.unknownAuthor')}</p>
               </div>
@@ -638,32 +584,6 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
         </div>
       )}
 
-      {/* On loan to others */}
-      {loansToOthers.length > 0 && (
-        <div className="mt-8">
-          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.onLoanToOthers')}</h2>
-          {loansToOthers.map(loan => (
-            <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
-              <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
-              <span className="text-foreground">{loan.books?.title}</span>
-              <span className="text-muted-foreground ml-auto text-xs">→ {loan.borrower_name}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* On loan from others */}
-      {loansFromOthers.length > 0 && (
-        <div className="mt-6">
-          <h2 className="font-serif text-lg text-foreground mb-3 border-b border-border pb-2">{t('library.borrowedFromOthers')}</h2>
-          {loansFromOthers.map(loan => (
-            <div key={loan.id} className="flex items-center gap-3 py-2 text-sm">
-              <BookOpen size={14} className="text-muted-foreground" strokeWidth={1} />
-              <span className="text-foreground">{loan.books?.title}</span>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* FABs or Selection toolbar */}
       {selectMode ? (
