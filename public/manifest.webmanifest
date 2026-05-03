@@ -1,7 +1,7 @@
 {
-  "name": "Folium",
-  "short_name": "Folium",
-  "description": "Folium — the student edition of Bibliotheca. Catalogue your books, leaf by leaf.",
+  "name": "Codex",
+  "short_name": "Codex",
+  "description": "Codex — a tua biblioteca pessoal. Catálogo, listas e descoberta para leitores.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FAFAF8",
