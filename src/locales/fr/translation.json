@@ -676,7 +676,7 @@
     "authorize": "Autoriser",
     "successTitle": "Compte autorisé",
     "successBody": "Merci ! Le compte de {{name}} est maintenant actif.",
-    "invalid": "Ce lien n’est plus valide ou a expiré. Si vous avez besoin d’aide, contactez folium@kendirstudios.pt"
+    "invalid": "Ce lien n’est plus valide ou a expiré. Si vous avez besoin d’aide, contactez codex@kendirstudios.pt"
   },
   "genres": {
     "Academic": "Académique",

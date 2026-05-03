@@ -12,7 +12,7 @@ export default function AdminSystem() {
     try {
       const { data, error } = await supabase.functions.invoke('send-notification-email', {
         body: {
-          to: 'folium@kendirstudios.pt',
+          to: 'codex@kendirstudios.pt',
           subject: '[Codex] Teste de notificação',
           body_html: 'Este é um email de teste do sistema de notificações do Codex. Se estás a ler isto, está tudo a funcionar.',
           action_label: 'Abrir backoffice',
@@ -21,7 +21,7 @@ export default function AdminSystem() {
       });
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
-      toast.success('Email de teste enviado', { description: 'Verifica a caixa de entrada de folium@kendirstudios.pt.' });
+      toast.success('Email de teste enviado', { description: 'Verifica a caixa de entrada de codex@kendirstudios.pt.' });
     } catch (err: any) {
       toast.error('Falhou o envio', { description: err.message || 'Erro desconhecido' });
     } finally {
@@ -43,7 +43,7 @@ export default function AdminSystem() {
           Notificações por email
         </h2>
         <p className="text-xs text-muted-foreground font-['Josefin_Sans'] mb-4">
-          Envia um email de teste para folium@kendirstudios.pt para verificar que o sistema de notificações está operacional.
+          Envia um email de teste para codex@kendirstudios.pt para verificar que o sistema de notificações está operacional.
         </p>
         <Button onClick={sendTest} disabled={loading} variant="outline">
           <Mail className="w-4 h-4 mr-2" />
