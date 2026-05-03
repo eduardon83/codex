@@ -33,8 +33,10 @@ import PendingRequestsSection from '@/components/profile/PendingRequestsSection'
 import ActiveLoansSection from '@/components/profile/ActiveLoansSection';
 import HelpButton from '@/components/tutorial/HelpButton';
 
-import AvatarPickerDialog from '@/components/AvatarPickerDialog';
-import { resolveAvatarSrc, getAvatarById, AvatarId } from '@/lib/avatars';
+import UserAvatar from '@/components/UserAvatar';
+import { uploadFileToStorage } from '@/lib/storage';
+import { useRef } from 'react';
+import { Upload, Trash2 } from 'lucide-react';
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
