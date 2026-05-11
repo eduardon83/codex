@@ -103,7 +103,11 @@
     "termsIntro": "Antes de continuar, lee y acepta los documentos legales de Codex.",
     "acceptTerms": "He leído y acepto los Términos y Condiciones de Uso",
     "acceptPrivacyPrefix": "He leído y acepto la",
-    "privacyPolicy": "Política de Privacidad"
+    "privacyPolicy": "Política de Privacidad",
+    "country": "País",
+    "birthYear": "Año de nacimiento",
+    "selectYear": "Elige un año",
+    "subtitle": "Cuéntanos un poco sobre ti"
   },
   "profile": {
     "title": "Perfil",
