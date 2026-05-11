@@ -678,16 +678,22 @@
       "ariaLabel": "Pesquisar listas e planos",
       "placeholder": "Nome da lista ou plano…",
       "empty": "Nenhuma lista ou plano público disponível ainda.",
-      "filter": { "lists": "Listas", "plans": "Planos" },
-      "role": { "bookstore": "Livraria", "author": "Autor", "influencer": "Influencer" },
+      "filter": {
+        "lists": "Listas",
+        "plans": "Planos"
+      },
+      "role": {
+        "bookstore": "Livraria",
+        "author": "Autor",
+        "influencer": "Influencer"
+      },
       "bookCount": "{{count}} livros",
       "itemCount": "{{count}} itens",
       "view": "Ver",
       "subscribe": "Subscrever",
       "subscribed": "Subscrito",
       "subscribeError": "Não foi possível subscrever.",
-      "planAdded": "Plano adicionado aos teus planos.",
-      "subscribed": "Subscrito"
+      "planAdded": "Plano adicionado aos teus planos."
     }
   },
   "legal": {
@@ -788,5 +794,41 @@
     "errors": {
       "tooShort": "A mensagem é demasiado curta."
     }
+  },
+  "pro": {
+    "role": {
+      "bookstore": "Livraria",
+      "author": "Autor/a",
+      "influencer": "Influencer"
+    },
+    "verified": "Verificado",
+    "section": {
+      "title": "Conteúdo público"
+    },
+    "fields": {
+      "entityName": "Nome (livraria, autor, etc.)",
+      "city": "Cidade",
+      "website": "Website (https://...)",
+      "platform": "Instagram / TikTok / YouTube"
+    },
+    "lists": {
+      "title": "Listas — tornar públicas",
+      "empty": "Ainda não tens listas. Cria uma em \"Listas\"."
+    },
+    "plans": {
+      "title": "Planos — tornar públicos",
+      "empty": "Ainda não tens planos. Cria um em \"Planos\"."
+    },
+    "publicNote": "Esta lista será visível a todos os utilizadores do Codex.",
+    "profileSaved": "Perfil profissional guardado"
+  },
+  "publicProfile": {
+    "lists": "Listas públicas",
+    "plans": "Planos públicos",
+    "events": "Próximos eventos",
+    "noLists": "Sem listas públicas ainda.",
+    "noPlans": "Sem planos públicos ainda.",
+    "noEvents": "Sem eventos agendados.",
+    "notFound": "Perfil não encontrado"
   }
 }
