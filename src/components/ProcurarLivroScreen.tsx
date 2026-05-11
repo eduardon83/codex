@@ -431,27 +431,74 @@ function ListsAndPlansTab({ userId, onGoToLists }: { userId: string | null; onGo
       .then(({ data }) => setSelectedBooks((data || []) as any));
   }, [selected]);
 
-  const subscribe = async (item: PublishedItem) => {
+  const subscribeList = async (item: PublishedItem) => {
     if (!userId) return;
-    if (item.kind === 'list') {
-      const { error } = await supabase
-        .from('reading_list_subscriptions' as any)
-        .upsert({ user_id: userId, reading_list_id: item.id }, { onConflict: 'user_id,reading_list_id' });
-      if (error) toast.error(t('search.listsPlans.subscribeError'));
-      else { toast.success(t('search.listsPlans.subscribed')); load(); }
-    } else {
-      // Plans: clone template into a personal plan
-      const { data: planRow, error: planErr } = await supabase
-        .from('reading_plans' as any)
-        .insert({ name: item.name, user_id: userId, created_by_user_id: userId, is_template: false })
-        .select('id')
-        .single();
-      if (planErr || !planRow) { toast.error(t('search.listsPlans.subscribeError')); return; }
-      const { data: srcItems } = await supabase.from('reading_plan_items' as any).select('title, author, isbn, cover_url, target_month, priority').eq('plan_id', item.id);
-      const toInsert = ((srcItems || []) as any[]).map((it) => ({ ...it, plan_id: (planRow as any).id }));
-      if (toInsert.length) await supabase.from('reading_plan_items' as any).insert(toInsert);
-      toast.success(t('search.listsPlans.planAdded'));
+    const { error } = await supabase
+      .from('reading_list_subscriptions' as any)
+      .upsert({ user_id: userId, reading_list_id: item.id }, { onConflict: 'user_id,reading_list_id' });
+    if (error) { toast.error(t('search.listsPlans.subscribeError')); return; }
+    toast.success(t('search.listsPlans.subscribed'));
+    load();
+  };
+
+  const unsubscribeList = async (item: PublishedItem) => {
+    if (!userId) return;
+    const { error } = await supabase
+      .from('reading_list_subscriptions' as any)
+      .delete()
+      .eq('user_id', userId)
+      .eq('reading_list_id', item.id);
+    if (error) { toast.error(t('search.listsPlans.subscribeError')); return; }
+    toast.success(t('search.listsPlans.unsubscribed'));
+    setUnsubscribeTarget(null);
+    load();
+  };
+
+  const importPlanFromTemplate = async (item: PublishedItem) => {
+    if (!userId) return;
+    setBusy(true);
+    const { data: planRow, error: planErr } = await supabase
+      .from('reading_plans' as any)
+      .insert({ name: item.name, user_id: userId, created_by_user_id: userId, is_template: false, status: 'active', source_template_id: item.id })
+      .select('id')
+      .single();
+    if (planErr || !planRow) { setBusy(false); toast.error(t('search.listsPlans.subscribeError')); return; }
+    const { data: srcItems } = await supabase
+      .from('reading_plan_items' as any)
+      .select('title, author, isbn, cover_url, target_month, priority')
+      .eq('plan_id', item.id);
+    const toInsert = ((srcItems || []) as any[]).map((it) => ({ ...it, plan_id: (planRow as any).id, status: 'planned' }));
+    if (toInsert.length) await supabase.from('reading_plan_items' as any).insert(toInsert);
+    setBusy(false);
+    toast.success(t('search.listsPlans.planAdded'));
+    load();
+    onGoToLists?.('planos');
+  };
+
+  const subscribePlan = async (item: PublishedItem) => {
+    if (!userId) return;
+    const { data: active } = await supabase
+      .from('reading_plans' as any)
+      .select('id, name')
+      .eq('user_id', userId)
+      .eq('is_template', false)
+      .eq('status', 'active')
+      .maybeSingle();
+    if (active) {
+      setPlanReplaceTarget({ item, activePlan: active as any });
+      return;
     }
+    await importPlanFromTemplate(item);
+  };
+
+  const replaceActivePlanAndImport = async () => {
+    if (!planReplaceTarget || !userId) return;
+    setBusy(true);
+    await supabase.from('reading_plans' as any).update({ status: 'archived' }).eq('id', planReplaceTarget.activePlan.id);
+    const target = planReplaceTarget.item;
+    setPlanReplaceTarget(null);
+    await importPlanFromTemplate(target);
+    setBusy(false);
   };
 
   if (selected && selected.kind === 'list') {
