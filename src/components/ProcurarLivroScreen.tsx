@@ -298,7 +298,7 @@ function roleBadgeLabel(role: string | null, t: (k: string) => string): string |
   return null;
 }
 
-function ListsAndPlansTab({ userId }: { userId: string | null }) {
+function ListsAndPlansTab({ userId, onGoToLists }: { userId: string | null; onGoToLists?: (sub?: 'planos' | 'listas') => void }) {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<ListsPlansFilter>('lists');
   const [query, setQuery] = useState('');
@@ -306,6 +306,9 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<PublishedItem | null>(null);
   const [selectedBooks, setSelectedBooks] = useState<{ id: string; title: string; author: string | null; cover_url: string | null }[]>([]);
+  const [unsubscribeTarget, setUnsubscribeTarget] = useState<PublishedItem | null>(null);
+  const [planReplaceTarget, setPlanReplaceTarget] = useState<{ item: PublishedItem; activePlan: { id: string; name: string } } | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -363,7 +366,10 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
       }
 
       collected = await Promise.all(rows.map(async (row) => {
-        const { count } = await supabase.from('reading_list_books').select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id);
+        const [{ count: bookCount }, { count: subCount }] = await Promise.all([
+          supabase.from('reading_list_books').select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id),
+          supabase.from('reading_list_subscriptions' as any).select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id),
+        ]);
         return {
           kind: 'list' as const,
           id: row.id,
@@ -371,7 +377,8 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
           user_id: row.user_id,
           creator_username: usernameByUser.get(row.user_id) ?? null,
           creator_role: roleByUser.get(row.user_id) ?? null,
-          item_count: count || 0,
+          item_count: bookCount || 0,
+          subscriber_count: subCount || 0,
           subscribed: subSet.has(row.id),
         };
       }));
@@ -390,7 +397,10 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
       const rows = (data || []) as any[];
 
       collected = await Promise.all(rows.map(async (row) => {
-        const { count } = await supabase.from('reading_plan_items' as any).select('id', { count: 'exact', head: true }).eq('plan_id', row.id);
+        const [{ count: itemCount }, { count: subCount }] = await Promise.all([
+          supabase.from('reading_plan_items' as any).select('id', { count: 'exact', head: true }).eq('plan_id', row.id),
+          supabase.from('reading_plans' as any).select('id', { count: 'exact', head: true }).eq('source_template_id', row.id),
+        ]);
         return {
           kind: 'plan' as const,
           id: row.id,
@@ -398,7 +408,8 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
           user_id: row.created_by_user_id,
           creator_username: usernameByUser.get(row.created_by_user_id) ?? null,
           creator_role: roleByUser.get(row.created_by_user_id) ?? null,
-          item_count: count || 0,
+          item_count: itemCount || 0,
+          subscriber_count: subCount || 0,
           subscribed: false,
         };
       }));
