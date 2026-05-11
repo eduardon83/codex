@@ -567,9 +567,14 @@ function ListsAndPlansTab({ userId, onGoToLists }: { userId: string | null; onGo
                         {roleLabel && <Badge variant="outline" className="text-[10px] py-0 h-5">{roleLabel}</Badge>}
                       </p>
                     </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {item.kind === 'list' ? t('search.listsPlans.bookCount', { count: item.item_count }) : t('search.listsPlans.itemCount', { count: item.item_count })}
-                    </span>
+                    <div className="text-right space-y-0.5 whitespace-nowrap">
+                      <p className="text-xs text-muted-foreground">
+                        {item.kind === 'list' ? t('search.listsPlans.bookCount', { count: item.item_count }) : t('search.listsPlans.itemCount', { count: item.item_count })}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground inline-flex items-center gap-1 justify-end">
+                        <Users size={11} /> {t('search.listsPlans.subscriberCount', { count: item.subscriber_count })}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     {item.kind === 'list' && (
@@ -579,8 +584,15 @@ function ListsAndPlansTab({ userId, onGoToLists }: { userId: string | null; onGo
                       variant={item.subscribed ? 'secondary' : 'default'}
                       size="sm"
                       className="h-8 text-xs gap-1"
-                      onClick={() => subscribe(item)}
-                      disabled={item.subscribed}
+                      onClick={() => {
+                        if (item.kind === 'list') {
+                          if (item.subscribed) setUnsubscribeTarget(item);
+                          else subscribeList(item);
+                        } else {
+                          subscribePlan(item);
+                        }
+                      }}
+                      disabled={busy}
                     >
                       {item.subscribed ? <Heart size={13} /> : <BookmarkPlus size={13} />}
                       {item.subscribed ? t('search.listsPlans.subscribed') : t('search.listsPlans.subscribe')}
@@ -591,6 +603,40 @@ function ListsAndPlansTab({ userId, onGoToLists }: { userId: string | null; onGo
             })}
           </div>
         )}
+
+      <AlertDialog open={!!unsubscribeTarget} onOpenChange={(o) => !o && setUnsubscribeTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('search.listsPlans.unsubscribeTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('search.listsPlans.unsubscribeBody', { name: unsubscribeTarget?.name ?? '' })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel', 'Cancelar')}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => unsubscribeTarget && unsubscribeList(unsubscribeTarget)}>
+              {t('search.listsPlans.unsubscribeConfirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!planReplaceTarget} onOpenChange={(o) => !o && setPlanReplaceTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('search.listsPlans.planReplaceTitle', { name: planReplaceTarget?.activePlan.name ?? '' })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t('search.listsPlans.planReplaceBody')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel', 'Cancelar')}</AlertDialogCancel>
+            <AlertDialogAction onClick={replaceActivePlanAndImport} disabled={busy}>
+              {t('search.listsPlans.planReplaceConfirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
