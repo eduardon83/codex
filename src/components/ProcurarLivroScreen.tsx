@@ -6,7 +6,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, Library as LibraryIcon } from 'lucide-react';
+import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, Library as LibraryIcon, Users } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import HelpButton from '@/components/tutorial/HelpButton';
 import OwlLoader from '@/components/OwlLoader';
 import { resolveAvatarSrc } from '@/lib/avatars';
@@ -34,6 +35,7 @@ interface PublishedItem {
   creator_username: string | null;
   creator_role: string | null; // 'bookstore' | 'author' | 'influencer' | other
   item_count: number;
+  subscriber_count: number;
   subscribed: boolean;
 }
 interface OSMLibrary { id: number; name: string; address: string | null; distance: number; openingHours: string | null; website: string | null; }
@@ -41,6 +43,7 @@ interface OSMLibrary { id: number; name: string; address: string | null; distanc
 interface Props {
   onGoToProfile?: () => void;
   onOpenLibrary?: (lib: { libraryId: string; libraryName: string; ownerUserId: string; ownerUsername: string | null }) => void;
+  onGoToLists?: (sub?: 'planos' | 'listas') => void;
 }
 
 const TAB_STORAGE_KEY = 'codex_procurar_tab';
@@ -53,7 +56,7 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Props) {
+export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary, onGoToLists }: Props) {
   const { t } = useTranslation();
   const { user, profile } = useAuth();
 
@@ -88,7 +91,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
         </TabsContent>
 
         <TabsContent value="listsPlans" className="space-y-4 mt-4">
-          <ListsAndPlansTab userId={user?.id ?? null} />
+          <ListsAndPlansTab userId={user?.id ?? null} onGoToLists={onGoToLists} />
         </TabsContent>
 
         <TabsContent value="publicLibraries" className="mt-4">
