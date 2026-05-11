@@ -1363,6 +1363,7 @@ export type Database = {
           is_template: boolean
           name: string
           scope: Database["public"]["Enums"]["reading_plan_scope"] | null
+          source_template_id: string | null
           started_at: string | null
           status: Database["public"]["Enums"]["reading_plan_status"]
           updated_at: string
@@ -1379,6 +1380,7 @@ export type Database = {
           is_template?: boolean
           name: string
           scope?: Database["public"]["Enums"]["reading_plan_scope"] | null
+          source_template_id?: string | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["reading_plan_status"]
           updated_at?: string
@@ -1395,12 +1397,21 @@ export type Database = {
           is_template?: boolean
           name?: string
           scope?: Database["public"]["Enums"]["reading_plan_scope"] | null
+          source_template_id?: string | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["reading_plan_status"]
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reading_plans_source_template_id_fkey"
+            columns: ["source_template_id"]
+            isOneToOne: false
+            referencedRelation: "reading_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       role_requests: {
         Row: {
