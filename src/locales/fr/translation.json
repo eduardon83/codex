@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Bibliotheca",
+    "name": "Codex",
     "tagline": "Votre catalogue de livres personnel",
     "loading": "Chargement...",
     "accountSuspended": "Compte suspendu",
@@ -103,7 +103,11 @@
     "termsIntro": "Avant de continuer, lisez et acceptez les documents légaux de Codex.",
     "acceptTerms": "J’ai lu et j’accepte les Conditions d’utilisation",
     "acceptPrivacyPrefix": "J’ai lu et j’accepte la",
-    "privacyPolicy": "Politique de confidentialité"
+    "privacyPolicy": "Politique de confidentialité",
+    "country": "Pays",
+    "birthYear": "Année de naissance",
+    "selectYear": "Choisir une année",
+    "subtitle": "Dis-nous quelque chose sur toi"
   },
   "profile": {
     "title": "Profil",
@@ -285,7 +289,7 @@
     "backToIsbn": "← Retour à la recherche ISBN",
     "notFound": "Ce livre n'a pas été trouvé dans les bases de données internationales. Vous pouvez ajouter les détails manuellement — ils seront sauvegardés pour les autres utilisateurs.",
     "manualFillBanner": "Saisie manuelle · Vos données aideront d'autres utilisateurs avec cet ISBN.",
-    "communitySource": "Données contribuées par la communauté Bibliotheca.",
+    "communitySource": "Données contribuées par la communauté Codex.",
     "expandDatabase": "Vous ne trouvez pas votre livre ? Ajoutez les détails manuellement pour aider d'autres utilisateurs.",
     "titleField": "Titre *",
     "author": "Auteur(s)",
@@ -336,7 +340,7 @@
     "loanTitle": "Prêter \"{{title}}\"",
     "borrowerName": "Nom de l'emprunteur",
     "or": "ou",
-    "borrowerUsername": "@utilisateur (s'il utilise Bibliotheca)",
+    "borrowerUsername": "@utilisateur (s'il utilise Codex)",
     "confirmLoan": "Confirmer le prêt",
     "edit": "Modifier",
     "saveChanges": "Enregistrer les modifications",

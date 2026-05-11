@@ -14,7 +14,7 @@ import { Loader2, ArrowLeft, CheckCircle2, XCircle, Check, Upload, Trash2 } from
 import { toast } from 'sonner';
 import foliumLogo from '@/assets/folium-logo.svg';
 import foliumLogoGold from '@/assets/folium-logo-gold.png';
-import { applyTheme, THEMES, useTheme } from '@/hooks/useTheme';
+import { applyTheme, THEMES, useTheme, getThemeDescription } from '@/hooks/useTheme';
 import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
 import UserAvatar from '@/components/UserAvatar';
@@ -418,7 +418,7 @@ export default function ProfileSetup() {
                     {th.colors.map((c, i) => <div key={i} className="flex-1" style={{ backgroundColor: c }} />)}
                   </div>
                   <p className="text-xs text-foreground pr-6">{th.name}</p>
-                  {th.description && <p className="mt-0.5 text-[10px] leading-tight italic text-muted-foreground line-clamp-2">{th.description}</p>}
+                  {(() => { const d = getThemeDescription(th, i18n.language); return d ? <p className="mt-0.5 text-[10px] leading-tight italic text-muted-foreground line-clamp-2">{d}</p> : null; })()}
                 </button>
               );
             })}

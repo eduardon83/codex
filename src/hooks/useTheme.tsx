@@ -7,8 +7,19 @@ export interface ThemeOption {
   name: string;
   tree: 'claro' | 'olmo' | 'carvalho' | 'betula' | 'oliveira';
   description?: string;
+  description_en?: string;
+  description_es?: string;
+  description_fr?: string;
   // [deepest, deep, accent, highlight]
   colors: [string, string, string, string];
+}
+
+export function getThemeDescription(theme: ThemeOption, language?: string): string {
+  const lang = (language || 'pt').slice(0, 2).toLowerCase();
+  if (lang === 'en' && theme.description_en) return theme.description_en;
+  if (lang === 'es' && theme.description_es) return theme.description_es;
+  if (lang === 'fr' && theme.description_fr) return theme.description_fr;
+  return theme.description ?? '';
 }
 
 /* ==========================================================
@@ -21,24 +32,24 @@ export const THEMES: ThemeOption[] = [
   { id: 'claro', name: 'Claro', tree: 'claro', colors: ['#FAFAF8', '#F0EDE8', '#6B8E7F', '#2C2A26'] },
 
   // Olmo · scholarly, tall — ink skies + warm gold
-  { id: 'idanha',         name: 'Idanha-a-Velha',  tree: 'olmo',     description: 'Vila romana com 2000 anos. Ruínas, oliveiras e uma catedral visigótica.', colors: ['#0B2545', '#1B3A6B', '#4A90C7', '#FFD166'] },
-  { id: 'marialva',       name: 'Marialva',        tree: 'olmo',     description: 'Aldeia em ruínas sobre o vale do Côa. Lenda, silêncio e vinhas.', colors: ['#1A2E2A', '#2A4742', '#6B8E7F', '#F5E6C0'] },
-  { id: 'piodao',         name: 'Piódão',          tree: 'olmo',     description: 'Aldeia de xisto escuro com portas azuis, encravada na Serra do Açor.', colors: ['#1A1F28', '#1F3347', '#D4A556', '#EDDAAE'] },
+  { id: 'idanha',         name: 'Idanha-a-Velha',  tree: 'olmo',     description: 'Vila romana com 2000 anos. Ruínas, oliveiras e uma catedral visigótica.', description_en: 'A 2000-year-old Roman town. Ruins, olive trees and an ancient Visigothic cathedral.', description_es: 'Ciudad romana de 2000 años. Ruinas, olivos y una catedral visigótica.', description_fr: 'Ville romaine vieille de 2000 ans. Ruines, oliviers et une cathédrale wisigothique.', colors: ['#0B2545', '#1B3A6B', '#4A90C7', '#FFD166'] },
+  { id: 'marialva',       name: 'Marialva',        tree: 'olmo',     description: 'Aldeia em ruínas sobre o vale do Côa. Lenda, silêncio e vinhas.', description_en: 'A ruined village above the Côa valley. Legend, silence and vineyards.', description_es: 'Pueblo en ruinas sobre el valle del Côa. Leyenda, silencio y viñedos.', description_fr: 'Village en ruines au-dessus de la vallée du Côa. Légende, silence et vignes.', colors: ['#1A2E2A', '#2A4742', '#6B8E7F', '#F5E6C0'] },
+  { id: 'piodao',         name: 'Piódão',          tree: 'olmo',     description: 'Aldeia de xisto escuro com portas azuis, encravada na Serra do Açor.', description_en: 'A dark schist village with blue doors, nestled in the Serra do Açor mountains.', description_es: 'Pueblo de pizarra oscura con puertas azules, enclavado en la Sierra del Açor.', description_fr: 'Village de schiste sombre aux portes bleues, niché dans la Serra do Açor.', colors: ['#1A1F28', '#1F3347', '#D4A556', '#EDDAAE'] },
 
   // Carvalho · warm, grand
-  { id: 'almeida',        name: 'Almeida',         tree: 'carvalho', description: 'Fortaleza em forma de estrela, a maior do seu tipo em Portugal.', colors: ['#1E1A2E', '#2D2445', '#7A5B9A', '#F0B27A'] },
-  { id: 'trancoso',       name: 'Trancoso',        tree: 'carvalho', description: 'Cidade-muralha onde D. Dinis se casou. Judiarias, lendas e Bandarra.', colors: ['#1A0B2E', '#3B1552', '#9B4DCA', '#FFB627'] },
-  { id: 'castelo-rod',    name: 'Castelo Rodrigo', tree: 'carvalho', description: 'Aldeia fortificada no alto, rodeada de oliveiras centenárias e amendoeiras.', colors: ['#231708', '#402811', '#D19C45', '#F5D789'] },
+  { id: 'almeida',        name: 'Almeida',         tree: 'carvalho', description: 'Fortaleza em forma de estrela, a maior do seu tipo em Portugal.', description_en: 'A star-shaped fortress, the largest of its kind in Portugal.', description_es: 'Fortaleza en forma de estrella, la mayor de su tipo en Portugal.', description_fr: 'Forteresse en étoile, la plus grande du genre au Portugal.', colors: ['#1E1A2E', '#2D2445', '#7A5B9A', '#F0B27A'] },
+  { id: 'trancoso',       name: 'Trancoso',        tree: 'carvalho', description: 'Cidade-muralha onde D. Dinis se casou. Judiarias, lendas e Bandarra.', description_en: 'A walled town where King Dinis married. Jewish quarters, legends and Bandarra.', description_es: 'Ciudad amurallada donde se casó el rey Dinis. Juderías, leyendas y Bandarra.', description_fr: "Ville fortifiée où le roi Dinis s'est marié. Quartiers juifs, légendes et Bandarra.", colors: ['#1A0B2E', '#3B1552', '#9B4DCA', '#FFB627'] },
+  { id: 'castelo-rod',    name: 'Castelo Rodrigo', tree: 'carvalho', description: 'Aldeia fortificada no alto, rodeada de oliveiras centenárias e amendoeiras.', description_en: 'A hilltop fortified village surrounded by centuries-old olive trees and almond groves.', description_es: 'Pueblo fortificado en lo alto, rodeado de olivos centenarios y almendros.', description_fr: "Village fortifié en hauteur entouré d'oliviers centenaires et d'amandiers.", colors: ['#231708', '#402811', '#D19C45', '#F5D789'] },
 
   // Bétula · delicate, light
-  { id: 'belmonte',       name: 'Belmonte',        tree: 'betula',   description: 'Terra de Pedro Álvares Cabral e de uma antiga comunidade judaica.', colors: ['#2B1D24', '#4A2F38', '#C98A82', '#F4DFC5'] },
-  { id: 'monsanto',       name: 'Monsanto',        tree: 'betula',   description: 'Casas construídas entre e sob enormes rochedos e um castelo imponente.', colors: ['#2A1F3D', '#3E2D52', '#D66F93', '#FFC9B5'] },
-  { id: 'sortelha',       name: 'Sortelha',        tree: 'betula',   description: 'Castelo medieval perfeitamente preservado, envolto em muralha de granito.', colors: ['#1E2A22', '#2F3E33', '#B5704A', '#F0B860'] },
+  { id: 'belmonte',       name: 'Belmonte',        tree: 'betula',   description: 'Terra de Pedro Álvares Cabral e de uma antiga comunidade judaica.', description_en: 'Birthplace of Pedro Álvares Cabral and home to an ancient Jewish community.', description_es: 'Tierra de Pedro Álvares Cabral y de una antigua comunidad judía.', description_fr: "Terre de Pedro Álvares Cabral et d'une ancienne communauté juive.", colors: ['#2B1D24', '#4A2F38', '#C98A82', '#F4DFC5'] },
+  { id: 'monsanto',       name: 'Monsanto',        tree: 'betula',   description: 'Casas construídas entre e sob enormes rochedos e um castelo imponente.', description_en: 'Houses built between and beneath enormous boulders, below an imposing castle.', description_es: 'Casas construidas entre y bajo enormes rocas y un imponente castillo.', description_fr: "Maisons construites entre et sous d'énormes rochers, sous un château imposant.", colors: ['#2A1F3D', '#3E2D52', '#D66F93', '#FFC9B5'] },
+  { id: 'sortelha',       name: 'Sortelha',        tree: 'betula',   description: 'Castelo medieval perfeitamente preservado, envolto em muralha de granito.', description_en: 'A perfectly preserved medieval castle enclosed by granite walls.', description_es: 'Castillo medieval perfectamente conservado, rodeado de murallas de granito.', description_fr: 'Château médiéval parfaitement conservé, entouré de murailles en granite.', colors: ['#1E2A22', '#2F3E33', '#B5704A', '#F0B860'] },
 
   // Oliveira · poetry, elevation
-  { id: 'castelo-mendo',  name: 'Castelo Mendo',   tree: 'oliveira', description: 'Aldeia esquecida no tempo. Um javali de pedra guarda a porta principal.', colors: ['#1A2320', '#2C3830', '#8BA18B', '#E8DCC4'] },
-  { id: 'castelo-novo',   name: 'Castelo Novo',    tree: 'oliveira', description: 'Granito imponente e nascentes termais, ao pé da Serra da Gardunha.', colors: ['#1F1A15', '#3A2D20', '#BA8554', '#F1E2BC'] },
-  { id: 'linhares',       name: 'Linhares da Beira', tree: 'oliveira', description: 'Aldeia suspensa entre o céu e a Serra da Estrela. Ponto de parapente.', colors: ['#16192E', '#262B47', '#7C88B5', '#E0DCEA'] },
+  { id: 'castelo-mendo',  name: 'Castelo Mendo',   tree: 'oliveira', description: 'Aldeia esquecida no tempo. Um javali de pedra guarda a porta principal.', description_en: 'A village forgotten by time. A stone boar guards the main gate.', description_es: 'Pueblo olvidado en el tiempo. Un jabalí de piedra guarda la puerta principal.', description_fr: 'Village oublié dans le temps. Un sanglier de pierre garde la porte principale.', colors: ['#1A2320', '#2C3830', '#8BA18B', '#E8DCC4'] },
+  { id: 'castelo-novo',   name: 'Castelo Novo',    tree: 'oliveira', description: 'Granito imponente e nascentes termais, ao pé da Serra da Gardunha.', description_en: 'Imposing granite and thermal springs at the foot of the Serra da Gardunha.', description_es: 'Granito imponente y manantiales termales al pie de la Sierra de la Gardunha.', description_fr: 'Granite imposant et sources thermales au pied de la Serra da Gardunha.', colors: ['#1F1A15', '#3A2D20', '#BA8554', '#F1E2BC'] },
+  { id: 'linhares',       name: 'Linhares da Beira', tree: 'oliveira', description: 'Aldeia suspensa entre o céu e a Serra da Estrela. Ponto de parapente.', description_en: 'A village suspended between sky and the Serra da Estrela. Paragliding capital.', description_es: 'Pueblo suspendido entre el cielo y la Sierra de la Estrella. Punto de parapente.', description_fr: 'Village suspendu entre ciel et Serra da Estrela. Haut lieu du parapente.', colors: ['#16192E', '#262B47', '#7C88B5', '#E0DCEA'] },
 ];
 
 function hexToHSL(hex: string): string {
