@@ -678,8 +678,15 @@
       "ariaLabel": "Search lists and plans",
       "placeholder": "List or plan name…",
       "empty": "No public lists or plans available yet.",
-      "filter": { "lists": "Lists", "plans": "Plans" },
-      "role": { "bookstore": "Bookstore", "author": "Author", "influencer": "Influencer" },
+      "filter": {
+        "lists": "Lists",
+        "plans": "Plans"
+      },
+      "role": {
+        "bookstore": "Bookstore",
+        "author": "Author",
+        "influencer": "Influencer"
+      },
       "bookCount": "{{count}} books",
       "itemCount": "{{count}} items",
       "view": "View",
@@ -787,5 +794,41 @@
     "errors": {
       "tooShort": "Your message is too short."
     }
+  },
+  "pro": {
+    "role": {
+      "bookstore": "Bookstore",
+      "author": "Author",
+      "influencer": "Influencer"
+    },
+    "verified": "Verified",
+    "section": {
+      "title": "Public content"
+    },
+    "fields": {
+      "entityName": "Name (bookstore, author, etc.)",
+      "city": "City",
+      "website": "Website (https://...)",
+      "platform": "Instagram / TikTok / YouTube"
+    },
+    "lists": {
+      "title": "Lists — make public",
+      "empty": "No lists yet. Create one in \"Lists\"."
+    },
+    "plans": {
+      "title": "Plans — make public",
+      "empty": "No plans yet. Create one in \"Plans\"."
+    },
+    "publicNote": "This list will be visible to all Codex users.",
+    "profileSaved": "Professional profile saved"
+  },
+  "publicProfile": {
+    "lists": "Public lists",
+    "plans": "Public plans",
+    "events": "Upcoming events",
+    "noLists": "No public lists yet.",
+    "noPlans": "No public plans yet.",
+    "noEvents": "No upcoming events.",
+    "notFound": "Profile not found"
   }
 }

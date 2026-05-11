@@ -678,8 +678,15 @@
       "ariaLabel": "Buscar listas y planes",
       "placeholder": "Nombre de lista o plan…",
       "empty": "Aún no hay listas o planes públicos disponibles.",
-      "filter": { "lists": "Listas", "plans": "Planes" },
-      "role": { "bookstore": "Librería", "author": "Autor", "influencer": "Influencer" },
+      "filter": {
+        "lists": "Listas",
+        "plans": "Planes"
+      },
+      "role": {
+        "bookstore": "Librería",
+        "author": "Autor",
+        "influencer": "Influencer"
+      },
       "bookCount": "{{count}} libros",
       "itemCount": "{{count}} elementos",
       "view": "Ver",
@@ -787,5 +794,41 @@
     "errors": {
       "tooShort": "Tu mensaje es demasiado corto."
     }
+  },
+  "pro": {
+    "role": {
+      "bookstore": "Librería",
+      "author": "Autor/a",
+      "influencer": "Influencer"
+    },
+    "verified": "Verificado",
+    "section": {
+      "title": "Contenido público"
+    },
+    "fields": {
+      "entityName": "Nombre (librería, autor, etc.)",
+      "city": "Ciudad",
+      "website": "Sitio web (https://...)",
+      "platform": "Instagram / TikTok / YouTube"
+    },
+    "lists": {
+      "title": "Listas — hacer públicas",
+      "empty": "Aún no tienes listas. Crea una en \"Listas\"."
+    },
+    "plans": {
+      "title": "Planes — hacer públicos",
+      "empty": "Aún no tienes planes. Crea uno en \"Planes\"."
+    },
+    "publicNote": "Esta lista será visible para todos los usuarios de Codex.",
+    "profileSaved": "Perfil profesional guardado"
+  },
+  "publicProfile": {
+    "lists": "Listas públicas",
+    "plans": "Planes públicos",
+    "events": "Próximos eventos",
+    "noLists": "Aún sin listas públicas.",
+    "noPlans": "Aún sin planes públicos.",
+    "noEvents": "Sin eventos próximos.",
+    "notFound": "Perfil no encontrado"
   }
 }

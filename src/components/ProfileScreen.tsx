@@ -22,6 +22,7 @@ import { SUPPORTED_LANGUAGES } from '@/i18n';
 import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
 import RoleRequestModal from '@/components/RoleRequestModal';
+import ProContentSection from '@/components/profile/ProContentSection';
 import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
@@ -358,6 +359,8 @@ export default function ProfileScreen() {
           {t('roleRequest.openButton', 'Pedir conta de Livraria, Autor ou Influencer')}
         </Button>
       </div>
+
+      <ProContentSection />
 
       <div className="mt-8 border-t border-border pt-5">
         <p className="text-sm text-muted-foreground mb-3">{t('about.title')}</p>
