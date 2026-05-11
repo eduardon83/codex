@@ -156,6 +156,7 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
         <TabsContent value="books" className="space-y-4 mt-4">
           {needsSchool ? <SchoolPrompt onGoToProfile={onGoToProfile} /> : (
             <>
+              <p className="text-sm text-muted-foreground">{t('search.books.intro')}</p>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('search.books.placeholder')} aria-label={t('search.books.placeholder')} className="pl-9" />
@@ -205,7 +206,12 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
         </TabsContent>
 
         <TabsContent value="readingLists" className="mt-4">
-          {needsSchool ? <SchoolPrompt onGoToProfile={onGoToProfile} /> : <PublishedReadingListsTab userId={user?.id ?? null} />}
+          {needsSchool ? <SchoolPrompt onGoToProfile={onGoToProfile} /> : (
+            <>
+              <p className="text-sm text-muted-foreground mb-4">{t('search.readingLists.intro')}</p>
+              <PublishedReadingListsTab userId={user?.id ?? null} />
+            </>
+          )}
         </TabsContent>
       </Tabs>
 
