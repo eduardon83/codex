@@ -77,7 +77,7 @@ export default function PublicList() {
 
   useEffect(() => {
     if (library) {
-      document.title = `${library.name} · Bibliotheca`;
+      document.title = `${library.name} · Codex`;
     }
   }, [library]);
 
@@ -190,7 +190,7 @@ export default function PublicList() {
             style={{ fontFamily: "'Josefin Sans', sans-serif" }}
             className="text-xs text-neutral-400 hover:text-neutral-700 transition-colors"
           >
-            Criado com Bibliotheca
+            Criado com Codex
           </Link>
         </footer>
       </div>

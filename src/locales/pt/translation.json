@@ -1,6 +1,6 @@
 {
   "app": {
-    "name": "Bibliotheca",
+    "name": "Codex",
     "tagline": "O seu catálogo pessoal de livros",
     "loading": "A carregar...",
     "accountSuspended": "Conta suspensa",
@@ -285,7 +285,7 @@
     "backToIsbn": "← Voltar à pesquisa por ISBN",
     "notFound": "Este livro não foi encontrado nas bases de dados internacionais. Podes adicionar os dados manualmente — vão ficar guardados para outros utilizadores.",
     "manualFillBanner": "A preencher manualmente · Os teus dados vão ajudar outros utilizadores com este ISBN.",
-    "communitySource": "Dados contribuídos pela comunidade Bibliotheca.",
+    "communitySource": "Dados contribuídos pela comunidade Codex.",
     "expandDatabase": "Não encontras o teu livro? Adiciona os dados manualmente para ajudar outros utilizadores a encontrá-lo.",
     "titleField": "Título *",
     "author": "Autor(es)",
@@ -336,7 +336,7 @@
     "loanTitle": "Emprestar \"{{title}}\"",
     "borrowerName": "Nome do leitor",
     "or": "ou",
-    "borrowerUsername": "@utilizador (se usa Bibliotheca)",
+    "borrowerUsername": "@utilizador (usa Codex)",
     "confirmLoan": "Confirmar empréstimo",
     "edit": "Editar",
     "saveChanges": "Guardar alterações",

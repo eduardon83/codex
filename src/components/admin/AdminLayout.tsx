@@ -33,7 +33,7 @@ export default function AdminLayout({ children }: Props) {
       <aside className="w-60 border-r border-border bg-card flex flex-col shrink-0">
         <div className="p-6 border-b border-border">
           <h1 className="font-['Cormorant_Garamond'] text-xl font-semibold text-foreground">
-            Bibliotheca
+            Codex
           </h1>
           <p className="text-xs text-muted-foreground font-['Josefin_Sans'] uppercase tracking-wider mt-1">
             {t('admin.admin')}

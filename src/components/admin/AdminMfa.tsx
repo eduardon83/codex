@@ -34,7 +34,7 @@ export default function AdminMfa({ onVerified }: Props) {
       // Enroll new factor
       const { data: enrollData, error } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
-        friendlyName: 'Bibliotheca Admin',
+        friendlyName: 'Codex Admin',
       });
       if (error || !enrollData) {
         setError(error?.message || t('admin.setupFailed'));
