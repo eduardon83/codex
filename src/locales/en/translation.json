@@ -639,20 +639,30 @@
     "tabs": {
       "books": "Books",
       "libraries": "Libraries",
-      "readingLists": "Reading Lists"
+      "readingLists": "Reading Lists",
+      "listsPlans": "Lists & Plans",
+      "publicLibraries": "Public Libraries"
     },
     "schoolPrompt": "Set your school in your profile to see books and lists from your school and district.",
     "goToProfile": "Go to profile",
     "books": {
       "intro": "Search for books that are available for loan and contact the user.",
+      "ariaLabel": "Search available books",
       "placeholder": "Title, author or ISBN…",
-      "empty": "No books available in your district.",
+      "empty": "No books available for loan yet. Share your books to get started.",
       "userFallback": "user",
       "returnRate": "{{rate}}% on-time returns",
-      "requestLoan": "Request loan"
+      "requestLoan": "Request loan",
+      "requestSent": "Request sent.",
+      "requestError": "Could not send request."
     },
     "libraries": {
-      "libraryFallback": "Library"
+      "libraryFallback": "Library",
+      "ariaLabel": "Search public libraries",
+      "placeholder": "Library name…",
+      "empty": "No public libraries found.",
+      "bookCount": "{{count}} books",
+      "viewLibrary": "View library"
     },
     "readingLists": {
       "intro": "Here you can check the public reading lists. Click on one to subscribe and import the list into your Codex. Keep track of your favourite lists and don't lose sight of what there is to read!",
@@ -663,6 +673,20 @@
       "viewList": "View list",
       "subscribe": "Subscribe",
       "subscribed": "Subscribed"
+    },
+    "listsPlans": {
+      "ariaLabel": "Search lists and plans",
+      "placeholder": "List or plan name…",
+      "empty": "No public lists or plans available yet.",
+      "filter": { "lists": "Lists", "plans": "Plans" },
+      "role": { "bookstore": "Bookstore", "author": "Author", "influencer": "Influencer" },
+      "bookCount": "{{count}} books",
+      "itemCount": "{{count}} items",
+      "view": "View",
+      "subscribe": "Subscribe",
+      "subscribed": "Subscribed",
+      "subscribeError": "Could not subscribe.",
+      "planAdded": "Plan added to your plans."
     }
   },
   "legal": {

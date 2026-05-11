@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -6,13 +6,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, MoreVertical } from 'lucide-react';
+import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, Library as LibraryIcon } from 'lucide-react';
 import HelpButton from '@/components/tutorial/HelpButton';
 import OwlLoader from '@/components/OwlLoader';
 import { resolveAvatarSrc } from '@/lib/avatars';
-import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+
+type ProcurarTab = 'books' | 'libraries' | 'listsPlans' | 'publicLibraries';
+type ListsPlansFilter = 'lists' | 'plans';
 
 interface AvailRow {
   id: string;
@@ -22,35 +23,27 @@ interface AvailRow {
   author: string | null;
   cover_url: string | null;
   isbn: string | null;
-  district_id: string | null;
-  school_id: string | null;
 }
-
-interface OwnerInfo { username: string | null; first_name: string | null; school_name: string | null; avatar_url: string | null; }
-interface OSMLibrary { id: number; name: string; address: string | null; distance: number; openingHours: string | null; website: string | null; }
-type ProcurarTab = 'books' | 'libraries' | 'readingLists';
-
-interface PublishedReadingList {
+interface OwnerInfo { username: string | null; first_name: string | null; avatar_url: string | null; }
+interface PublicLibraryRow { id: string; name: string; user_id: string; book_count: number; owner_username: string | null; }
+interface PublishedItem {
+  kind: 'list' | 'plan';
   id: string;
   name: string;
   user_id: string;
-  creator_name: string | null;
-  creator_role: string | null;
-  education_level: string | null;
-  subject: string | null;
-  is_official: boolean;
-  book_count: number;
+  creator_username: string | null;
+  creator_role: string | null; // 'bookstore' | 'author' | 'influencer' | other
+  item_count: number;
   subscribed: boolean;
 }
-
-interface PublishedListBook { id: string; title: string; author: string | null; cover_url: string | null; }
+interface OSMLibrary { id: number; name: string; address: string | null; distance: number; openingHours: string | null; website: string | null; }
 
 interface Props {
   onGoToProfile?: () => void;
   onOpenLibrary?: (lib: { libraryId: string; libraryName: string; ownerUserId: string; ownerUsername: string | null }) => void;
 }
 
-const TAB_STORAGE_KEY = 'folium_procurar_tab';
+const TAB_STORAGE_KEY = 'codex_procurar_tab';
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
@@ -60,42 +53,71 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
+export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Props) {
   const { t } = useTranslation();
   const { user, profile } = useAuth();
-  const districtId = (profile as any)?.district_id ?? null;
-  const schoolId = (profile as any)?.school_id ?? null;
 
   const [tab, setTab] = useState<ProcurarTab>(() => {
     const saved = localStorage.getItem(TAB_STORAGE_KEY) as ProcurarTab | null;
-    return saved === 'books' || saved === 'libraries' || saved === 'readingLists' ? saved : 'books';
+    return saved === 'books' || saved === 'libraries' || saved === 'listsPlans' || saved === 'publicLibraries' ? saved : 'books';
   });
+
+  useEffect(() => { localStorage.setItem(TAB_STORAGE_KEY, tab); }, [tab]);
+
+  return (
+    <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem' }}>{t('search.title')}</h1>
+        <HelpButton screen="discover" />
+      </div>
+
+      <Tabs value={tab} onValueChange={(value) => setTab(value as ProcurarTab)}>
+        <TabsList data-tutorial="procurar-tabs" className="w-full rounded-full grid grid-cols-4 h-auto">
+          <TabsTrigger value="books" className="rounded-full text-xs px-2">{t('search.tabs.books')}</TabsTrigger>
+          <TabsTrigger value="libraries" className="rounded-full text-xs px-2">{t('search.tabs.libraries')}</TabsTrigger>
+          <TabsTrigger value="listsPlans" className="rounded-full text-xs px-2">{t('search.tabs.listsPlans')}</TabsTrigger>
+          <TabsTrigger value="publicLibraries" className="rounded-full text-xs px-2">{t('search.tabs.publicLibraries')}</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="books" className="space-y-4 mt-4">
+          <BooksTab userId={user?.id ?? null} />
+        </TabsContent>
+
+        <TabsContent value="libraries" className="space-y-4 mt-4">
+          <PublicUserLibrariesTab userId={user?.id ?? null} onOpenLibrary={onOpenLibrary} />
+        </TabsContent>
+
+        <TabsContent value="listsPlans" className="space-y-4 mt-4">
+          <ListsAndPlansTab userId={user?.id ?? null} />
+        </TabsContent>
+
+        <TabsContent value="publicLibraries" className="mt-4">
+          <PublicLibrariesTab profile={profile} onGoToProfile={onGoToProfile} />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+/* ---------------- Tab 1: Books available for loan (national) ---------------- */
+
+function BooksTab({ userId }: { userId: string | null }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<AvailRow[]>([]);
   const [owners, setOwners] = useState<Record<string, OwnerInfo>>({});
-  const [reputations, setReputations] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
-  
-  const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
-  const [showPlanSheet, setShowPlanSheet] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(TAB_STORAGE_KEY, tab);
-  }, [tab]);
-
-  useEffect(() => {
-    if (!user || !districtId || !schoolId) return;
     let active = true;
     setLoading(true);
     const timer = setTimeout(async () => {
       let q = supabase
         .from('book_availability' as any)
-        .select('id, book_id, owner_user_id, title, author, cover_url, isbn, district_id, school_id')
+        .select('id, book_id, owner_user_id, title, author, cover_url, isbn')
         .eq('is_available', true)
-        .eq('district_id', districtId)
-        .neq('owner_user_id', user.id)
-        .limit(50);
-
+        .limit(60);
+      if (userId) q = q.neq('owner_user_id', userId);
       const term = query.trim();
       if (term) q = q.or(`title.ilike.%${term}%,author.ilike.%${term}%,isbn.ilike.%${term}%`);
 
@@ -105,136 +127,414 @@ export default function ProcurarLivroScreen({ onGoToProfile }: Props) {
       setResults(rows);
 
       const ownerIds = Array.from(new Set(rows.map(r => r.owner_user_id)));
-      const schoolIds = Array.from(new Set(rows.map(r => r.school_id).filter(Boolean) as string[]));
-      const [profsRes, schoolsRes] = await Promise.all([
-        ownerIds.length ? supabase.from('public_profiles').select('user_id, username, first_name, avatar_url').in('user_id', ownerIds) : Promise.resolve({ data: [] as any[] }),
-        schoolIds.length ? supabase.from('schools').select('id, name').in('id', schoolIds) : Promise.resolve({ data: [] as any[] }),
-      ]);
-
-      const schoolMap = new Map<string, string>();
-      (schoolsRes.data || []).forEach((s: any) => schoolMap.set(s.id, s.name));
-      const profMap = new Map<string, { username: string | null; first_name: string | null; avatar_url: string | null }>();
-      (profsRes.data || []).forEach((p: any) => p.user_id && profMap.set(p.user_id, p));
-
-      const map: Record<string, OwnerInfo> = {};
-      rows.forEach((r) => {
-        const p = profMap.get(r.owner_user_id);
-        map[r.owner_user_id] = { username: p?.username ?? null, first_name: p?.first_name ?? null, avatar_url: p?.avatar_url ?? null, school_name: r.school_id ? schoolMap.get(r.school_id) ?? null : null };
-      });
-      setOwners(map);
+      if (ownerIds.length) {
+        const { data: profs } = await supabase.from('public_profiles').select('user_id, username, first_name, avatar_url').in('user_id', ownerIds);
+        const map: Record<string, OwnerInfo> = {};
+        (profs || []).forEach((p: any) => { if (p.user_id) map[p.user_id] = { username: p.username, first_name: p.first_name, avatar_url: p.avatar_url }; });
+        setOwners(map);
+      } else {
+        setOwners({});
+      }
       setLoading(false);
     }, 200);
     return () => { active = false; clearTimeout(timer); };
-  }, [user, districtId, schoolId, query]);
+  }, [userId, query]);
 
-  const needsSchool = !schoolId || !districtId;
-
-  const openAddToPlan = (book: AvailRow) => {
-    setPlanBook({ book_id: book.book_id, title: book.title, author: book.author, isbn: book.isbn, cover_url: book.cover_url });
-    setShowPlanSheet(true);
-  };
-
-  const goCreatePlan = () => {
-    localStorage.setItem('folium_listas_tab', 'planos');
-    window.dispatchEvent(new Event('folium-open-planos'));
+  const requestLoan = async (book: AvailRow) => {
+    if (!userId) return;
+    const { error } = await supabase.from('loan_requests' as any).insert({
+      requester_user_id: userId,
+      owner_user_id: book.owner_user_id,
+      book_id: book.book_id,
+      book_title: book.title,
+      book_author: book.author,
+      book_cover_url: book.cover_url,
+      book_isbn: book.isbn,
+    });
+    if (error) toast.error(t('search.books.requestError'));
+    else toast.success(t('search.books.requestSent'));
   };
 
   return (
-    <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>{t('search.title')}</h1>
-        <HelpButton screen="discover" />
+    <>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('search.books.placeholder')}
+          aria-label={t('search.books.ariaLabel')}
+          className="pl-9"
+        />
+      </div>
+      {loading ? <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+        : results.length === 0 ? <p className="text-sm text-muted-foreground text-center py-10">{t('search.books.empty')}</p>
+        : (
+          <div className="space-y-3">
+            {results.map((r) => {
+              const owner = owners[r.owner_user_id];
+              const ownerLabel = owner?.username || owner?.first_name || t('search.books.userFallback');
+              return (
+                <div key={r.id} className="flex gap-3 p-3 border border-border rounded-md bg-card">
+                  {r.cover_url
+                    ? <img src={r.cover_url} alt={r.title} style={{ width: 52, height: 72 }} className="object-cover rounded shrink-0" />
+                    : <div style={{ width: 52, height: 72 }} className="bg-secondary rounded flex items-center justify-center shrink-0"><BookOpen size={18} className="text-muted-foreground" /></div>}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground line-clamp-2">{r.title}</p>
+                    {r.author && <p className="text-xs text-muted-foreground line-clamp-1">{r.author}</p>}
+                    <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
+                      <img src={resolveAvatarSrc(owner?.avatar_url)} alt="" className="h-4 w-4 rounded-full border border-border object-cover" /> @{ownerLabel}
+                    </p>
+                    <Button size="sm" variant="outline" className="h-7 text-xs mt-2" onClick={() => requestLoan(r)}>
+                      {t('search.books.requestLoan')}
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+    </>
+  );
+}
+
+/* ---------------- Tab 2: Other users' public libraries ---------------- */
+
+function PublicUserLibrariesTab({ userId, onOpenLibrary }: { userId: string | null; onOpenLibrary?: (lib: { libraryId: string; libraryName: string; ownerUserId: string; ownerUsername: string | null }) => void }) {
+  const { t } = useTranslation();
+  const [query, setQuery] = useState('');
+  const [libs, setLibs] = useState<PublicLibraryRow[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    const timer = setTimeout(async () => {
+      let q = supabase
+        .from('libraries')
+        .select('id, name, user_id')
+        .eq('is_public', true)
+        .limit(60);
+      if (userId) q = q.neq('user_id', userId);
+      const term = query.trim();
+      if (term) q = q.ilike('name', `%${term}%`);
+      const { data } = await q;
+      if (!active) return;
+      const rows = (data || []) as { id: string; name: string; user_id: string }[];
+
+      const ownerIds = Array.from(new Set(rows.map(r => r.user_id)));
+      const profs = ownerIds.length
+        ? (await supabase.from('public_profiles').select('user_id, username').in('user_id', ownerIds)).data ?? []
+        : [];
+      const usernameMap = new Map<string, string | null>();
+      (profs as any[]).forEach((p) => usernameMap.set(p.user_id, p.username ?? null));
+
+      const enriched = await Promise.all(rows.map(async (r) => {
+        const { count } = await supabase.from('books').select('id', { count: 'exact', head: true }).eq('library_id', r.id);
+        return { id: r.id, name: r.name, user_id: r.user_id, book_count: count || 0, owner_username: usernameMap.get(r.user_id) ?? null };
+      }));
+      setLibs(enriched);
+      setLoading(false);
+    }, 200);
+    return () => { active = false; clearTimeout(timer); };
+  }, [userId, query]);
+
+  return (
+    <>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('search.libraries.placeholder')}
+          aria-label={t('search.libraries.ariaLabel')}
+          className="pl-9"
+        />
+      </div>
+      {loading ? <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+        : libs.length === 0 ? <p className="text-sm text-muted-foreground text-center py-10">{t('search.libraries.empty')}</p>
+        : (
+          <div className="space-y-3">
+            {libs.map((lib) => (
+              <div key={lib.id} className="p-3 border border-border rounded-md bg-card">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-foreground line-clamp-2 flex items-center gap-2">
+                      <LibraryIcon size={14} className="text-muted-foreground shrink-0" />{lib.name}
+                    </p>
+                    {lib.owner_username && <p className="text-xs text-muted-foreground mt-1">@{lib.owner_username}</p>}
+                  </div>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">{t('search.libraries.bookCount', { count: lib.book_count })}</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs mt-3"
+                  onClick={() => onOpenLibrary?.({ libraryId: lib.id, libraryName: lib.name, ownerUserId: lib.user_id, ownerUsername: lib.owner_username })}
+                >
+                  {t('search.libraries.viewLibrary')}
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+    </>
+  );
+}
+
+/* ---------------- Tab 3: Lists & Plans (special profiles) ---------------- */
+
+const SPECIAL_ROLES = ['bookstore', 'author', 'influencer'] as const;
+type SpecialRole = typeof SPECIAL_ROLES[number];
+
+function roleBadgeLabel(role: string | null, t: (k: string) => string): string | null {
+  if (!role) return null;
+  if (role === 'bookstore') return t('search.listsPlans.role.bookstore');
+  if (role === 'author') return t('search.listsPlans.role.author');
+  if (role === 'influencer') return t('search.listsPlans.role.influencer');
+  return null;
+}
+
+function ListsAndPlansTab({ userId }: { userId: string | null }) {
+  const { t } = useTranslation();
+  const [filter, setFilter] = useState<ListsPlansFilter>('lists');
+  const [query, setQuery] = useState('');
+  const [items, setItems] = useState<PublishedItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState<PublishedItem | null>(null);
+  const [selectedBooks, setSelectedBooks] = useState<{ id: string; title: string; author: string | null; cover_url: string | null }[]>([]);
+
+  const load = async () => {
+    setLoading(true);
+
+    // Find users with special roles
+    const { data: specialUserRows } = await supabase
+      .from('user_roles' as any)
+      .select('user_id, role')
+      .in('role', SPECIAL_ROLES as unknown as string[]);
+    const roleByUser = new Map<string, SpecialRole>();
+    ((specialUserRows || []) as any[]).forEach((r) => {
+      if (!roleByUser.has(r.user_id)) roleByUser.set(r.user_id, r.role);
+    });
+    const specialUserIds = Array.from(roleByUser.keys());
+
+    if (specialUserIds.length === 0) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
+
+    // Usernames
+    const { data: profs } = await supabase
+      .from('public_profiles')
+      .select('user_id, username')
+      .in('user_id', specialUserIds);
+    const usernameByUser = new Map<string, string | null>();
+    ((profs || []) as any[]).forEach((p) => usernameByUser.set(p.user_id, p.username ?? null));
+
+    let collected: PublishedItem[] = [];
+
+    if (filter === 'lists') {
+      let q = supabase
+        .from('reading_lists' as any)
+        .select('id, name, user_id, scope, approval_status')
+        .eq('approval_status', 'published')
+        .in('scope', ['regional', 'national', 'district'])
+        .in('user_id', specialUserIds)
+        .order('created_at', { ascending: false })
+        .limit(80);
+      const term = query.trim();
+      if (term) q = q.ilike('name', `%${term}%`);
+      const { data } = await q;
+      const rows = (data || []) as any[];
+
+      // Subscriptions
+      const subSet = new Set<string>();
+      if (userId && rows.length) {
+        const { data: subs } = await supabase
+          .from('reading_list_subscriptions' as any)
+          .select('reading_list_id')
+          .eq('user_id', userId)
+          .in('reading_list_id', rows.map(r => r.id));
+        ((subs || []) as any[]).forEach((s) => subSet.add(s.reading_list_id));
+      }
+
+      collected = await Promise.all(rows.map(async (row) => {
+        const { count } = await supabase.from('reading_list_books').select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id);
+        return {
+          kind: 'list' as const,
+          id: row.id,
+          name: row.name,
+          user_id: row.user_id,
+          creator_username: usernameByUser.get(row.user_id) ?? null,
+          creator_role: roleByUser.get(row.user_id) ?? null,
+          item_count: count || 0,
+          subscribed: subSet.has(row.id),
+        };
+      }));
+    } else {
+      let q = supabase
+        .from('reading_plans' as any)
+        .select('id, name, created_by_user_id, scope, is_template')
+        .eq('is_template', true)
+        .in('scope', ['regional', 'national'])
+        .in('created_by_user_id', specialUserIds)
+        .order('created_at', { ascending: false })
+        .limit(80);
+      const term = query.trim();
+      if (term) q = q.ilike('name', `%${term}%`);
+      const { data } = await q;
+      const rows = (data || []) as any[];
+
+      collected = await Promise.all(rows.map(async (row) => {
+        const { count } = await supabase.from('reading_plan_items' as any).select('id', { count: 'exact', head: true }).eq('plan_id', row.id);
+        return {
+          kind: 'plan' as const,
+          id: row.id,
+          name: row.name,
+          user_id: row.created_by_user_id,
+          creator_username: usernameByUser.get(row.created_by_user_id) ?? null,
+          creator_role: roleByUser.get(row.created_by_user_id) ?? null,
+          item_count: count || 0,
+          subscribed: false,
+        };
+      }));
+    }
+
+    setItems(collected);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, [filter, query, userId]);
+
+  useEffect(() => {
+    if (!selected || selected.kind !== 'list') { setSelectedBooks([]); return; }
+    supabase
+      .from('reading_list_books')
+      .select('id, title, author, cover_url')
+      .eq('reading_list_id', selected.id)
+      .order('created_at', { ascending: true })
+      .then(({ data }) => setSelectedBooks((data || []) as any));
+  }, [selected]);
+
+  const subscribe = async (item: PublishedItem) => {
+    if (!userId) return;
+    if (item.kind === 'list') {
+      const { error } = await supabase
+        .from('reading_list_subscriptions' as any)
+        .upsert({ user_id: userId, reading_list_id: item.id }, { onConflict: 'user_id,reading_list_id' });
+      if (error) toast.error(t('search.listsPlans.subscribeError'));
+      else { toast.success(t('search.listsPlans.subscribed')); load(); }
+    } else {
+      // Plans: clone template into a personal plan
+      const { data: planRow, error: planErr } = await supabase
+        .from('reading_plans' as any)
+        .insert({ name: item.name, user_id: userId, created_by_user_id: userId, is_template: false })
+        .select('id')
+        .single();
+      if (planErr || !planRow) { toast.error(t('search.listsPlans.subscribeError')); return; }
+      const { data: srcItems } = await supabase.from('reading_plan_items' as any).select('title, author, isbn, cover_url, target_month, priority').eq('plan_id', item.id);
+      const toInsert = ((srcItems || []) as any[]).map((it) => ({ ...it, plan_id: (planRow as any).id }));
+      if (toInsert.length) await supabase.from('reading_plan_items' as any).insert(toInsert);
+      toast.success(t('search.listsPlans.planAdded'));
+    }
+  };
+
+  if (selected && selected.kind === 'list') {
+    return (
+      <div className="space-y-4">
+        <Button variant="ghost" size="sm" className="gap-2 px-0" onClick={() => setSelected(null)}><ArrowLeft size={14} />{t('bookDetail.back')}</Button>
+        <div>
+          <h3 className="font-serif text-xl text-foreground">{selected.name}</h3>
+          {selected.creator_username && <p className="text-xs text-muted-foreground mt-1">@{selected.creator_username}{selected.creator_role ? ` · ${roleBadgeLabel(selected.creator_role, t)}` : ''}</p>}
+        </div>
+        {selectedBooks.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">{t('readingLists.emptyList')}</p> : (
+          <div className="space-y-3">
+            {selectedBooks.map((book) => (
+              <div key={book.id} className="flex gap-3 py-3 border-b border-border">
+                {book.cover_url ? <img src={book.cover_url} alt={book.title} className="w-11 h-16 object-cover rounded shrink-0" /> : <div className="w-11 h-16 bg-secondary rounded flex items-center justify-center shrink-0"><BookOpen size={16} className="text-muted-foreground" /></div>}
+                <div className="min-w-0"><p className="text-sm text-foreground line-clamp-2">{book.title}</p>{book.author && <p className="text-xs text-muted-foreground line-clamp-1">{book.author}</p>}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('search.listsPlans.placeholder')}
+          aria-label={t('search.listsPlans.ariaLabel')}
+          className="pl-9"
+        />
       </div>
 
-      <Tabs value={tab} onValueChange={(value) => setTab(value as ProcurarTab)}>
-        <TabsList data-tutorial="procurar-tabs" className="w-full rounded-full">
-          <TabsTrigger value="books" className="flex-1 rounded-full">{t('search.tabs.books')}</TabsTrigger>
-          <TabsTrigger value="libraries" className="flex-1 rounded-full">{t('search.tabs.libraries')}</TabsTrigger>
-          <TabsTrigger value="readingLists" className="flex-1 rounded-full">{t('search.tabs.readingLists')}</TabsTrigger>
-        </TabsList>
+      <div className="flex gap-2">
+        <button
+          onClick={() => setFilter('lists')}
+          className={`px-3 py-1 text-xs rounded-full border transition-colors ${filter === 'lists' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}
+        >
+          {t('search.listsPlans.filter.lists')}
+        </button>
+        <button
+          onClick={() => setFilter('plans')}
+          className={`px-3 py-1 text-xs rounded-full border transition-colors ${filter === 'plans' ? 'bg-foreground text-background border-foreground' : 'border-border text-muted-foreground hover:text-foreground'}`}
+        >
+          {t('search.listsPlans.filter.plans')}
+        </button>
+      </div>
 
-        <TabsContent value="books" className="space-y-4 mt-4">
-          {needsSchool ? <SchoolPrompt onGoToProfile={onGoToProfile} /> : (
-            <>
-              <p className="text-sm text-muted-foreground">{t('search.books.intro')}</p>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('search.books.placeholder')} aria-label={t('search.books.placeholder')} className="pl-9" />
-              </div>
-              {loading ? <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div> : results.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-10">{t('search.books.empty')}</p>
-              ) : (
-                <div className="space-y-3">
-                  {results.map((r) => {
-                    const owner = owners[r.owner_user_id];
-                    const ownerLabel = owner?.username || owner?.first_name || t('search.books.userFallback');
-                    return (
-                      <div key={r.id} className="flex gap-3 p-3 border border-border rounded-md bg-card">
-                        {r.cover_url ? <img src={r.cover_url} alt={r.title} className="w-14 h-20 object-cover rounded shrink-0" /> : (
-                          <div className="w-14 h-20 bg-secondary rounded flex items-center justify-center shrink-0"><BookOpen size={18} className="text-muted-foreground" /></div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground line-clamp-2">{r.title}</p>
-                          {r.author && <p className="text-xs text-muted-foreground line-clamp-1">{r.author}</p>}
-                          <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1">
-                            <img src={resolveAvatarSrc(owner?.avatar_url)} alt="" className="h-4 w-4 rounded-full border border-border object-cover" /> @{ownerLabel}{owner?.school_name ? ` · ${owner.school_name}` : ''}{reputations[r.owner_user_id] !== undefined ? ` · ${t('search.books.returnRate', { rate: reputations[r.owner_user_id] })}` : ''}
-                          </p>
-                          <div className="mt-2 flex items-center gap-2">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <button className="h-7 w-7 grid place-items-center rounded-full border border-border text-muted-foreground">
-                                  <MoreVertical size={14} />
-                                </button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => openAddToPlan(r)}>Adicionar ao plano</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+      {loading ? <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+        : items.length === 0 ? <p className="text-sm text-muted-foreground text-center py-10">{t('search.listsPlans.empty')}</p>
+        : (
+          <div className="space-y-3">
+            {items.map((item) => {
+              const roleLabel = roleBadgeLabel(item.creator_role, t);
+              return (
+                <div key={`${item.kind}-${item.id}`} className="p-3 border border-border rounded-md bg-card space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-sm font-medium text-foreground line-clamp-2">{item.name}</h3>
+                      <p className="text-xs text-muted-foreground mt-1 flex items-center gap-2 flex-wrap">
+                        {item.creator_username ? `@${item.creator_username}` : ''}
+                        {roleLabel && <Badge variant="outline" className="text-[10px] py-0 h-5">{roleLabel}</Badge>}
+                      </p>
+                    </div>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                      {item.kind === 'list' ? t('search.listsPlans.bookCount', { count: item.item_count }) : t('search.listsPlans.itemCount', { count: item.item_count })}
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    {item.kind === 'list' && (
+                      <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => setSelected(item)}>{t('search.listsPlans.view')}</Button>
+                    )}
+                    <Button
+                      variant={item.subscribed ? 'secondary' : 'default'}
+                      size="sm"
+                      className="h-8 text-xs gap-1"
+                      onClick={() => subscribe(item)}
+                      disabled={item.subscribed}
+                    >
+                      {item.subscribed ? <Heart size={13} /> : <BookmarkPlus size={13} />}
+                      {item.subscribed ? t('search.listsPlans.subscribed') : t('search.listsPlans.subscribe')}
+                    </Button>
+                  </div>
                 </div>
-              )}
-            </>
-          )}
-        </TabsContent>
-
-        <TabsContent value="libraries" className="mt-4">
-          <PublicLibrariesTab profile={profile} onGoToProfile={onGoToProfile} />
-        </TabsContent>
-
-        <TabsContent value="readingLists" className="mt-4">
-          {needsSchool ? <SchoolPrompt onGoToProfile={onGoToProfile} /> : (
-            <>
-              <p className="text-sm text-muted-foreground mb-4">{t('search.readingLists.intro')}</p>
-              <PublishedReadingListsTab userId={user?.id ?? null} />
-            </>
-          )}
-        </TabsContent>
-      </Tabs>
-
-      
-      <AddToPlanSheet
-        book={planBook}
-        open={showPlanSheet}
-        onOpenChange={setShowPlanSheet}
-        onNoActivePlan={() => toast('Não tens um plano activo.', { action: { label: 'Criar plano →', onClick: goCreatePlan } })}
-      />
-    </div>
+              );
+            })}
+          </div>
+        )}
+    </>
   );
 }
 
-function SchoolPrompt({ onGoToProfile }: { onGoToProfile?: () => void }) {
-  const { t } = useTranslation();
-  return (
-    <div className="text-center py-10 space-y-3">
-      <p className="text-sm text-muted-foreground">{t('search.schoolPrompt')}</p>
-      <Button variant="outline" onClick={onGoToProfile}>{t('search.goToProfile')}</Button>
-    </div>
-  );
-}
+/* ---------------- Tab 4: Physical public libraries (Overpass API) ---------------- */
 
 function PublicLibrariesTab({ profile, onGoToProfile }: { profile: unknown; onGoToProfile?: () => void }) {
   const { t } = useTranslation();
@@ -351,110 +651,6 @@ function PublicLibrariesTab({ profile, onGoToProfile }: { profile: unknown; onGo
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-function PublishedReadingListsTab({ userId }: { userId: string | null }) {
-  const { t } = useTranslation();
-  const [lists, setLists] = useState<PublishedReadingList[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<PublishedReadingList | null>(null);
-  const [books, setBooks] = useState<PublishedListBook[]>([]);
-
-  const loadLists = async () => {
-    if (!userId) return;
-    setLoading(true);
-    const { data } = await supabase
-      .from('reading_lists' as any)
-      .select('id, name, user_id, creator_name, creator_role, education_level, subject, is_official, created_at')
-      .eq('approval_status', 'published')
-      .order('created_at', { ascending: false });
-
-    const listRows = (data || []) as any[];
-    const subscriptionRes = await supabase.from('reading_list_subscriptions' as any).select('id, reading_list_id').eq('user_id', userId);
-    const subscribedIds = new Set(((subscriptionRes.data || []) as any[]).map((s) => s.reading_list_id));
-
-    const withCounts = await Promise.all(listRows.map(async (list) => {
-      const { count } = await supabase.from('reading_list_books').select('id', { count: 'exact', head: true }).eq('reading_list_id', list.id);
-      return { ...list, book_count: count || 0, subscribed: subscribedIds.has(list.id) } as PublishedReadingList;
-    }));
-    setLists(withCounts);
-    setLoading(false);
-  };
-
-  useEffect(() => { loadLists(); }, [userId]);
-
-  useEffect(() => {
-    if (!selected) return;
-    supabase
-      .from('reading_list_books')
-      .select('id, title, author, cover_url')
-      .eq('reading_list_id', selected.id)
-      .order('created_at', { ascending: true })
-      .then(({ data }) => setBooks((data || []) as PublishedListBook[]));
-  }, [selected]);
-
-  const subscribe = async (listId: string) => {
-    if (!userId) return;
-    await supabase.from('reading_list_subscriptions' as any).upsert({ user_id: userId, reading_list_id: listId }, { onConflict: 'user_id,reading_list_id' });
-    loadLists();
-  };
-
-  if (selected) {
-    return (
-      <div className="space-y-4">
-        <Button variant="ghost" size="sm" className="gap-2 px-0" onClick={() => setSelected(null)}><ArrowLeft size={14} />{t('bookDetail.back')}</Button>
-        <div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-serif text-xl text-foreground">{selected.name}</h3>
-            {selected.is_official && <Badge variant="outline" className="text-gold border-gold/40">{t('search.readingLists.official')}</Badge>}
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">{selected.creator_name || t('search.readingLists.creatorFallback')}</p>
-        </div>
-        {books.length === 0 ? <p className="text-sm text-muted-foreground text-center py-8">{t('readingLists.emptyList')}</p> : (
-          <div className="space-y-3">
-            {books.map((book) => (
-              <div key={book.id} className="flex gap-3 py-3 border-b border-border">
-                {book.cover_url ? <img src={book.cover_url} alt={book.title} className="w-11 h-16 object-cover rounded shrink-0" /> : <div className="w-11 h-16 bg-secondary rounded flex items-center justify-center shrink-0"><BookOpen size={16} className="text-muted-foreground" /></div>}
-                <div className="min-w-0"><p className="text-sm text-foreground line-clamp-2">{book.title}</p>{book.author && <p className="text-xs text-muted-foreground line-clamp-1">{book.author}</p>}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (loading) return <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>;
-  if (lists.length === 0) return <p className="text-sm text-muted-foreground text-center py-10">{t('search.readingLists.empty')}</p>;
-
-  return (
-    <div className="space-y-3">
-      {lists.map((list) => (
-        <div key={list.id} className="p-3 border border-border rounded-md bg-card space-y-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="text-sm font-medium text-foreground line-clamp-2">{list.name}</h3>
-                {list.is_official && <Badge variant="outline" className="text-gold border-gold/40">{t('search.readingLists.official')}</Badge>}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">{list.creator_name || t('search.readingLists.creatorFallback')}{list.creator_role ? ` · ${list.creator_role}` : ''}</p>
-            </div>
-            <span className="text-xs text-muted-foreground whitespace-nowrap">{t('search.readingLists.bookCount', { count: list.book_count })}</span>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            {list.education_level && <Badge variant="secondary">{list.education_level}</Badge>}
-            {list.subject && <Badge variant="secondary">{list.subject}</Badge>}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="h-8 text-xs" onClick={() => setSelected(list)}>{t('search.readingLists.viewList')}</Button>
-            <Button variant={list.subscribed ? 'secondary' : 'default'} size="sm" className="h-8 text-xs gap-1" onClick={() => subscribe(list.id)} disabled={list.subscribed}>
-              {list.subscribed ? <Heart size={13} /> : <BookmarkPlus size={13} />}{list.subscribed ? t('search.readingLists.subscribed') : t('search.readingLists.subscribe')}
-            </Button>
-          </div>
-        </div>
-      ))}
     </div>
   );
 }

@@ -639,20 +639,30 @@
     "tabs": {
       "books": "Livres",
       "libraries": "Bibliothèques",
-      "readingLists": "Listes de lecture"
+      "readingLists": "Listes de lecture",
+      "listsPlans": "Listes et plans",
+      "publicLibraries": "Bibliothèques publiques"
     },
     "schoolPrompt": "Définissez votre école dans le profil pour voir les livres et listes de votre école et district.",
     "goToProfile": "Aller au profil",
     "books": {
       "intro": "Recherche des livres disponibles en prêt et contacte l'utilisateur.",
+      "ariaLabel": "Rechercher des livres disponibles",
       "placeholder": "Titre, auteur ou ISBN…",
-      "empty": "Aucun livre disponible dans votre district.",
+      "empty": "Aucun livre disponible en prêt pour le moment. Partage tes livres pour commencer.",
       "userFallback": "utilisateur",
       "returnRate": "{{rate}}% de retours à temps",
-      "requestLoan": "Demander un prêt"
+      "requestLoan": "Demander un prêt",
+      "requestSent": "Demande envoyée.",
+      "requestError": "Impossible d'envoyer la demande."
     },
     "libraries": {
-      "libraryFallback": "Bibliothèque"
+      "libraryFallback": "Bibliothèque",
+      "ariaLabel": "Rechercher des bibliothèques publiques",
+      "placeholder": "Nom de la bibliothèque…",
+      "empty": "Aucune bibliothèque publique trouvée.",
+      "bookCount": "{{count}} livres",
+      "viewLibrary": "Voir la bibliothèque"
     },
     "readingLists": {
       "intro": "Ici, tu peux consulter les listes de lecture publiques. Clique sur une liste pour t'abonner et l'importer dans ton Codex. Suis tes listes préférées et ne perds pas de vue ce qu'il y a à lire !",
@@ -663,6 +673,20 @@
       "viewList": "Voir la liste",
       "subscribe": "S’abonner",
       "subscribed": "Abonné"
+    },
+    "listsPlans": {
+      "ariaLabel": "Rechercher des listes et plans",
+      "placeholder": "Nom de la liste ou du plan…",
+      "empty": "Aucune liste ou plan public disponible pour le moment.",
+      "filter": { "lists": "Listes", "plans": "Plans" },
+      "role": { "bookstore": "Librairie", "author": "Auteur", "influencer": "Influenceur" },
+      "bookCount": "{{count}} livres",
+      "itemCount": "{{count}} éléments",
+      "view": "Voir",
+      "subscribe": "S’abonner",
+      "subscribed": "Abonné",
+      "subscribeError": "Impossible de s'abonner.",
+      "planAdded": "Plan ajouté à tes plans."
     }
   },
   "legal": {
