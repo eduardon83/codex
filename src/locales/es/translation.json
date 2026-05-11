@@ -639,20 +639,30 @@
     "tabs": {
       "books": "Libros",
       "libraries": "Bibliotecas",
-      "readingLists": "Listas de lectura"
+      "readingLists": "Listas de lectura",
+      "listsPlans": "Listas y planes",
+      "publicLibraries": "Bibliotecas públicas"
     },
     "schoolPrompt": "Define tu escuela en el perfil para ver libros y listas de tu escuela y distrito.",
     "goToProfile": "Ir al perfil",
     "books": {
       "intro": "Busca libros que estén disponibles para préstamo y contacta al usuario.",
+      "ariaLabel": "Buscar libros disponibles",
       "placeholder": "Título, autor o ISBN…",
-      "empty": "No hay libros disponibles en tu distrito.",
+      "empty": "Aún no hay libros disponibles para préstamo. Comparte tus libros para empezar.",
       "userFallback": "usuario",
       "returnRate": "{{rate}}% devoluciones a tiempo",
-      "requestLoan": "Pedir prestado"
+      "requestLoan": "Solicitar préstamo",
+      "requestSent": "Solicitud enviada.",
+      "requestError": "No se pudo enviar la solicitud."
     },
     "libraries": {
-      "libraryFallback": "Biblioteca"
+      "libraryFallback": "Biblioteca",
+      "ariaLabel": "Buscar bibliotecas públicas",
+      "placeholder": "Nombre de la biblioteca…",
+      "empty": "No se encontraron bibliotecas públicas.",
+      "bookCount": "{{count}} libros",
+      "viewLibrary": "Ver biblioteca"
     },
     "readingLists": {
       "intro": "Aquí puedes consultar las listas de lectura públicas. Haz clic en una para suscribirte e importar la lista a tu Codex. Sigue tus listas favoritas y no pierdas de vista lo que hay para leer.",
@@ -663,6 +673,20 @@
       "viewList": "Ver lista",
       "subscribe": "Suscribirse",
       "subscribed": "Suscrito"
+    },
+    "listsPlans": {
+      "ariaLabel": "Buscar listas y planes",
+      "placeholder": "Nombre de lista o plan…",
+      "empty": "Aún no hay listas o planes públicos disponibles.",
+      "filter": { "lists": "Listas", "plans": "Planes" },
+      "role": { "bookstore": "Librería", "author": "Autor", "influencer": "Influencer" },
+      "bookCount": "{{count}} libros",
+      "itemCount": "{{count}} elementos",
+      "view": "Ver",
+      "subscribe": "Suscribirse",
+      "subscribed": "Suscrito",
+      "subscribeError": "No se pudo suscribir.",
+      "planAdded": "Plan añadido a tus planes."
     }
   },
   "legal": {
