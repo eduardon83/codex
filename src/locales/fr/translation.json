@@ -15,8 +15,8 @@
     "discover": "Découvrir"
   },
   "listas": {
-    "planosHelp": "Ici, tu peux consulter tes plans de lecture, en créer un nouveau adapté à tes ambitions de lecture ou suivre un plan recommandé par ton professeur ! Tu peux aussi exporter ou importer un plan. Attention : tu ne peux avoir qu’un seul plan à la fois !",
-    "listasHelp": "Importe des listes de lecture recommandées, comme le Plan National de Lecture, ou crée tes propres listes de lecture !"
+    "planosHelp": "Crée des plans de lecture, relève le défi et élargis tes ambitions de lecture ! Tu peux aussi importer ou exporter des plans. Tu ne peux avoir qu'un seul plan actif à la fois !",
+    "listasHelp": "Importe des listes de lecture recommandées ou crée tes propres listes de lecture !"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -644,6 +644,7 @@
     "schoolPrompt": "Définissez votre école dans le profil pour voir les livres et listes de votre école et district.",
     "goToProfile": "Aller au profil",
     "books": {
+      "intro": "Recherche des livres disponibles en prêt et contacte l'utilisateur.",
       "placeholder": "Titre, auteur ou ISBN…",
       "empty": "Aucun livre disponible dans votre district.",
       "userFallback": "utilisateur",
@@ -654,6 +655,7 @@
       "libraryFallback": "Bibliothèque"
     },
     "readingLists": {
+      "intro": "Ici, tu peux consulter les listes de lecture publiques. Clique sur une liste pour t'abonner et l'importer dans ton Codex. Suis tes listes préférées et ne perds pas de vue ce qu'il y a à lire !",
       "empty": "Aucune liste de lecture publiée disponible pour vous.",
       "official": "Officiel",
       "creatorFallback": "Plan National de Lecture",
