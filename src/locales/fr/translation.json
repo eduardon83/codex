@@ -691,9 +691,18 @@
       "itemCount": "{{count}} éléments",
       "view": "Voir",
       "subscribe": "S’abonner",
-      "subscribed": "Abonné",
+      "subscribed": "Liste suivie. Retrouvez-la dans Listes → Listes suivies.",
       "subscribeError": "Impossible de s'abonner.",
-      "planAdded": "Plan ajouté à tes plans."
+      "planAdded": "Plan importé dans vos plans de lecture.",
+      "unsubscribed": "Abonnement annulé.",
+      "unsubscribeTitle": "Annuler l’abonnement ?",
+      "unsubscribeBody": "Ne plus suivre « {{name}} » ? Vous pouvez vous réabonner à tout moment.",
+      "unsubscribeConfirm": "Annuler l’abonnement",
+      "planReplaceTitle": "Vous avez un plan actif : {{name}}.",
+      "planReplaceBody": "Importer ce plan archivera votre plan actuel. Exportez-en une copie d’abord dans Listes → Plans si vous souhaitez le conserver.",
+      "planReplaceConfirm": "Archiver et importer",
+      "subscriberCount_one": "{{count}} abonné",
+      "subscriberCount_other": "{{count}} abonnés"
     }
   },
   "legal": {

@@ -691,9 +691,18 @@
       "itemCount": "{{count}} items",
       "view": "View",
       "subscribe": "Subscribe",
-      "subscribed": "Subscribed",
+      "subscribed": "List subscribed. View it in Lists → Subscribed lists.",
       "subscribeError": "Could not subscribe.",
-      "planAdded": "Plan added to your plans."
+      "planAdded": "Plan imported into your reading plans.",
+      "unsubscribed": "Subscription cancelled.",
+      "unsubscribeTitle": "Cancel subscription?",
+      "unsubscribeBody": "Stop following “{{name}}”? You can resubscribe at any time.",
+      "unsubscribeConfirm": "Cancel subscription",
+      "planReplaceTitle": "You have an active plan: {{name}}.",
+      "planReplaceBody": "Importing this plan will archive your current one. Export a copy first in Lists → Plans if you want to keep it.",
+      "planReplaceConfirm": "Archive and import",
+      "subscriberCount_one": "{{count}} subscriber",
+      "subscriberCount_other": "{{count}} subscribers"
     }
   },
   "legal": {
