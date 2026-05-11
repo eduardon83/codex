@@ -149,6 +149,7 @@ export default function Index() {
           <ProcurarLivroScreen
             onGoToProfile={() => setActiveTab('profile')}
             onOpenLibrary={(lib) => setPublicLibView(lib)}
+            onGoToLists={(sub) => { if (sub) localStorage.setItem('folium_listas_tab', sub); setActiveTab('lists'); }}
           />
         )}
         {activeTab === 'lists' && (

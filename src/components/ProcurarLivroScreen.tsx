@@ -6,7 +6,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, Library as LibraryIcon } from 'lucide-react';
+import { Search, BookOpen, Loader2, MapPin, ExternalLink, Heart, BookmarkPlus, ArrowLeft, Library as LibraryIcon, Users } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import HelpButton from '@/components/tutorial/HelpButton';
 import OwlLoader from '@/components/OwlLoader';
 import { resolveAvatarSrc } from '@/lib/avatars';
@@ -34,6 +35,7 @@ interface PublishedItem {
   creator_username: string | null;
   creator_role: string | null; // 'bookstore' | 'author' | 'influencer' | other
   item_count: number;
+  subscriber_count: number;
   subscribed: boolean;
 }
 interface OSMLibrary { id: number; name: string; address: string | null; distance: number; openingHours: string | null; website: string | null; }
@@ -41,6 +43,7 @@ interface OSMLibrary { id: number; name: string; address: string | null; distanc
 interface Props {
   onGoToProfile?: () => void;
   onOpenLibrary?: (lib: { libraryId: string; libraryName: string; ownerUserId: string; ownerUsername: string | null }) => void;
+  onGoToLists?: (sub?: 'planos' | 'listas') => void;
 }
 
 const TAB_STORAGE_KEY = 'codex_procurar_tab';
@@ -53,7 +56,7 @@ function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): nu
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Props) {
+export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary, onGoToLists }: Props) {
   const { t } = useTranslation();
   const { user, profile } = useAuth();
 
@@ -88,7 +91,7 @@ export default function ProcurarLivroScreen({ onGoToProfile, onOpenLibrary }: Pr
         </TabsContent>
 
         <TabsContent value="listsPlans" className="space-y-4 mt-4">
-          <ListsAndPlansTab userId={user?.id ?? null} />
+          <ListsAndPlansTab userId={user?.id ?? null} onGoToLists={onGoToLists} />
         </TabsContent>
 
         <TabsContent value="publicLibraries" className="mt-4">
@@ -295,7 +298,7 @@ function roleBadgeLabel(role: string | null, t: (k: string) => string): string |
   return null;
 }
 
-function ListsAndPlansTab({ userId }: { userId: string | null }) {
+function ListsAndPlansTab({ userId, onGoToLists }: { userId: string | null; onGoToLists?: (sub?: 'planos' | 'listas') => void }) {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<ListsPlansFilter>('lists');
   const [query, setQuery] = useState('');
@@ -303,6 +306,9 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState<PublishedItem | null>(null);
   const [selectedBooks, setSelectedBooks] = useState<{ id: string; title: string; author: string | null; cover_url: string | null }[]>([]);
+  const [unsubscribeTarget, setUnsubscribeTarget] = useState<PublishedItem | null>(null);
+  const [planReplaceTarget, setPlanReplaceTarget] = useState<{ item: PublishedItem; activePlan: { id: string; name: string } } | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -360,7 +366,10 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
       }
 
       collected = await Promise.all(rows.map(async (row) => {
-        const { count } = await supabase.from('reading_list_books').select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id);
+        const [{ count: bookCount }, { count: subCount }] = await Promise.all([
+          supabase.from('reading_list_books').select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id),
+          supabase.from('reading_list_subscriptions' as any).select('id', { count: 'exact', head: true }).eq('reading_list_id', row.id),
+        ]);
         return {
           kind: 'list' as const,
           id: row.id,
@@ -368,7 +377,8 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
           user_id: row.user_id,
           creator_username: usernameByUser.get(row.user_id) ?? null,
           creator_role: roleByUser.get(row.user_id) ?? null,
-          item_count: count || 0,
+          item_count: bookCount || 0,
+          subscriber_count: subCount || 0,
           subscribed: subSet.has(row.id),
         };
       }));
@@ -387,7 +397,10 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
       const rows = (data || []) as any[];
 
       collected = await Promise.all(rows.map(async (row) => {
-        const { count } = await supabase.from('reading_plan_items' as any).select('id', { count: 'exact', head: true }).eq('plan_id', row.id);
+        const [{ count: itemCount }, { count: subCount }] = await Promise.all([
+          supabase.from('reading_plan_items' as any).select('id', { count: 'exact', head: true }).eq('plan_id', row.id),
+          supabase.from('reading_plans' as any).select('id', { count: 'exact', head: true }).eq('source_template_id', row.id),
+        ]);
         return {
           kind: 'plan' as const,
           id: row.id,
@@ -395,7 +408,8 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
           user_id: row.created_by_user_id,
           creator_username: usernameByUser.get(row.created_by_user_id) ?? null,
           creator_role: roleByUser.get(row.created_by_user_id) ?? null,
-          item_count: count || 0,
+          item_count: itemCount || 0,
+          subscriber_count: subCount || 0,
           subscribed: false,
         };
       }));
@@ -417,27 +431,74 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
       .then(({ data }) => setSelectedBooks((data || []) as any));
   }, [selected]);
 
-  const subscribe = async (item: PublishedItem) => {
+  const subscribeList = async (item: PublishedItem) => {
     if (!userId) return;
-    if (item.kind === 'list') {
-      const { error } = await supabase
-        .from('reading_list_subscriptions' as any)
-        .upsert({ user_id: userId, reading_list_id: item.id }, { onConflict: 'user_id,reading_list_id' });
-      if (error) toast.error(t('search.listsPlans.subscribeError'));
-      else { toast.success(t('search.listsPlans.subscribed')); load(); }
-    } else {
-      // Plans: clone template into a personal plan
-      const { data: planRow, error: planErr } = await supabase
-        .from('reading_plans' as any)
-        .insert({ name: item.name, user_id: userId, created_by_user_id: userId, is_template: false })
-        .select('id')
-        .single();
-      if (planErr || !planRow) { toast.error(t('search.listsPlans.subscribeError')); return; }
-      const { data: srcItems } = await supabase.from('reading_plan_items' as any).select('title, author, isbn, cover_url, target_month, priority').eq('plan_id', item.id);
-      const toInsert = ((srcItems || []) as any[]).map((it) => ({ ...it, plan_id: (planRow as any).id }));
-      if (toInsert.length) await supabase.from('reading_plan_items' as any).insert(toInsert);
-      toast.success(t('search.listsPlans.planAdded'));
+    const { error } = await supabase
+      .from('reading_list_subscriptions' as any)
+      .upsert({ user_id: userId, reading_list_id: item.id }, { onConflict: 'user_id,reading_list_id' });
+    if (error) { toast.error(t('search.listsPlans.subscribeError')); return; }
+    toast.success(t('search.listsPlans.subscribed'));
+    load();
+  };
+
+  const unsubscribeList = async (item: PublishedItem) => {
+    if (!userId) return;
+    const { error } = await supabase
+      .from('reading_list_subscriptions' as any)
+      .delete()
+      .eq('user_id', userId)
+      .eq('reading_list_id', item.id);
+    if (error) { toast.error(t('search.listsPlans.subscribeError')); return; }
+    toast.success(t('search.listsPlans.unsubscribed'));
+    setUnsubscribeTarget(null);
+    load();
+  };
+
+  const importPlanFromTemplate = async (item: PublishedItem) => {
+    if (!userId) return;
+    setBusy(true);
+    const { data: planRow, error: planErr } = await supabase
+      .from('reading_plans' as any)
+      .insert({ name: item.name, user_id: userId, created_by_user_id: userId, is_template: false, status: 'active', source_template_id: item.id })
+      .select('id')
+      .single();
+    if (planErr || !planRow) { setBusy(false); toast.error(t('search.listsPlans.subscribeError')); return; }
+    const { data: srcItems } = await supabase
+      .from('reading_plan_items' as any)
+      .select('title, author, isbn, cover_url, target_month, priority')
+      .eq('plan_id', item.id);
+    const toInsert = ((srcItems || []) as any[]).map((it) => ({ ...it, plan_id: (planRow as any).id, status: 'planned' }));
+    if (toInsert.length) await supabase.from('reading_plan_items' as any).insert(toInsert);
+    setBusy(false);
+    toast.success(t('search.listsPlans.planAdded'));
+    load();
+    onGoToLists?.('planos');
+  };
+
+  const subscribePlan = async (item: PublishedItem) => {
+    if (!userId) return;
+    const { data: active } = await supabase
+      .from('reading_plans' as any)
+      .select('id, name')
+      .eq('user_id', userId)
+      .eq('is_template', false)
+      .eq('status', 'active')
+      .maybeSingle();
+    if (active) {
+      setPlanReplaceTarget({ item, activePlan: active as any });
+      return;
     }
+    await importPlanFromTemplate(item);
+  };
+
+  const replaceActivePlanAndImport = async () => {
+    if (!planReplaceTarget || !userId) return;
+    setBusy(true);
+    await supabase.from('reading_plans' as any).update({ status: 'archived' }).eq('id', planReplaceTarget.activePlan.id);
+    const target = planReplaceTarget.item;
+    setPlanReplaceTarget(null);
+    await importPlanFromTemplate(target);
+    setBusy(false);
   };
 
   if (selected && selected.kind === 'list') {
@@ -506,9 +567,14 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
                         {roleLabel && <Badge variant="outline" className="text-[10px] py-0 h-5">{roleLabel}</Badge>}
                       </p>
                     </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {item.kind === 'list' ? t('search.listsPlans.bookCount', { count: item.item_count }) : t('search.listsPlans.itemCount', { count: item.item_count })}
-                    </span>
+                    <div className="text-right space-y-0.5 whitespace-nowrap">
+                      <p className="text-xs text-muted-foreground">
+                        {item.kind === 'list' ? t('search.listsPlans.bookCount', { count: item.item_count }) : t('search.listsPlans.itemCount', { count: item.item_count })}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground inline-flex items-center gap-1 justify-end">
+                        <Users size={11} /> {t('search.listsPlans.subscriberCount', { count: item.subscriber_count })}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     {item.kind === 'list' && (
@@ -518,8 +584,15 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
                       variant={item.subscribed ? 'secondary' : 'default'}
                       size="sm"
                       className="h-8 text-xs gap-1"
-                      onClick={() => subscribe(item)}
-                      disabled={item.subscribed}
+                      onClick={() => {
+                        if (item.kind === 'list') {
+                          if (item.subscribed) setUnsubscribeTarget(item);
+                          else subscribeList(item);
+                        } else {
+                          subscribePlan(item);
+                        }
+                      }}
+                      disabled={busy}
                     >
                       {item.subscribed ? <Heart size={13} /> : <BookmarkPlus size={13} />}
                       {item.subscribed ? t('search.listsPlans.subscribed') : t('search.listsPlans.subscribe')}
@@ -530,6 +603,40 @@ function ListsAndPlansTab({ userId }: { userId: string | null }) {
             })}
           </div>
         )}
+
+      <AlertDialog open={!!unsubscribeTarget} onOpenChange={(o) => !o && setUnsubscribeTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('search.listsPlans.unsubscribeTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('search.listsPlans.unsubscribeBody', { name: unsubscribeTarget?.name ?? '' })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel', 'Cancelar')}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => unsubscribeTarget && unsubscribeList(unsubscribeTarget)}>
+              {t('search.listsPlans.unsubscribeConfirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={!!planReplaceTarget} onOpenChange={(o) => !o && setPlanReplaceTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t('search.listsPlans.planReplaceTitle', { name: planReplaceTarget?.activePlan.name ?? '' })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t('search.listsPlans.planReplaceBody')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common.cancel', 'Cancelar')}</AlertDialogCancel>
+            <AlertDialogAction onClick={replaceActivePlanAndImport} disabled={busy}>
+              {t('search.listsPlans.planReplaceConfirm')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

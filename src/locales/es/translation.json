@@ -691,9 +691,18 @@
       "itemCount": "{{count}} elementos",
       "view": "Ver",
       "subscribe": "Suscribirse",
-      "subscribed": "Suscrito",
+      "subscribed": "Lista suscrita. Puedes verla en Listas → Listas suscritas.",
       "subscribeError": "No se pudo suscribir.",
-      "planAdded": "Plan añadido a tus planes."
+      "planAdded": "Plan importado a tus planes de lectura.",
+      "unsubscribed": "Suscripción cancelada.",
+      "unsubscribeTitle": "¿Cancelar suscripción?",
+      "unsubscribeBody": "¿Dejar de seguir “{{name}}”? Puedes volver a suscribirte cuando quieras.",
+      "unsubscribeConfirm": "Cancelar suscripción",
+      "planReplaceTitle": "Tienes un plan activo: {{name}}.",
+      "planReplaceBody": "Importar este plan archivará tu plan actual. Exporta una copia primero en Listas → Planes si quieres conservarlo.",
+      "planReplaceConfirm": "Archivar e importar",
+      "subscriberCount_one": "{{count}} suscriptor",
+      "subscriberCount_other": "{{count}} suscriptores"
     }
   },
   "legal": {
