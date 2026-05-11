@@ -15,8 +15,8 @@
     "discover": "Discover"
   },
   "listas": {
-    "planosHelp": "Here you can view your reading plans, create a new one tailored to your reading ambitions, or follow a plan recommended by your teacher! You can also export or import a plan. Please note: you can only have one plan at a time!",
-    "listasHelp": "Import recommended reading lists such as the National Reading Plan, or create your own reading lists!"
+    "planosHelp": "Create reading plans, challenge yourself and expand your reading ambitions! You can also import or export plans. You can only have one active plan at a time!",
+    "listasHelp": "Import recommended reading lists or create your own!"
   },
   "auth": {
     "signIn": "Sign in",
@@ -644,6 +644,7 @@
     "schoolPrompt": "Set your school in your profile to see books and lists from your school and district.",
     "goToProfile": "Go to profile",
     "books": {
+      "intro": "Search for books that are available for loan and contact the user.",
       "placeholder": "Title, author or ISBN…",
       "empty": "No books available in your district.",
       "userFallback": "user",
@@ -654,9 +655,10 @@
       "libraryFallback": "Library"
     },
     "readingLists": {
+      "intro": "Here you can check the public reading lists. Click on one to subscribe and import the list into your Codex. Keep track of your favourite lists and don't lose sight of what there is to read!",
       "empty": "No published reading lists are available for you yet.",
       "official": "Official",
-      "creatorFallback": "National Reading Plan",
+      "creatorFallback": "Official list",
       "bookCount": "{{count}} books",
       "viewList": "View list",
       "subscribe": "Subscribe",

@@ -15,7 +15,7 @@
     "discover": "Descobrir"
   },
   "listas": {
-    "planosHelp": "Aqui podes ver os teus planos de leitura, criar um novo à medida das tuas ambições de leitura ou seguir um plano recomendado pelo Professor! Podes também exportar ou importar um plano. Atenção, só podes ter um plano de cada vez!",
+    "planosHelp": "Cria planos de leitura, desafia-te e expande as tuas ambições de leitura! Podes também importar ou exportar planos. Só podes ter um plano ativo de cada vez!",
     "listasHelp": "Importa listas de leitura recomendadas ou cria as tuas próprias!"
   },
   "auth": {
@@ -644,6 +644,7 @@
     "schoolPrompt": "Define a tua escola no perfil para ver livros e listas da tua escola e distrito.",
     "goToProfile": "Ir ao perfil",
     "books": {
+      "intro": "Pesquisa por livros que estejam disponíveis para empréstimo e contacta o utilizador.",
       "placeholder": "Título, autor ou ISBN…",
       "empty": "Sem livros disponíveis no teu distrito.",
       "userFallback": "utilizador",
@@ -654,6 +655,7 @@
       "libraryFallback": "Biblioteca"
     },
     "readingLists": {
+      "intro": "Aqui podes verificar as listas de leitura que estão publicas. Clica numa para subscrever e importar a lista para o teu Codex. Acompanha as tuas listas favoritas e não perdas vista do que há para ler!",
       "empty": "Ainda não há listas de leitura publicadas para ti.",
       "official": "Oficial",
       "creatorFallback": "Lista oficial",
