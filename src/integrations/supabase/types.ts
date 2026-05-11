@@ -924,6 +924,11 @@ export type Database = {
           parent_consent_token: string | null
           parent_email: string | null
           pending_email_confirmation_after_parental_consent: boolean
+          pro_city: string | null
+          pro_entity_name: string | null
+          pro_platform_url: string | null
+          pro_verified: boolean
+          pro_website: string | null
           profile_completed: boolean
           school_id: string | null
           suspended: boolean
@@ -963,6 +968,11 @@ export type Database = {
           parent_consent_token?: string | null
           parent_email?: string | null
           pending_email_confirmation_after_parental_consent?: boolean
+          pro_city?: string | null
+          pro_entity_name?: string | null
+          pro_platform_url?: string | null
+          pro_verified?: boolean
+          pro_website?: string | null
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
@@ -1002,6 +1012,11 @@ export type Database = {
           parent_consent_token?: string | null
           parent_email?: string | null
           pending_email_confirmation_after_parental_consent?: boolean
+          pro_city?: string | null
+          pro_entity_name?: string | null
+          pro_platform_url?: string | null
+          pro_verified?: boolean
+          pro_website?: string | null
           profile_completed?: boolean
           school_id?: string | null
           suspended?: boolean
@@ -1344,6 +1359,7 @@ export type Database = {
           district_id: string | null
           ends_at: string | null
           id: string
+          is_public: boolean
           is_template: boolean
           name: string
           scope: Database["public"]["Enums"]["reading_plan_scope"] | null
@@ -1359,6 +1375,7 @@ export type Database = {
           district_id?: string | null
           ends_at?: string | null
           id?: string
+          is_public?: boolean
           is_template?: boolean
           name: string
           scope?: Database["public"]["Enums"]["reading_plan_scope"] | null
@@ -1374,6 +1391,7 @@ export type Database = {
           district_id?: string | null
           ends_at?: string | null
           id?: string
+          is_public?: boolean
           is_template?: boolean
           name?: string
           scope?: Database["public"]["Enums"]["reading_plan_scope"] | null
@@ -1657,6 +1675,12 @@ export type Database = {
           first_name: string | null
           last_name: string | null
           location: string | null
+          pro_city: string | null
+          pro_entity_name: string | null
+          pro_platform_url: string | null
+          pro_roles: string[] | null
+          pro_verified: boolean | null
+          pro_website: string | null
           user_id: string | null
           username: string | null
         }
@@ -1665,6 +1689,12 @@ export type Database = {
           first_name?: string | null
           last_name?: string | null
           location?: string | null
+          pro_city?: string | null
+          pro_entity_name?: string | null
+          pro_platform_url?: string | null
+          pro_roles?: never
+          pro_verified?: boolean | null
+          pro_website?: string | null
           user_id?: string | null
           username?: string | null
         }
@@ -1673,6 +1703,12 @@ export type Database = {
           first_name?: string | null
           last_name?: string | null
           location?: string | null
+          pro_city?: string | null
+          pro_entity_name?: string | null
+          pro_platform_url?: string | null
+          pro_roles?: never
+          pro_verified?: boolean | null
+          pro_website?: string | null
           user_id?: string | null
           username?: string | null
         }
