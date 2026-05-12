@@ -792,6 +792,9 @@ export type Database = {
           reminder_3day_sent_at: string | null
           reminder_confirm_sent_at: string | null
           requested_at: string
+          requested_duration_days: number | null
+          requester_email: string | null
+          requester_seen_response: boolean
           requester_user_id: string
           responded_at: string | null
           returned_at: string | null
@@ -815,6 +818,9 @@ export type Database = {
           reminder_3day_sent_at?: string | null
           reminder_confirm_sent_at?: string | null
           requested_at?: string
+          requested_duration_days?: number | null
+          requester_email?: string | null
+          requester_seen_response?: boolean
           requester_user_id: string
           responded_at?: string | null
           returned_at?: string | null
@@ -838,6 +844,9 @@ export type Database = {
           reminder_3day_sent_at?: string | null
           reminder_confirm_sent_at?: string | null
           requested_at?: string
+          requested_duration_days?: number | null
+          requester_email?: string | null
+          requester_seen_response?: boolean
           requester_user_id?: string
           responded_at?: string | null
           returned_at?: string | null
