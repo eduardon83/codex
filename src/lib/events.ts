@@ -11,21 +11,21 @@ export type CodexEvent = {
   id: string; created_by_user_id: string; entity_id: string | null; school_id: string | null; district_id: string | null; type: EventType; scope: EventScope; title: string; introduction: string; body: string; status: EventStatus; is_official: boolean; approval_status: ApprovalStatus; rejection_note?: string | null; starts_at: string | null; ends_at: string | null; registration_opens_at: string | null; registration_closes_at: string | null; registration_limit: number | null; location: string | null; online_link: string | null; linked_book_isbn: string | null; linked_reading_list_id: string | null; created_at: string; updated_at: string; event_media?: EventMedia[]; entities?: { name: string; role_label: string | null; logo_url: string | null } | null; schools?: { name: string } | null; districts?: { name: string } | null; profiles?: { first_name: string | null; last_name: string | null; username: string | null; avatar_url: string | null } | null; reading_lists?: { name: string } | null; registration_count?: number; my_registration?: { id: string; status: 'confirmed' | 'waitlisted' | 'cancelled' } | null;
 };
 
-export const EVENT_TYPE_KEYS: EventType[] = ['reading_group', 'author_talk', 'writing_comp', 'reading_comp', 'poetry_slam', 'book_club', 'symposium', 'workshop', 'book_fair', 'interschool', 'library_visit', 'reading_week', 'storytelling', 'news', 'award', 'pnl_update'];
+export const EVENT_TYPE_KEYS: EventType[] = ['reading_group', 'author_talk', 'writing_comp', 'reading_comp', 'poetry_slam', 'book_club', 'symposium', 'workshop', 'book_fair', 'library_visit', 'reading_week', 'storytelling', 'award', 'pnl_update', 'news', 'other'];
 
 export const EVENT_GROUPS: Record<string, EventType[]> = {
-  all: EVENT_TYPE_KEYS,
+  all: ['reading_group', 'author_talk', 'writing_comp', 'reading_comp', 'poetry_slam', 'book_club', 'symposium', 'workshop', 'book_fair', 'library_visit', 'reading_week', 'storytelling', 'award', 'pnl_update', 'news', 'other'],
   reading: ['reading_group', 'author_talk', 'poetry_slam', 'book_club', 'storytelling'],
   contests: ['writing_comp', 'reading_comp', 'award'],
-  conferences: ['symposium', 'workshop', 'book_fair', 'interschool'],
-  school: ['library_visit', 'reading_week'],
-  news: ['news', 'pnl_update'],
+  conferences: ['symposium', 'workshop', 'book_fair'],
+  visits: ['library_visit', 'reading_week'],
+  news: ['news', 'pnl_update', 'other'],
 };
 
-export const EVENT_GROUP_LABELS: Record<string, string> = { all: 'Todos', reading: 'Leitura', contests: 'Concursos', conferences: 'Conferências', school: 'Escola', news: 'Novidades' };
+export const EVENT_GROUP_LABELS: Record<string, string> = { all: 'Todos', reading: 'Leitura', contests: 'Concursos', conferences: 'Conferências', visits: 'Visitas', news: 'Novidades' };
 
 export const EVENT_TYPE_LABELS_PT: Record<EventType, string> = {
-  reading_group: 'Grupo de Leitura', author_talk: 'Apresentação de Autor', writing_comp: 'Concurso de Escrita', reading_comp: 'Concurso de Leitura', poetry_slam: 'Recital / Poetry Slam', book_club: 'Clube do Livro', symposium: 'Simpósio / Conferência', workshop: 'Oficina', book_fair: 'Feira do Livro', interschool: 'Evento Interescolar', library_visit: 'Visita à Biblioteca', reading_week: 'Semana da Leitura', storytelling: 'Hora do Conto', news: 'Novidade', award: 'Prémio Literário', pnl_update: 'Atualização PNL'
+  reading_group: 'Grupo de Leitura', author_talk: 'Apresentação de Autor', writing_comp: 'Concurso de Escrita', reading_comp: 'Concurso de Leitura', poetry_slam: 'Recital / Poetry Slam', book_club: 'Clube do Livro', symposium: 'Simpósio', workshop: 'Oficina', book_fair: 'Feira do Livro', interschool: 'Evento Interescolar', library_visit: 'Visita à Biblioteca', reading_week: 'Semana da Leitura', storytelling: 'Hora do Conto', news: 'Novidade', award: 'Prémio Literário', pnl_update: 'Atualização PNL', other: 'Outro'
 };
 
 export const EVENT_SCOPE_LABELS_PT: Record<EventScope, string> = { school: 'Escola', district: 'Distrito', regional: 'Regional', national: 'Nacional' };
