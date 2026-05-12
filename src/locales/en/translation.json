@@ -12,7 +12,8 @@
     "lists": "Lists",
     "search": "Search",
     "profile": "Profile",
-    "discover": "Discover"
+    "discover": "Discover",
+    "events": "Events"
   },
   "listas": {
     "planosHelp": "Create reading plans, challenge yourself and expand your reading ambitions! You can also import or export plans. You can only have one active plan at a time!",
