@@ -91,6 +91,52 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [filterFormats, setFilterFormats] = useState<string[]>([]);
   const [filterStatuses, setFilterStatuses] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('date_newest');
+  const [activeLoanByBookId, setActiveLoanByBookId] = useState<Record<string, string>>({});
+
+  const loadActiveLoans = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('loan_requests' as any)
+      .select('id, book_id')
+      .eq('owner_user_id', user.id)
+      .eq('status', 'accepted');
+    const map: Record<string, string> = {};
+    ((data as any[]) || []).forEach((r) => { map[r.book_id] = r.id; });
+    setActiveLoanByBookId(map);
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    loadActiveLoans();
+    const handler = () => loadActiveLoans();
+    window.addEventListener('codex-loan-refresh', handler);
+    const channel = supabase
+      .channel(`library_active_loans_${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${user.id}` }, () => loadActiveLoans())
+      .subscribe();
+    return () => {
+      window.removeEventListener('codex-loan-refresh', handler);
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
+
+  const markLoanComplete = async (bookId: string) => {
+    if (!user) return;
+    const loanId = activeLoanByBookId[bookId];
+    if (!loanId) return;
+    await supabase
+      .from('loan_requests' as any)
+      .update({ status: 'returned', returned_at: new Date().toISOString() })
+      .eq('id', loanId);
+    await supabase
+      .from('book_availability' as any)
+      .update({ is_available: true })
+      .eq('book_id', bookId)
+      .eq('owner_user_id', user.id);
+    toast.success(t('loans.completed', 'Empréstimo concluído.'));
+    loadActiveLoans();
+    emitLoanRefresh();
+  };
 
   useEffect(() => {
     if (user) loadLibraries();
