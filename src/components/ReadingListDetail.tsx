@@ -60,16 +60,45 @@ interface LibraryBook {
 
 export default function ReadingListDetail({ list, subscribed, onBack, onCreatePlan }: Props) {
   const { user } = useAuth();
+  const { hasAnyProRole } = useUserRoles();
   const [books, setBooks] = useState<ReadingListDetailRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<string[]>([]);
   const [addOpen, setAddOpen] = useState(false);
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [subscriberPicker, setSubscriberPicker] = useState<ReadingListDetailRow | null>(null);
+  const [isPublic, setIsPublic] = useState(false);
+  const [togglingPublic, setTogglingPublic] = useState(false);
 
   const isOwner = !!user && user.id === list.user_id;
   const isTeacher = useMemo(() => roles.some(r => TEACHER_ROLES.has(r)), [roles]);
   const canEdit = isOwner && !subscribed;
+  const canShare = isOwner && hasAnyProRole;
+
+  useEffect(() => {
+    if (!list.id) return;
+    supabase.from('reading_lists').select('is_public').eq('id', list.id).maybeSingle()
+      .then(({ data }) => setIsPublic(!!(data as any)?.is_public));
+  }, [list.id]);
+
+  const togglePublic = async (next: boolean) => {
+    setTogglingPublic(true);
+    const { error } = await supabase.from('reading_lists').update({ is_public: next } as any).eq('id', list.id);
+    setTogglingPublic(false);
+    if (error) return toast.error(error.message);
+    setIsPublic(next);
+    toast.success(next ? 'Lista pública.' : 'Lista privada.');
+  };
+
+  const copyShareLink = async () => {
+    const url = `${window.location.origin}/reading-list/${list.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copiado.');
+    } catch {
+      toast.error('Não foi possível copiar.');
+    }
+  };
 
   const loadBooks = async () => {
     setLoading(true);
