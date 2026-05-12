@@ -19,7 +19,7 @@ import { EVENT_GROUP_LABELS, EVENT_GROUPS, EVENT_SCOPE_LABELS_PT, EVENT_TYPE_KEY
 type UploadedMedia = { type: 'banner' | 'image' | 'attachment'; url: string; filename: string; mime_type: string; file_size: number; sort_order: number };
 type EventForm = { type: EventType | null; scope: EventScope; title: string; introduction: string; body: string; starts_at: string; ends_at: string; multiDay: boolean; registrations: boolean; registration_opens_at: string; registration_closes_at: string; registration_limit: string; location: string; online: boolean; online_link: string; linked_book_isbn: string; linked_reading_list_id: string; draft: boolean; media: UploadedMedia[] };
 
-const emptyForm: EventForm = { type: null, scope: 'district', title: '', introduction: '', body: '', starts_at: '', ends_at: '', multiDay: false, registrations: false, registration_opens_at: '', registration_closes_at: '', registration_limit: '', location: '', online: false, online_link: '', linked_book_isbn: '', linked_reading_list_id: '', draft: false, media: [] };
+const emptyForm: EventForm = { type: null, scope: 'national', title: '', introduction: '', body: '', starts_at: '', ends_at: '', multiDay: false, registrations: false, registration_opens_at: '', registration_closes_at: '', registration_limit: '', location: '', online: false, online_link: '', linked_book_isbn: '', linked_reading_list_id: '', draft: false, media: [] };
 
 export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEvent?: string | null }) {
   const { user } = useAuth();
