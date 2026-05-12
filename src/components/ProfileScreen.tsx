@@ -222,7 +222,17 @@ export default function ProfileScreen() {
               {[displayProfile.first_name, displayProfile.last_name].filter(Boolean).join(' ')}
             </p>
             {displayProfile.username && <p className="text-sm text-muted-foreground">@{displayProfile.username}</p>}
-            <ProfileRoleBadges />
+            {roles.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                {roles
+                  .filter((r) => ['bookstore', 'author', 'influencer', 'entity', 'admin', 'global_admin', 'teacher', 'school_admin'].includes(r))
+                  .map((r) => (
+                    <Badge key={r} variant="secondary" className="text-[10px] px-2 py-0.5">
+                      {t(`pro.role.${r}`, r)}
+                    </Badge>
+                  ))}
+              </div>
+            )}
             {displayProfile.bio && (
               <p className="text-xs text-foreground mt-2">{displayProfile.bio}</p>
             )}
