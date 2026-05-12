@@ -144,19 +144,16 @@ function BooksTab({ userId }: { userId: string | null }) {
     return () => { active = false; clearTimeout(timer); };
   }, [userId, query]);
 
-  const requestLoan = async (book: AvailRow) => {
-    if (!userId) return;
-    const { error } = await supabase.from('loan_requests' as any).insert({
-      requester_user_id: userId,
-      owner_user_id: book.owner_user_id,
+  const [loanBook, setLoanBook] = useState<LoanRequestBook | null>(null);
+  const requestLoan = (book: AvailRow) => {
+    setLoanBook({
       book_id: book.book_id,
-      book_title: book.title,
-      book_author: book.author,
-      book_cover_url: book.cover_url,
-      book_isbn: book.isbn,
+      owner_user_id: book.owner_user_id,
+      title: book.title,
+      author: book.author,
+      cover_url: book.cover_url,
+      isbn: book.isbn,
     });
-    if (error) toast.error(t('search.books.requestError'));
-    else toast.success(t('search.books.requestSent'));
   };
 
   return (
