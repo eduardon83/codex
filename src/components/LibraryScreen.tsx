@@ -70,6 +70,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const { user } = useAuth();
   const { showToast } = useAppToast();
   const { celebrate } = useCelebration();
+  const { hasAnyProRole } = useUserRoles();
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [activeLibrary, setActiveLibrary] = useState<string>('');
   const [books, setBooks] = useState<Book[]>([]);
