@@ -40,6 +40,7 @@ import { Upload, Trash2 } from 'lucide-react';
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const { user, profile, signOut, refreshProfile } = useAuth();
+  const { roles, hasAnyProRole } = useUserRoles();
   const { theme, availableThemes, setTheme } = useTheme();
   
   const [editing, setEditing] = useState(false);
