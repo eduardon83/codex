@@ -290,6 +290,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
 
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
+      <LoanNotifications />
       {/* Top bar with help */}
       <div className="flex justify-end mb-1 -mt-1">
         <HelpButton screen="library" autoOnFirstVisit />
