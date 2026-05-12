@@ -31,7 +31,7 @@ export default function EventsScreen({ onOpenCalendarEvent }: { onOpenCalendarEv
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState<{ type: string; scope: string; from: string; to: string }>({ type: '', scope: '', from: '', to: '' });
 
-  const canCreate = roles.some((r) => ['teacher', 'school_admin', 'entity', 'global_admin', 'admin'].includes(r));
+  const canCreate = roles.some((r) => ['bookstore', 'entity', 'global_admin', 'admin'].includes(r));
 
   const load = async () => {
     if (!user) return;
