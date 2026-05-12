@@ -335,7 +335,7 @@ export default function ProfileSetup() {
 
   if (step === 'terms') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
         <div className="w-full max-w-sm">
           <Header />
           <div className="space-y-4">
@@ -378,7 +378,7 @@ export default function ProfileSetup() {
 
   if (step === 'photo') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
         <div className="w-full max-w-sm">
           <Header onBack={() => setStep('basics')} />
           <div className="space-y-5 text-center">
@@ -425,7 +425,7 @@ export default function ProfileSetup() {
 
   if (step === 'theme') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
         <div className="w-full max-w-md">
           <Header onBack={() => setStep('photo')} />
           <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
@@ -461,7 +461,7 @@ export default function ProfileSetup() {
   // STEP: basics
   const districtsForCountry = districts;
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
       <div className="w-full max-w-sm">
         <Header onBack={profile?.terms_accepted_at ? undefined : () => setStep('terms')} />
         <form onSubmit={submitBasics} className="space-y-3">
