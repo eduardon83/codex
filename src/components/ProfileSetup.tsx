@@ -100,7 +100,28 @@ export default function ProfileSetup() {
   // Theme
   const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
-  const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
+
+  // Wilderness Hearth palette overrides — matches the landing page across
+  // the pre-completion onboarding flow (before the user picks their app theme).
+  const wildernessVars = {
+    ['--background' as any]: '140 16% 14%',
+    ['--foreground' as any]: '42 50% 90%',
+    ['--card' as any]: '132 13% 21%',
+    ['--card-foreground' as any]: '42 50% 90%',
+    ['--popover' as any]: '132 13% 21%',
+    ['--popover-foreground' as any]: '42 50% 90%',
+    ['--primary' as any]: '44 55% 54%',
+    ['--primary-foreground' as any]: '140 16% 14%',
+    ['--secondary' as any]: '132 13% 21%',
+    ['--secondary-foreground' as any]: '42 50% 90%',
+    ['--muted' as any]: '132 13% 21%',
+    ['--muted-foreground' as any]: '43 26% 75%',
+    ['--accent' as any]: '44 55% 54%',
+    ['--accent-foreground' as any]: '140 16% 14%',
+    ['--border' as any]: '44 30% 30%',
+    ['--input' as any]: '44 30% 30%',
+    ['--ring' as any]: '44 55% 54%',
+  } as React.CSSProperties;
 
   // Persist setup progress
   useEffect(() => {
