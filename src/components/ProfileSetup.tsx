@@ -315,7 +315,15 @@ export default function ProfileSetup() {
           ))}
         </div>
       </div>
-      <img src={logo} alt="Codex" className="w-40 mb-4" />
+      <div className="flex items-center gap-2 mb-4">
+        <img src={owlGold} alt="" aria-hidden="true" className="h-9 w-9 object-contain" />
+        <span
+          className="font-['Cormorant_Garamond'] italic text-3xl leading-none"
+          style={{ color: '#C9A84C' }}
+        >
+          Codex
+        </span>
+      </div>
       <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">
         {t('profileSetup.welcomeCodex')}
       </h1>
