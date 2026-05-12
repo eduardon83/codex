@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
-import { BookOpen, User, Search, BookMarked } from 'lucide-react';
+import { BookOpen, User, Search, BookMarked, CalendarDays } from 'lucide-react';
 
-export type Tab = 'library' | 'lists' | 'find' | 'profile';
+export type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile';
 
 interface BottomNavProps {
   active: Tab;
@@ -15,6 +15,7 @@ const tabConfig: { id: Tab; labelKey: string; icon: React.ElementType }[] = [
   { id: 'library', labelKey: 'nav.library', icon: BookOpen },
   { id: 'lists', labelKey: 'nav.lists', icon: BookMarked },
   { id: 'find', labelKey: 'nav.discover', icon: Search },
+  { id: 'events', labelKey: 'nav.events', icon: CalendarDays },
   { id: 'profile', labelKey: 'nav.profile', icon: User },
 ];
 
