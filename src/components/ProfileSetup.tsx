@@ -12,10 +12,8 @@ import {
 } from '@/components/ui/select';
 import { Loader2, ArrowLeft, CheckCircle2, XCircle, Check, Upload, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import foliumLogo from '@/assets/folium-logo.svg';
-import foliumLogoGold from '@/assets/folium-logo-gold.png';
+import owlGold from '@/assets/codex-owl-gold.png';
 import { applyTheme, THEMES, useTheme, getThemeDescription } from '@/hooks/useTheme';
-import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
 import UserAvatar from '@/components/UserAvatar';
 import { uploadFileToStorage } from '@/lib/storage';
@@ -102,7 +100,28 @@ export default function ProfileSetup() {
   // Theme
   const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
-  const logo = isFoliumDarkTheme(themeId) ? foliumLogoGold : foliumLogo;
+
+  // Wilderness Hearth palette overrides — matches the landing page across
+  // the pre-completion onboarding flow (before the user picks their app theme).
+  const wildernessVars = {
+    ['--background' as any]: '140 16% 14%',
+    ['--foreground' as any]: '42 50% 90%',
+    ['--card' as any]: '132 13% 21%',
+    ['--card-foreground' as any]: '42 50% 90%',
+    ['--popover' as any]: '132 13% 21%',
+    ['--popover-foreground' as any]: '42 50% 90%',
+    ['--primary' as any]: '44 55% 54%',
+    ['--primary-foreground' as any]: '140 16% 14%',
+    ['--secondary' as any]: '132 13% 21%',
+    ['--secondary-foreground' as any]: '42 50% 90%',
+    ['--muted' as any]: '132 13% 21%',
+    ['--muted-foreground' as any]: '43 26% 75%',
+    ['--accent' as any]: '44 55% 54%',
+    ['--accent-foreground' as any]: '140 16% 14%',
+    ['--border' as any]: '44 30% 30%',
+    ['--input' as any]: '44 30% 30%',
+    ['--ring' as any]: '44 55% 54%',
+  } as React.CSSProperties;
 
   // Persist setup progress
   useEffect(() => {
@@ -296,7 +315,15 @@ export default function ProfileSetup() {
           ))}
         </div>
       </div>
-      <img src={logo} alt="Codex" className="w-40 mb-4" />
+      <div className="flex items-center gap-2 mb-4">
+        <img src={owlGold} alt="" aria-hidden="true" className="h-9 w-9 object-contain" />
+        <span
+          className="font-['Cormorant_Garamond'] italic text-3xl leading-none"
+          style={{ color: '#C9A84C' }}
+        >
+          Codex
+        </span>
+      </div>
       <h1 className="font-['Cormorant_Garamond'] text-3xl text-foreground text-center">
         {t('profileSetup.welcomeCodex')}
       </h1>
@@ -308,7 +335,7 @@ export default function ProfileSetup() {
 
   if (step === 'terms') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
         <div className="w-full max-w-sm">
           <Header />
           <div className="space-y-4">
@@ -351,7 +378,7 @@ export default function ProfileSetup() {
 
   if (step === 'photo') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
         <div className="w-full max-w-sm">
           <Header onBack={() => setStep('basics')} />
           <div className="space-y-5 text-center">
@@ -398,7 +425,7 @@ export default function ProfileSetup() {
 
   if (step === 'theme') {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
         <div className="w-full max-w-md">
           <Header onBack={() => setStep('photo')} />
           <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
@@ -434,7 +461,7 @@ export default function ProfileSetup() {
   // STEP: basics
   const districtsForCountry = districts;
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10">
+    <div className="min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
       <div className="w-full max-w-sm">
         <Header onBack={profile?.terms_accepted_at ? undefined : () => setStep('terms')} />
         <form onSubmit={submitBasics} className="space-y-3">
