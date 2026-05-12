@@ -220,14 +220,14 @@ function EventCreateSheet({ open, onOpenChange, roles, onCreated }: { open: bool
   const publish = async () => {
     if (!user || !form.type || !form.title.trim() || !form.introduction.trim() || !form.body.trim()) return toast.error('Preenche os campos obrigatórios.');
     setSaving(true);
-    const approval_status = isGlobal || (form.scope === 'school' && !isEntity) ? 'approved' : 'pending';
-    const status = form.draft || approval_status === 'pending' ? 'draft' : 'published';
+    const approval_status = 'approved';
+    const status = form.draft ? 'draft' : 'published';
     const profileAny = profile as any;
-    const { data, error } = await supabase.from('events' as any).insert({ created_by_user_id: user.id, type: form.type, scope: form.scope, title: form.title.trim(), introduction: form.introduction.trim(), body: form.body.trim(), status, approval_status, is_official: isGlobal, district_id: profileAny?.district_id || null, school_id: form.scope === 'school' ? profileAny?.school_id || null : null, starts_at: form.starts_at ? new Date(form.starts_at).toISOString() : null, ends_at: form.multiDay && form.ends_at ? new Date(form.ends_at).toISOString() : null, registration_opens_at: form.registrations && form.registration_opens_at ? new Date(form.registration_opens_at).toISOString() : null, registration_closes_at: form.registrations && form.registration_closes_at ? new Date(form.registration_closes_at).toISOString() : null, registration_limit: form.registrations && form.registration_limit ? Number(form.registration_limit) : null, location: form.online ? 'Online' : form.location || null, online_link: form.online_link || null, linked_book_isbn: form.linked_book_isbn || null, linked_reading_list_id: form.linked_reading_list_id || null }).select().single();
+    const { data, error } = await supabase.from('events' as any).insert({ created_by_user_id: user.id, type: form.type, scope: form.scope, title: form.title.trim(), introduction: form.introduction.trim(), body: form.body.trim(), status, approval_status, is_official: isGlobal, district_id: form.scope !== 'national' ? profileAny?.district_id || null : null, school_id: null, starts_at: form.starts_at ? new Date(form.starts_at).toISOString() : null, ends_at: form.multiDay && form.ends_at ? new Date(form.ends_at).toISOString() : null, registration_opens_at: form.registrations && form.registration_opens_at ? new Date(form.registration_opens_at).toISOString() : null, registration_closes_at: form.registrations && form.registration_closes_at ? new Date(form.registration_closes_at).toISOString() : null, registration_limit: form.registrations && form.registration_limit ? Number(form.registration_limit) : null, location: form.online ? 'Online' : form.location || null, online_link: form.online_link || null, linked_book_isbn: form.linked_book_isbn || null, linked_reading_list_id: form.linked_reading_list_id || null }).select().single();
     if (error) { setSaving(false); return toast.error(error.message); }
     const eventId = (data as any).id;
     if (form.media.length) await supabase.from('event_media' as any).insert(form.media.map((m) => ({ ...m, event_id: eventId })));
-    toast.success(approval_status === 'pending' ? `Novo evento aguarda aprovação: ${form.title}` : 'Evento publicado.');
+    toast.success(form.draft ? 'Rascunho guardado.' : 'Evento publicado.');
     setSaving(false); setStep(1); setForm(emptyForm); onOpenChange(false); onCreated();
   };
 
