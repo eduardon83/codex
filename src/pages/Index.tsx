@@ -12,10 +12,11 @@ import BookDetail from '@/components/BookDetail';
 import ProfileScreen from '@/components/ProfileScreen';
 import ProcurarLivroScreen from '@/components/ProcurarLivroScreen';
 import ListasScreen from '@/components/ListasScreen';
+import EventsScreen from '@/components/EventsScreen';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
 
-type Tab = 'library' | 'lists' | 'find' | 'profile' | 'add';
+type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile' | 'add';
 
 interface PublicLibraryView {
   libraryId: string;
@@ -155,6 +156,7 @@ export default function Index() {
         {activeTab === 'lists' && (
           <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
         )}
+        {activeTab === 'events' && <EventsScreen onOpenCalendarEvent={null} />}
       </main>
       <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={setActiveTab} />
     </>
