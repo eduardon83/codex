@@ -30,6 +30,9 @@ import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import LoanNotifications, { emitLoanRefresh } from '@/components/loans/LoanNotifications';
+import { useUserRoles } from '@/hooks/useUserRoles';
+import { Switch } from '@/components/ui/switch';
+import { Globe, Link2 } from 'lucide-react';
 
 interface Library {
   id: string;
