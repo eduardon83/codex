@@ -188,8 +188,26 @@ export default function ReadingListDetail({ list, subscribed, onBack, onCreatePl
         <ArrowLeft size={15} /> Voltar
       </button>
 
-      <header className="space-y-1">
-        <h1 className="font-serif text-2xl text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif' }}>{list.name}</h1>
+      <header className="space-y-2">
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="font-serif text-2xl text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif' }}>{list.name}</h1>
+          {canShare && (
+            <div className="flex items-center gap-2 shrink-0">
+              <Globe size={14} className="text-muted-foreground" />
+              <Switch checked={isPublic} disabled={togglingPublic} onCheckedChange={togglePublic} aria-label="Tornar lista pública" />
+              {isPublic && (
+                <button
+                  onClick={copyShareLink}
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                  aria-label="Copiar link da lista"
+                  title="Copiar link"
+                >
+                  <Link2 size={16} />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
         <p className="text-xs text-muted-foreground">
           {books.length} {books.length === 1 ? 'livro' : 'livros'} · criada {new Date(list.created_at).toLocaleDateString('pt-PT')}
         </p>
