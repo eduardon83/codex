@@ -88,6 +88,22 @@ export default function CalendarScreen({ onBack, onOpenBook }: Props) {
           title: c.library_name || c.name,
         });
       });
+      // Codex loan_requests with due_date (both as owner and as borrower)
+      const { data: loanReqs } = await supabase
+        .from('loan_requests' as any)
+        .select('id, due_date, book_id, book_title, owner_user_id, requester_user_id, status')
+        .or(`owner_user_id.eq.${user.id},requester_user_id.eq.${user.id}`)
+        .eq('status', 'accepted')
+        .not('due_date', 'is', null);
+      ((loanReqs as any[]) || []).forEach((r) => {
+        const isOwner = r.owner_user_id === user.id;
+        all.push({
+          date: ymd(new Date(r.due_date)),
+          type: isOwner ? 'loan' : 'borrow',
+          title: r.book_title,
+          bookId: r.book_id,
+        });
+      });
       setEvents(all);
     })();
   }, [user, t]);
