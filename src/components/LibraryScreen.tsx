@@ -608,6 +608,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
+                  {activeLoanByBookId[book.id] && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" aria-label={t('loans.activeLoan', 'Empréstimo ativo')} />}
                   <p className="text-sm text-foreground truncate">{book.title}</p>
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{book.author || t('library.unknownAuthor')}</p>
@@ -622,6 +623,11 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openAddToPlan(book); }}>Adicionar ao plano</DropdownMenuItem>
+                      {activeLoanByBookId[book.id] && (
+                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); markLoanComplete(book.id); }}>
+                          {t('loans.markComplete', 'Marcar empréstimo como concluído')}
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <ChevronRight size={16} className="text-muted-foreground" />
