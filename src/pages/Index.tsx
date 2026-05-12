@@ -155,6 +155,7 @@ export default function Index() {
         {activeTab === 'lists' && (
           <ListasScreen onGoToSearchReadingLists={() => { localStorage.setItem('folium_procurar_tab', 'readingLists'); setActiveTab('find'); }} />
         )}
+        {activeTab === 'events' && <EventsScreen onOpenCalendarEvent={null} />}
       </main>
       <BottomNav active={activeTab === 'add' ? 'library' : activeTab} onChange={setActiveTab} />
     </>
