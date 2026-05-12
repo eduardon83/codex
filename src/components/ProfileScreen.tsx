@@ -221,16 +221,7 @@ export default function ProfileScreen() {
               {[displayProfile.first_name, displayProfile.last_name].filter(Boolean).join(' ')}
             </p>
             {displayProfile.username && <p className="text-sm text-muted-foreground">@{displayProfile.username}</p>}
-            <div className="mt-1" data-tutorial="school-selector">
-              <SchoolSelector
-                current={{
-                  country_code: (profile as any)?.country_code ?? null,
-                  district_id: (profile as any)?.district_id ?? null,
-                  school_id: (profile as any)?.school_id ?? null,
-                }}
-                onSaved={refreshProfile}
-              />
-            </div>
+            <ProfileRoleBadges />
             {displayProfile.bio && (
               <p className="text-xs text-foreground mt-2">{displayProfile.bio}</p>
             )}
