@@ -76,7 +76,7 @@ export function useLoanNotifications() {
     window.addEventListener('codex-loan-refresh', handler);
     if (!user) return () => window.removeEventListener('codex-loan-refresh', handler);
     const channel = supabase
-      .channel(`loan_notifications_${user.id}`)
+      .channel(`loan_notifications_${user.id}_${Math.random().toString(36).slice(2)}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${user.id}` }, load)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'loan_requests', filter: `requester_user_id=eq.${user.id}` }, load)
       .subscribe();
