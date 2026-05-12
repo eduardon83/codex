@@ -335,12 +335,14 @@ export default function ProfileScreen() {
         </div>
       </div>
 
-      <div className="mt-8 border-t border-border pt-5 space-y-2">
-        <p className="text-sm text-muted-foreground mb-3">{t('profile.proRoleSection', 'Conta profissional')}</p>
-        <Button variant="outline" className="w-full justify-start" onClick={() => setShowRoleRequest(true)}>
-          {t('roleRequest.openButton', 'Pedir conta de Livraria, Autor ou Influencer')}
-        </Button>
-      </div>
+      {!hasAnyProRole && (
+        <div className="mt-8 border-t border-border pt-5 space-y-2">
+          <p className="text-sm text-muted-foreground mb-3">{t('profile.proRoleSection', 'Conta profissional')}</p>
+          <Button variant="outline" className="w-full justify-start" onClick={() => setShowRoleRequest(true)}>
+            {t('roleRequest.openButton', 'Pedir conta de Livraria, Autor ou Influencer')}
+          </Button>
+        </div>
+      )}
 
       <ProContentSection />
 
