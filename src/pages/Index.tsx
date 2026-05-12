@@ -15,7 +15,7 @@ import ListasScreen from '@/components/ListasScreen';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
 
-type Tab = 'library' | 'lists' | 'find' | 'profile' | 'add';
+type Tab = 'library' | 'lists' | 'find' | 'events' | 'profile' | 'add';
 
 interface PublicLibraryView {
   libraryId: string;
