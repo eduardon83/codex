@@ -29,6 +29,7 @@ import HelpButton from '@/components/tutorial/HelpButton';
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import LoanNotifications, { emitLoanRefresh } from '@/components/loans/LoanNotifications';
 
 interface Library {
   id: string;
