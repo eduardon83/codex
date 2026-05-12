@@ -195,6 +195,7 @@ function BooksTab({ userId }: { userId: string | null }) {
             })}
           </div>
         )}
+      <LoanRequestSheet book={loanBook} open={!!loanBook} onOpenChange={(v) => !v && setLoanBook(null)} />
     </>
   );
 }
