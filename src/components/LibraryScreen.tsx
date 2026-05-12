@@ -30,6 +30,9 @@ import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 import LoanNotifications, { emitLoanRefresh } from '@/components/loans/LoanNotifications';
+import { useUserRoles } from '@/hooks/useUserRoles';
+import { Switch } from '@/components/ui/switch';
+import { Globe, Link2 } from 'lucide-react';
 
 interface Library {
   id: string;
@@ -67,6 +70,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const { user } = useAuth();
   const { showToast } = useAppToast();
   const { celebrate } = useCelebration();
+  const { hasAnyProRole } = useUserRoles();
   const [libraries, setLibraries] = useState<Library[]>([]);
   const [activeLibrary, setActiveLibrary] = useState<string>('');
   const [books, setBooks] = useState<Book[]>([]);
@@ -410,7 +414,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 </Tooltip>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif', fontStyle: 'italic', fontSize: '1.75rem', color: 'hsl(var(--accent, var(--foreground)))' }}>{currentLib.name}</h1>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -420,6 +424,38 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                   </TooltipTrigger>
                   <TooltipContent>{t('library.editName')}</TooltipContent>
                 </Tooltip>
+                {hasAnyProRole && (
+                  <div className="flex items-center gap-2 ml-2 px-2 py-1 border border-border rounded">
+                    <Globe size={13} className="text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground">Pública</span>
+                    <Switch
+                      checked={!!currentLib.is_public}
+                      onCheckedChange={async (v) => {
+                        await supabase.from('libraries').update({ is_public: v }).eq('id', currentLib.id);
+                        showToast(v ? 'Biblioteca tornada pública.' : 'Biblioteca tornada privada.');
+                        loadLibraries();
+                      }}
+                    />
+                    {currentLib.is_public && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => {
+                              const url = `${window.location.origin}/lista/${currentLib.id}`;
+                              navigator.clipboard.writeText(url);
+                              showToast('Link copiado.');
+                            }}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label="Copiar link"
+                          >
+                            <Link2 size={14} />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent>Copiar link de partilha</TooltipContent>
+                      </Tooltip>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             <div className="flex items-center gap-2">
