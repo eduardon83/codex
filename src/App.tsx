@@ -86,6 +86,7 @@ const App = () => {
                     <Route path="/auth" element={<AuthRoute />} />
                     <Route path="/admin/*" element={<Admin />} />
                     <Route path="/lista/:libraryId" element={<PublicList />} />
+                    <Route path="/reading-list/:listId" element={<PublicReadingList />} />
                     <Route path="/u/:username" element={<PublicProfile />} />
                     <Route path="/reset-password" element={<ResetPasswordScreen />} />
                     <Route path="/parental-consent" element={<ParentalConsent />} />
