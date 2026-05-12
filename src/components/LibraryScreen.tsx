@@ -29,6 +29,7 @@ import HelpButton from '@/components/tutorial/HelpButton';
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import LoanNotifications, { emitLoanRefresh } from '@/components/loans/LoanNotifications';
 
 interface Library {
   id: string;
@@ -90,6 +91,52 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [filterFormats, setFilterFormats] = useState<string[]>([]);
   const [filterStatuses, setFilterStatuses] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('date_newest');
+  const [activeLoanByBookId, setActiveLoanByBookId] = useState<Record<string, string>>({});
+
+  const loadActiveLoans = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('loan_requests' as any)
+      .select('id, book_id')
+      .eq('owner_user_id', user.id)
+      .eq('status', 'accepted');
+    const map: Record<string, string> = {};
+    ((data as any[]) || []).forEach((r) => { map[r.book_id] = r.id; });
+    setActiveLoanByBookId(map);
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    loadActiveLoans();
+    const handler = () => loadActiveLoans();
+    window.addEventListener('codex-loan-refresh', handler);
+    const channel = supabase
+      .channel(`library_active_loans_${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'loan_requests', filter: `owner_user_id=eq.${user.id}` }, () => loadActiveLoans())
+      .subscribe();
+    return () => {
+      window.removeEventListener('codex-loan-refresh', handler);
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
+
+  const markLoanComplete = async (bookId: string) => {
+    if (!user) return;
+    const loanId = activeLoanByBookId[bookId];
+    if (!loanId) return;
+    await supabase
+      .from('loan_requests' as any)
+      .update({ status: 'returned', returned_at: new Date().toISOString() })
+      .eq('id', loanId);
+    await supabase
+      .from('book_availability' as any)
+      .update({ is_available: true })
+      .eq('book_id', bookId)
+      .eq('owner_user_id', user.id);
+    toast.success(t('loans.completed', 'Empréstimo concluído.'));
+    loadActiveLoans();
+    emitLoanRefresh();
+  };
 
   useEffect(() => {
     if (user) loadLibraries();
@@ -289,6 +336,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
 
   return (
     <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
+      <LoanNotifications />
       {/* Top bar with help */}
       <div className="flex justify-end mb-1 -mt-1">
         <HelpButton screen="library" autoOnFirstVisit />
@@ -560,6 +608,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
+                  {activeLoanByBookId[book.id] && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" aria-label={t('loans.activeLoan', 'Empréstimo ativo')} />}
                   <p className="text-sm text-foreground truncate">{book.title}</p>
                 </div>
                 <p className="text-xs text-muted-foreground truncate">{book.author || t('library.unknownAuthor')}</p>
@@ -574,6 +623,11 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={(e) => { e.stopPropagation(); openAddToPlan(book); }}>Adicionar ao plano</DropdownMenuItem>
+                      {activeLoanByBookId[book.id] && (
+                        <DropdownMenuItem onClick={(e) => { e.stopPropagation(); markLoanComplete(book.id); }}>
+                          {t('loans.markComplete', 'Marcar empréstimo como concluído')}
+                        </DropdownMenuItem>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <ChevronRight size={16} className="text-muted-foreground" />
