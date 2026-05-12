@@ -14,6 +14,7 @@ import Index from "./pages/Index.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
 import Admin from "./pages/Admin.tsx";
 import PublicList from "./pages/PublicList.tsx";
+import PublicReadingList from "./pages/PublicReadingList.tsx";
 import PublicProfile from "./pages/PublicProfile.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import ParentalConsent from "./pages/ParentalConsent.tsx";
@@ -85,6 +86,7 @@ const App = () => {
                     <Route path="/auth" element={<AuthRoute />} />
                     <Route path="/admin/*" element={<Admin />} />
                     <Route path="/lista/:libraryId" element={<PublicList />} />
+                    <Route path="/reading-list/:listId" element={<PublicReadingList />} />
                     <Route path="/u/:username" element={<PublicProfile />} />
                     <Route path="/reset-password" element={<ResetPasswordScreen />} />
                     <Route path="/parental-consent" element={<ParentalConsent />} />

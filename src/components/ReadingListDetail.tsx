@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, BookOpen, Check, Plus, Search, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, BookOpen, Check, Plus, Search, X, Loader2, Globe, Link2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useUserRoles } from '@/hooks/useUserRoles';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -58,16 +60,45 @@ interface LibraryBook {
 
 export default function ReadingListDetail({ list, subscribed, onBack, onCreatePlan }: Props) {
   const { user } = useAuth();
+  const { hasAnyProRole } = useUserRoles();
   const [books, setBooks] = useState<ReadingListDetailRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [roles, setRoles] = useState<string[]>([]);
   const [addOpen, setAddOpen] = useState(false);
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [subscriberPicker, setSubscriberPicker] = useState<ReadingListDetailRow | null>(null);
+  const [isPublic, setIsPublic] = useState(false);
+  const [togglingPublic, setTogglingPublic] = useState(false);
 
   const isOwner = !!user && user.id === list.user_id;
   const isTeacher = useMemo(() => roles.some(r => TEACHER_ROLES.has(r)), [roles]);
   const canEdit = isOwner && !subscribed;
+  const canShare = isOwner && hasAnyProRole;
+
+  useEffect(() => {
+    if (!list.id) return;
+    supabase.from('reading_lists').select('is_public').eq('id', list.id).maybeSingle()
+      .then(({ data }) => setIsPublic(!!(data as any)?.is_public));
+  }, [list.id]);
+
+  const togglePublic = async (next: boolean) => {
+    setTogglingPublic(true);
+    const { error } = await supabase.from('reading_lists').update({ is_public: next } as any).eq('id', list.id);
+    setTogglingPublic(false);
+    if (error) return toast.error(error.message);
+    setIsPublic(next);
+    toast.success(next ? 'Lista pública.' : 'Lista privada.');
+  };
+
+  const copyShareLink = async () => {
+    const url = `${window.location.origin}/reading-list/${list.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copiado.');
+    } catch {
+      toast.error('Não foi possível copiar.');
+    }
+  };
 
   const loadBooks = async () => {
     setLoading(true);
@@ -157,8 +188,26 @@ export default function ReadingListDetail({ list, subscribed, onBack, onCreatePl
         <ArrowLeft size={15} /> Voltar
       </button>
 
-      <header className="space-y-1">
-        <h1 className="font-serif text-2xl text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif' }}>{list.name}</h1>
+      <header className="space-y-2">
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="font-serif text-2xl text-foreground" style={{ fontFamily: '"Cormorant Garamond", serif' }}>{list.name}</h1>
+          {canShare && (
+            <div className="flex items-center gap-2 shrink-0">
+              <Globe size={14} className="text-muted-foreground" />
+              <Switch checked={isPublic} disabled={togglingPublic} onCheckedChange={togglePublic} aria-label="Tornar lista pública" />
+              {isPublic && (
+                <button
+                  onClick={copyShareLink}
+                  className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                  aria-label="Copiar link da lista"
+                  title="Copiar link"
+                >
+                  <Link2 size={16} />
+                </button>
+              )}
+            </div>
+          )}
+        </div>
         <p className="text-xs text-muted-foreground">
           {books.length} {books.length === 1 ? 'livro' : 'livros'} · criada {new Date(list.created_at).toLocaleDateString('pt-PT')}
         </p>

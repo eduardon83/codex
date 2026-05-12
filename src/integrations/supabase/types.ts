@@ -1253,11 +1253,13 @@ export type Database = {
           education_level: string | null
           id: string
           is_official: boolean
+          is_public: boolean
           name: string
           notification_sent_at: string | null
           rejection_note: string | null
           school_id: string | null
           scope: string
+          share_code: string | null
           subject: string | null
           updated_at: string
           user_id: string
@@ -1271,11 +1273,13 @@ export type Database = {
           education_level?: string | null
           id?: string
           is_official?: boolean
+          is_public?: boolean
           name?: string
           notification_sent_at?: string | null
           rejection_note?: string | null
           school_id?: string | null
           scope?: string
+          share_code?: string | null
           subject?: string | null
           updated_at?: string
           user_id: string
@@ -1289,11 +1293,13 @@ export type Database = {
           education_level?: string | null
           id?: string
           is_official?: boolean
+          is_public?: boolean
           name?: string
           notification_sent_at?: string | null
           rejection_note?: string | null
           school_id?: string | null
           scope?: string
+          share_code?: string | null
           subject?: string | null
           updated_at?: string
           user_id?: string
