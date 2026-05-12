@@ -23,8 +23,9 @@ import i18n from '@/i18n';
 import AboutScreen from '@/components/AboutScreen';
 import RoleRequestModal from '@/components/RoleRequestModal';
 import ProContentSection from '@/components/profile/ProContentSection';
-import SchoolSelector from '@/components/SchoolSelector';
 import ProfileStats from '@/components/ProfileStats';
+import { Badge } from '@/components/ui/badge';
+import { useUserRoles } from '@/hooks/useUserRoles';
 import ReadingHistoryScreen from '@/components/ReadingHistoryScreen';
 import CalendarScreen from '@/components/CalendarScreen';
 import FavouritesSection from '@/components/profile/FavouritesSection';
@@ -39,6 +40,7 @@ import { Upload, Trash2 } from 'lucide-react';
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const { user, profile, signOut, refreshProfile } = useAuth();
+  const { roles, hasAnyProRole } = useUserRoles();
   const { theme, availableThemes, setTheme } = useTheme();
   
   const [editing, setEditing] = useState(false);
@@ -220,16 +222,17 @@ export default function ProfileScreen() {
               {[displayProfile.first_name, displayProfile.last_name].filter(Boolean).join(' ')}
             </p>
             {displayProfile.username && <p className="text-sm text-muted-foreground">@{displayProfile.username}</p>}
-            <div className="mt-1" data-tutorial="school-selector">
-              <SchoolSelector
-                current={{
-                  country_code: (profile as any)?.country_code ?? null,
-                  district_id: (profile as any)?.district_id ?? null,
-                  school_id: (profile as any)?.school_id ?? null,
-                }}
-                onSaved={refreshProfile}
-              />
-            </div>
+            {roles.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-1.5">
+                {roles
+                  .filter((r) => ['bookstore', 'author', 'influencer', 'entity', 'admin', 'global_admin', 'teacher', 'school_admin'].includes(r))
+                  .map((r) => (
+                    <Badge key={r} variant="secondary" className="text-[10px] px-2 py-0.5">
+                      {t(`pro.role.${r}`, r)}
+                    </Badge>
+                  ))}
+              </div>
+            )}
             {displayProfile.bio && (
               <p className="text-xs text-foreground mt-2">{displayProfile.bio}</p>
             )}
@@ -244,16 +247,6 @@ export default function ProfileScreen() {
               <Input value={form.last_name} onChange={e => update('last_name', e.target.value)} placeholder={t('profile.lastName')} className="bg-background border-border text-sm h-9" />
             </div>
             <Input value={form.username} onChange={e => update('username', e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))} placeholder={t('profile.username')} className="bg-background border-border text-sm h-9" />
-            <div data-tutorial="school-selector">
-            <SchoolSelector
-              current={{
-                country_code: (profile as any)?.country_code ?? null,
-                district_id: (profile as any)?.district_id ?? null,
-                school_id: (profile as any)?.school_id ?? null,
-              }}
-              onSaved={refreshProfile}
-            />
-            </div>
             <Textarea value={form.bio} onChange={e => update('bio', e.target.value)} placeholder={t('profile.bio')} className="bg-background border-border text-sm resize-none" rows={2} maxLength={280} />
             <div className="flex gap-2">
               <Button onClick={save} size="sm" className="flex-1">{t('profile.save')}</Button>
@@ -353,12 +346,14 @@ export default function ProfileScreen() {
         </div>
       </div>
 
-      <div className="mt-8 border-t border-border pt-5 space-y-2">
-        <p className="text-sm text-muted-foreground mb-3">{t('profile.proRoleSection', 'Conta profissional')}</p>
-        <Button variant="outline" className="w-full justify-start" onClick={() => setShowRoleRequest(true)}>
-          {t('roleRequest.openButton', 'Pedir conta de Livraria, Autor ou Influencer')}
-        </Button>
-      </div>
+      {!hasAnyProRole && (
+        <div className="mt-8 border-t border-border pt-5 space-y-2">
+          <p className="text-sm text-muted-foreground mb-3">{t('profile.proRoleSection', 'Conta profissional')}</p>
+          <Button variant="outline" className="w-full justify-start" onClick={() => setShowRoleRequest(true)}>
+            {t('roleRequest.openButton', 'Pedir conta de Livraria, Autor ou Influencer')}
+          </Button>
+        </div>
+      )}
 
       <ProContentSection />
 
