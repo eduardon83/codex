@@ -1833,6 +1833,7 @@ export type Database = {
         | "news"
         | "award"
         | "pnl_update"
+        | "other"
       reading_plan_item_status: "planned" | "reading" | "done" | "skipped"
       reading_plan_scope:
         | "personal"
@@ -2002,6 +2003,7 @@ export const Constants = {
         "news",
         "award",
         "pnl_update",
+        "other",
       ],
       reading_plan_item_status: ["planned", "reading", "done", "skipped"],
       reading_plan_scope: [
