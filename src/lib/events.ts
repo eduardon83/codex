@@ -1,6 +1,6 @@
 import { BookOpen, CalendarDays, Feather, Landmark, Library, Megaphone, Mic2, Newspaper, PenTool, Trophy, Users } from 'lucide-react';
 
-export type EventType = 'reading_group' | 'author_talk' | 'writing_comp' | 'reading_comp' | 'poetry_slam' | 'book_club' | 'symposium' | 'workshop' | 'book_fair' | 'interschool' | 'library_visit' | 'reading_week' | 'storytelling' | 'news' | 'award' | 'pnl_update';
+export type EventType = 'reading_group' | 'author_talk' | 'writing_comp' | 'reading_comp' | 'poetry_slam' | 'book_club' | 'symposium' | 'workshop' | 'book_fair' | 'interschool' | 'library_visit' | 'reading_week' | 'storytelling' | 'news' | 'award' | 'pnl_update' | 'other';
 export type EventScope = 'school' | 'district' | 'regional' | 'national';
 export type EventStatus = 'draft' | 'published' | 'archived' | 'cancelled';
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
