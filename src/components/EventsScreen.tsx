@@ -186,13 +186,12 @@ function EventCreateSheet({ open, onOpenChange, roles, onCreated }: { open: bool
   const [form, setForm] = useState<EventForm>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [lists, setLists] = useState<{ id: string; name: string }[]>([]);
-  const isTeacher = roles.includes('teacher') && !roles.some((r) => ['school_admin', 'entity', 'global_admin', 'admin'].includes(r));
-  const canChooseScope = !isTeacher;
-  const isEntity = roles.includes('entity');
+  const isTeacher = false;
+  const canChooseScope = true;
+  const isEntity = roles.includes('entity') || roles.includes('bookstore' as any);
   const isGlobal = roles.includes('global_admin') || roles.includes('admin');
 
   useEffect(() => { if (user && open) supabase.from('reading_lists' as any).select('id, name').eq('user_id', user.id).then(({ data }) => setLists((data as any[]) || [])); }, [user, open]);
-  useEffect(() => { if (open && isTeacher) setForm((f) => ({ ...f, scope: 'district' })); }, [open, isTeacher]);
 
   const update = (patch: Partial<EventForm>) => setForm((f) => ({ ...f, ...patch }));
   const skipDates = form.type === 'news' || form.type === 'pnl_update';
