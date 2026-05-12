@@ -12,10 +12,8 @@ import {
 } from '@/components/ui/select';
 import { Loader2, ArrowLeft, CheckCircle2, XCircle, Check, Upload, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import foliumLogo from '@/assets/folium-logo.svg';
-import foliumLogoGold from '@/assets/folium-logo-gold.png';
+import owlGold from '@/assets/codex-owl-gold.png';
 import { applyTheme, THEMES, useTheme, getThemeDescription } from '@/hooks/useTheme';
-import { isFoliumDarkTheme } from '@/lib/foliumTheme';
 import { fetchCurrentLegalDocument, LegalDocumentRecord } from '@/lib/legalDocuments';
 import UserAvatar from '@/components/UserAvatar';
 import { uploadFileToStorage } from '@/lib/storage';
