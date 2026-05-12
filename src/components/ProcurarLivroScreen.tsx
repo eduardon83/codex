@@ -12,6 +12,7 @@ import HelpButton from '@/components/tutorial/HelpButton';
 import OwlLoader from '@/components/OwlLoader';
 import { resolveAvatarSrc } from '@/lib/avatars';
 import { toast } from 'sonner';
+import LoanRequestSheet, { LoanRequestBook } from '@/components/loans/LoanRequestSheet';
 
 type ProcurarTab = 'books' | 'libraries' | 'listsPlans' | 'publicLibraries';
 type ListsPlansFilter = 'lists' | 'plans';
