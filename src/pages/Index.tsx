@@ -12,6 +12,7 @@ import BookDetail from '@/components/BookDetail';
 import ProfileScreen from '@/components/ProfileScreen';
 import ProcurarLivroScreen from '@/components/ProcurarLivroScreen';
 import ListasScreen from '@/components/ListasScreen';
+import EventsScreen from '@/components/EventsScreen';
 import PublicLibraryDetail from '@/components/PublicLibraryDetail';
 import OwlLoader from '@/components/OwlLoader';
 
