@@ -327,12 +327,75 @@ export type Database = {
           },
         ]
       }
+      cities: {
+        Row: {
+          created_at: string
+          district_id: string
+          id: string
+          name: string
+          name_en: string | null
+        }
+        Insert: {
+          created_at?: string
+          district_id: string
+          id?: string
+          name: string
+          name_en?: string | null
+        }
+        Update: {
+          created_at?: string
+          district_id?: string
+          id?: string
+          name?: string
+          name_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cities_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      countries: {
+        Row: {
+          code: string
+          created_at: string
+          is_active: boolean
+          name_en: string
+          name_es: string
+          name_fr: string
+          name_pt: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          is_active?: boolean
+          name_en: string
+          name_es: string
+          name_fr: string
+          name_pt: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          is_active?: boolean
+          name_en?: string
+          name_es?: string
+          name_fr?: string
+          name_pt?: string
+        }
+        Relationships: []
+      }
       districts: {
         Row: {
           country_code: string
           created_at: string
           id: string
           name: string
+          name_en: string | null
           region: string | null
         }
         Insert: {
@@ -340,6 +403,7 @@ export type Database = {
           created_at?: string
           id?: string
           name: string
+          name_en?: string | null
           region?: string | null
         }
         Update: {
@@ -347,6 +411,7 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          name_en?: string | null
           region?: string | null
         }
         Relationships: []
@@ -551,6 +616,8 @@ export type Database = {
         Row: {
           approval_status: Database["public"]["Enums"]["event_approval_status"]
           body: string
+          city_id: string | null
+          country_code: string | null
           created_at: string
           created_by_user_id: string
           district_id: string | null
@@ -579,6 +646,8 @@ export type Database = {
         Insert: {
           approval_status?: Database["public"]["Enums"]["event_approval_status"]
           body: string
+          city_id?: string | null
+          country_code?: string | null
           created_at?: string
           created_by_user_id: string
           district_id?: string | null
@@ -607,6 +676,8 @@ export type Database = {
         Update: {
           approval_status?: Database["public"]["Enums"]["event_approval_status"]
           body?: string
+          city_id?: string | null
+          country_code?: string | null
           created_at?: string
           created_by_user_id?: string
           district_id?: string | null
@@ -633,6 +704,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "events_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_country_code_fkey"
+            columns: ["country_code"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["code"]
+          },
           {
             foreignKeyName: "events_district_id_fkey"
             columns: ["district_id"]
@@ -915,6 +1000,7 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           birth_year: number | null
+          city_id: string | null
           country_code: string
           created_at: string
           date_of_birth: string | null
@@ -923,9 +1009,6 @@ export type Database = {
           id: string
           language: string
           last_name: string | null
-          location: string | null
-          location_lat: number | null
-          location_lng: number | null
           parent_consent_confirmed_at: string | null
           parent_consent_expires_at: string | null
           parent_consent_granted_at: string | null
@@ -959,6 +1042,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_year?: number | null
+          city_id?: string | null
           country_code?: string
           created_at?: string
           date_of_birth?: string | null
@@ -967,9 +1051,6 @@ export type Database = {
           id?: string
           language?: string
           last_name?: string | null
-          location?: string | null
-          location_lat?: number | null
-          location_lng?: number | null
           parent_consent_confirmed_at?: string | null
           parent_consent_expires_at?: string | null
           parent_consent_granted_at?: string | null
@@ -1003,6 +1084,7 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           birth_year?: number | null
+          city_id?: string | null
           country_code?: string
           created_at?: string
           date_of_birth?: string | null
@@ -1011,9 +1093,6 @@ export type Database = {
           id?: string
           language?: string
           last_name?: string | null
-          location?: string | null
-          location_lat?: number | null
-          location_lng?: number | null
           parent_consent_confirmed_at?: string | null
           parent_consent_expires_at?: string | null
           parent_consent_granted_at?: string | null
@@ -1042,6 +1121,13 @@ export type Database = {
           username?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "profiles_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "profiles_district_id_fkey"
             columns: ["district_id"]
@@ -1698,9 +1784,11 @@ export type Database = {
       public_profiles: {
         Row: {
           avatar_url: string | null
+          city_id: string | null
+          country_code: string | null
+          district_id: string | null
           first_name: string | null
           last_name: string | null
-          location: string | null
           pro_city: string | null
           pro_entity_name: string | null
           pro_platform_url: string | null
@@ -1712,9 +1800,11 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          city_id?: string | null
+          country_code?: string | null
+          district_id?: string | null
           first_name?: string | null
           last_name?: string | null
-          location?: string | null
           pro_city?: string | null
           pro_entity_name?: string | null
           pro_platform_url?: string | null
@@ -1726,9 +1816,11 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          city_id?: string | null
+          country_code?: string | null
+          district_id?: string | null
           first_name?: string | null
           last_name?: string | null
-          location?: string | null
           pro_city?: string | null
           pro_entity_name?: string | null
           pro_platform_url?: string | null
@@ -1738,7 +1830,22 @@ export type Database = {
           user_id?: string | null
           username?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_city_id_fkey"
+            columns: ["city_id"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_district_id_fkey"
+            columns: ["district_id"]
+            isOneToOne: false
+            referencedRelation: "districts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
