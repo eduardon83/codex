@@ -14,7 +14,6 @@ interface PublicProfile {
   first_name: string | null;
   last_name: string | null;
   avatar_url: string | null;
-  location: string | null;
   pro_entity_name: string | null;
   pro_city: string | null;
   pro_website: string | null;
