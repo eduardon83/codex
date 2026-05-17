@@ -14,7 +14,6 @@ interface PublicProfile {
   first_name: string | null;
   last_name: string | null;
   avatar_url: string | null;
-  location: string | null;
   pro_entity_name: string | null;
   pro_city: string | null;
   pro_website: string | null;
@@ -125,7 +124,7 @@ export default function PublicProfile() {
             )}
           </div>
           <div className="text-sm text-muted-foreground mt-2 space-y-0.5">
-            {(profile.pro_city || profile.location) && <p>{profile.pro_city || profile.location}</p>}
+            {profile.pro_city && <p>{profile.pro_city}</p>}
             {profile.pro_website && (
               <a href={profile.pro_website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 underline">
                 {profile.pro_website.replace(/^https?:\/\//, '')} <ExternalLink className="w-3 h-3" />

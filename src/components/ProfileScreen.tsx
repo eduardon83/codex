@@ -95,15 +95,11 @@ export default function ProfileScreen() {
     setEditing(false);
   };
 
-  const saveLocation = async (data: { name: string; lat: number; lng: number }) => {
-    if (!user) return;
-    await supabase.from('profiles').update({
-      location: data.name,
-      location_lat: data.lat,
-      location_lng: data.lng,
-    } as any).eq('user_id', user.id);
+  const saveLocation = async (_data: { name: string; lat: number; lng: number }) => {
+    // Legacy free-text location removed; structured city/district now lives on profiles.
     await refreshProfile();
   };
+
 
   const changeLanguage = async (lang: string) => {
     i18n.changeLanguage(lang);
