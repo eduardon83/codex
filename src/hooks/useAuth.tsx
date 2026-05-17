@@ -9,7 +9,6 @@ interface Profile {
   first_name: string | null;
   last_name: string | null;
   username: string | null;
-  location: string | null;
   bio: string | null;
   avatar_url?: string | null;
   profile_completed: boolean;
