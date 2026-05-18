@@ -183,11 +183,11 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
         }
       `}</style>
 
-      {/* Background layer: village landscape */}
+      {/* Layer 1 — Background SVG */}
       <div
         aria-hidden
         style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute', inset: 0, zIndex: 0,
           backgroundImage: `url(${bgSrc})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -200,22 +200,28 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
         }}
       />
 
-      {/* Legibility overlay */}
+      {/* Layer 2 — Legibility overlay */}
       <div
         aria-hidden
         style={{
-          position: 'absolute', inset: 0,
-          background: 'rgba(0,0,0,0.15)',
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'rgba(0,0,0,0.12)',
           pointerEvents: 'none',
         }}
       />
 
-
+      {/* Layers 3–5 — particles & bird */}
       {!completed && (
         <>
-          <WindParticles leafColor={particles.leaf} />
-          <ReadingBird color={particles.glow} />
-          <AmbientParticles themeId={themeDef?.id ?? 'claro'} glowColor={particles.glow} />
+          <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none' }}>
+            <AmbientParticles themeId={activeSceneId} glowColor={particles.glow} />
+          </div>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none' }}>
+            <WindParticles leafColor={particles.leaf} />
+          </div>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 4, pointerEvents: 'none' }}>
+            <ReadingBird color={particles.glow} />
+          </div>
         </>
       )}
 
