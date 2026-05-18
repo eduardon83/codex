@@ -145,15 +145,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
     onClose(null);
   };
 
-  const leaves = useMemo(
-    () => Array.from({ length: 10 }).map((_, i) => ({
-      left: Math.random() * 100,
-      delay: Math.random() * 8,
-      duration: 12 + Math.random() * 6,
-      size: 6 + Math.random() * 6,
-    })),
-    []
-  );
+
 
   const burst = useMemo(
     () => Array.from({ length: 26 }).map((_, i) => {
