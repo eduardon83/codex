@@ -500,7 +500,10 @@
     "totalLibraries": "Libraries",
     "wishlist": "Wishlist",
     "avgRating": "Avg. rating",
-    "topGenre": "Top genre"
+    "topGenre": "Top genre",
+    "totalReadingTime": "Reading time",
+    "longestSession": "Longest session",
+    "readingSessions": "Reading sessions"
   },
   "tutorial": {
     "help": "Help",
@@ -840,5 +843,29 @@
     "noPlans": "No public plans yet.",
     "noEvents": "No upcoming events.",
     "notFound": "Profile not found"
+  },
+  "reading_mode": {
+    "choose_what": "What are you reading?",
+    "other_book": "Another book",
+    "timing_title": "How do you want to read?",
+    "from_library": "From my library",
+    "no_books": "No books to show.",
+    "title_field": "Title",
+    "author_field": "Author",
+    "continue": "Continue",
+    "chronometer": "Chronometer",
+    "chronometer_desc": "Counts up from 0",
+    "timer": "Timer",
+    "timer_desc": "Counts down",
+    "duration": "Duration",
+    "custom_min": "min",
+    "keep_screen": "Keep screen on",
+    "start": "Start reading →",
+    "session_saved": "{{duration}} session saved.",
+    "new_session": "New reading",
+    "back": "Back",
+    "pause": "Pause",
+    "resume": "Resume",
+    "finish": "Finish"
   }
 }

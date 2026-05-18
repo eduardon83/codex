@@ -500,7 +500,10 @@
     "totalLibraries": "Bibliotecas",
     "wishlist": "Desejos",
     "avgRating": "Nota média",
-    "topGenre": "Género favorito"
+    "topGenre": "Género favorito",
+    "totalReadingTime": "Tempo de leitura",
+    "longestSession": "Maior sessão",
+    "readingSessions": "Sessões de leitura"
   },
   "tutorial": {
     "help": "Ajuda",
@@ -840,5 +843,29 @@
     "noPlans": "Sem planos públicos ainda.",
     "noEvents": "Sem eventos agendados.",
     "notFound": "Perfil não encontrado"
+  },
+  "reading_mode": {
+    "choose_what": "O que vais ler?",
+    "other_book": "Outro livro",
+    "timing_title": "Como queres ler?",
+    "from_library": "Da minha biblioteca",
+    "no_books": "Sem livros para mostrar.",
+    "title_field": "Título",
+    "author_field": "Autor",
+    "continue": "Continuar",
+    "chronometer": "Cronómetro",
+    "chronometer_desc": "Conta a partir de 0",
+    "timer": "Temporizador",
+    "timer_desc": "Conta decrescente",
+    "duration": "Duração",
+    "custom_min": "min",
+    "keep_screen": "Manter ecrã activo",
+    "start": "Começar a ler →",
+    "session_saved": "Sessão de {{duration}} guardada.",
+    "new_session": "Nova leitura",
+    "back": "Voltar",
+    "pause": "Pausar",
+    "resume": "Retomar",
+    "finish": "Terminar"
   }
 }
