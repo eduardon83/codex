@@ -169,7 +169,7 @@ export default function ProfileScreen() {
   
 
   return (
-    <div className="pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
+    <div className="profile-screen pb-24 px-4 pt-4 max-w-lg mx-auto animate-fade-in">
       <div className="flex items-center justify-between mb-6">
         <h1
           className="text-foreground"
