@@ -272,6 +272,19 @@ export default function ProfileSetup() {
     applyTheme(theme);
   };
 
+  const enterThemeStep = () => {
+    originalThemeRef.current = currentTheme.id;
+    const theme = THEMES.find(th => th.id === themeId);
+    if (theme) applyTheme(theme);
+    setStep('theme');
+  };
+
+  const backFromTheme = () => {
+    const theme = THEMES.find(th => th.id === originalThemeRef.current);
+    if (theme) applyTheme(theme);
+    setStep('photo');
+  };
+
   const finalize = async () => {
     if (!user) return;
     setSaving(true);
