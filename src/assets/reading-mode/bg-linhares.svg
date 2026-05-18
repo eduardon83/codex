@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="sky-linhares" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0C0E1E"></stop>
+      <stop offset="60%" stop-color="#16192E"></stop>
+      <stop offset="100%" stop-color="#262B47"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#sky-linhares)"></rect>
+
+  
+  <circle cx="980" cy="120" r="40" fill="#E0DCEA" opacity="0.18"></circle>
+  <circle cx="980" cy="120" r="28" fill="#E0DCEA"></circle>
+
+  
+  <g fill="#E0DCEA" opacity="0.7">
+    <circle cx="100" cy="60" r="1.1"></circle>
+    <circle cx="220" cy="90" r="0.9"></circle>
+    <circle cx="340" cy="50" r="1.3"></circle>
+    <circle cx="450" cy="110" r="0.8"></circle>
+    <circle cx="560" cy="70" r="1"></circle>
+    <circle cx="660" cy="40" r="1.2"></circle>
+    <circle cx="780" cy="80" r="0.9"></circle>
+    <circle cx="850" cy="150" r="0.7"></circle>
+    <circle cx="1080" cy="50" r="1"></circle>
+    <circle cx="1150" cy="170" r="0.8"></circle>
+    <circle cx="180" cy="180" r="0.8"></circle>
+    <circle cx="400" cy="200" r="0.7"></circle>
+    <circle cx="600" cy="180" r="0.9"></circle>
+  </g>
+
+  
+  <path d="M0,320 L120,260 L200,290 L320,210 L420,260 L520,200 L640,250 L760,190 L880,240 L1000,200 L1100,250 L1200,220 L1200,420 L0,420 Z" fill="#16192E"></path>
+
+  
+  <path d="M0,380 L150,340 L280,360 L420,320 L560,355 L720,315 L860,350 L1000,320 L1200,355 L1200,500 L0,500 Z" fill="#262B47" opacity="0.6"></path>
+
+  
+  <path d="M0,490 Q300,470 600,478 Q900,468 1200,480 L1200,600 L0,600 Z" fill="#0C0E1E"></path>
+
+  
+  <g fill="#0C0E1E">
+    <rect x="440" y="430" width="28" height="48"></rect>
+    <polygon points="438,430 470,430 454,418"></polygon>
+    <rect x="472" y="438" width="26" height="42"></rect>
+    <polygon points="470,438 500,438 485,427"></polygon>
+    <rect x="502" y="432" width="30" height="46"></rect>
+    <polygon points="500,432 534,432 517,420"></polygon>
+    <rect x="538" y="442" width="26" height="38"></rect>
+    <polygon points="536,442 566,442 551,431"></polygon>
+    <rect x="572" y="436" width="28" height="44"></rect>
+    <polygon points="570,436 602,436 586,425"></polygon>
+    
+    <rect x="610" y="400" width="38" height="78"></rect>
+    <rect x="610" y="390" width="10" height="12"></rect>
+    <rect x="624" y="390" width="10" height="12"></rect>
+    <rect x="638" y="390" width="10" height="12"></rect>
+    <rect x="654" y="425" width="26" height="52"></rect>
+    <rect x="684" y="435" width="28" height="42"></rect>
+    <polygon points="682,435 714,435 698,423"></polygon>
+  </g>
+
+  
+  <g fill="#7C88B5">
+    <rect x="450" y="450" width="4" height="6" opacity="0.9"></rect>
+    <rect x="482" y="455" width="4" height="6" opacity="0.85"></rect>
+    <rect x="512" y="450" width="4" height="6" opacity="0.9"></rect>
+    <rect x="546" y="458" width="4" height="6" opacity="0.8"></rect>
+    <rect x="580" y="452" width="4" height="6" opacity="0.85"></rect>
+    <rect x="620" y="430" width="5" height="8" opacity="0.95"></rect>
+    <rect x="636" y="450" width="4" height="7" opacity="0.75"></rect>
+    <rect x="690" y="450" width="4" height="6" opacity="0.85"></rect>
+  </g>
+  
+  <ellipse cx="580" cy="478" rx="200" ry="14" fill="#7C88B5" opacity="0.12"></ellipse>
+
+  
+  <rect x="0" y="568" width="1200" height="32" fill="#08091A"></rect>
+</svg>

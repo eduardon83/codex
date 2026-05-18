@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="sky-marialva" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0E1F1B"></stop>
+      <stop offset="55%" stop-color="#1A2E2A"></stop>
+      <stop offset="100%" stop-color="#2A4742"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#sky-marialva)"></rect>
+
+  
+  <circle cx="210" cy="130" r="46" fill="#F5E6C0" opacity="0.18"></circle>
+  <circle cx="210" cy="130" r="34" fill="#F5E6C0"></circle>
+  <circle cx="225" cy="122" r="32" fill="#1A2E2A"></circle>
+
+  
+  <g fill="#F5E6C0" opacity="0.6">
+    <circle cx="420" cy="60" r="1.2"></circle>
+    <circle cx="560" cy="90" r="1"></circle>
+    <circle cx="690" cy="50" r="0.9"></circle>
+    <circle cx="830" cy="80" r="1.3"></circle>
+    <circle cx="990" cy="55" r="1"></circle>
+    <circle cx="1110" cy="110" r="1.1"></circle>
+    <circle cx="380" cy="160" r="0.8"></circle>
+    <circle cx="900" cy="170" r="0.9"></circle>
+  </g>
+
+  
+  <path d="M0,440 Q300,415 600,425 Q900,408 1200,420 L1200,475 L0,475 Z" fill="#2A4742" opacity="0.6"></path>
+
+  
+  <path d="M0,490 Q200,470 450,475 Q700,460 950,470 Q1100,475 1200,468 L1200,600 L0,600 Z" fill="#1A2E2A"></path>
+
+  
+  <g fill="#0E1F1B">
+    
+    <rect x="520" y="320" width="80" height="160"></rect>
+    <rect x="520" y="306" width="14" height="16"></rect>
+    <rect x="544" y="306" width="14" height="16"></rect>
+    <rect x="568" y="306" width="14" height="16"></rect>
+    
+    <path d="M350,470 L350,400 L390,400 L390,360 L430,360 L430,420 L470,420 L470,470 Z"></path>
+    
+    <path d="M620,470 L620,380 L660,380 L660,420 L700,420 L700,360 L740,360 L740,470 Z"></path>
+    
+    <path d="M770,470 L770,420 Q770,395 800,395 Q830,395 830,420 L830,470 Z"></path>
+    
+    <rect x="870" y="395" width="55" height="80"></rect>
+    <rect x="870" y="383" width="11" height="12"></rect>
+    <rect x="888" y="383" width="11" height="12"></rect>
+    <rect x="906" y="383" width="11" height="12"></rect>
+  </g>
+
+  
+  <path d="M780,470 L780,422 Q780,406 800,406 Q820,406 820,422 L820,470 Z" fill="#6B8E7F" opacity="0.55"></path>
+  <ellipse cx="800" cy="475" rx="60" ry="10" fill="#6B8E7F" opacity="0.2"></ellipse>
+
+  
+  <rect x="544" y="370" width="10" height="16" fill="#6B8E7F" opacity="0.55"></rect>
+  <rect x="568" y="410" width="8" height="12" fill="#6B8E7F" opacity="0.4"></rect>
+
+  
+  <g stroke="#2A4742" stroke-width="1" opacity="0.45">
+    <line x1="0" y1="525" x2="1200" y2="520"></line>
+    <line x1="0" y1="540" x2="1200" y2="538"></line>
+    <line x1="0" y1="555" x2="1200" y2="554"></line>
+  </g>
+
+  
+  <rect x="0" y="568" width="1200" height="32" fill="#0E1F1B"></rect>
+
+  
+  <g>
+    <line x1="120" y1="510" x2="120" y2="560" stroke="#0E1F1B" stroke-width="5"></line>
+    <ellipse cx="120" cy="498" rx="32" ry="22" fill="#1A2E2A"></ellipse>
+  </g>
+  <g>
+    <line x1="1080" y1="520" x2="1080" y2="565" stroke="#0E1F1B" stroke-width="4"></line>
+    <ellipse cx="1080" cy="510" rx="26" ry="18" fill="#1A2E2A"></ellipse>
+  </g>
+</svg>

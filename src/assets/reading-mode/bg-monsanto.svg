@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="sky-monsanto" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A1F3D"></stop>
+      <stop offset="45%" stop-color="#3E2D52"></stop>
+      <stop offset="80%" stop-color="#D66F93"></stop>
+      <stop offset="100%" stop-color="#FFC9B5"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#sky-monsanto)"></rect>
+
+  
+  <circle cx="280" cy="440" r="60" fill="#FFC9B5" opacity="0.45"></circle>
+  <circle cx="280" cy="440" r="42" fill="#FFC9B5"></circle>
+
+  
+  <path d="M0,460 Q200,440 400,455 Q600,435 800,450 Q1000,430 1200,448 L1200,500 L0,500 Z" fill="#3E2D52" opacity="0.7"></path>
+
+  
+  <path d="M0,520 Q400,440 700,470 Q950,440 1200,470 L1200,600 L0,600 Z" fill="#2A1F3D"></path>
+
+  
+  <g fill="#3E2D52">
+    <ellipse cx="520" cy="450" rx="120" ry="55"></ellipse>
+    <ellipse cx="780" cy="445" rx="95" ry="48"></ellipse>
+    <ellipse cx="380" cy="500" rx="85" ry="38"></ellipse>
+    <ellipse cx="950" cy="495" rx="110" ry="44"></ellipse>
+  </g>
+  
+  <g fill="#2A1F3D" opacity="0.65">
+    <ellipse cx="540" cy="445" rx="80" ry="40"></ellipse>
+    <ellipse cx="795" cy="442" rx="60" ry="34"></ellipse>
+    <ellipse cx="385" cy="505" rx="50" ry="22"></ellipse>
+    <ellipse cx="960" cy="498" rx="70" ry="28"></ellipse>
+  </g>
+
+  
+  <g fill="#2A1F3D">
+    
+    <rect x="630" y="445" width="38" height="36"></rect>
+    <polygon points="628,445 670,445 649,428"></polygon>
+    
+    <rect x="690" y="455" width="34" height="30"></rect>
+    <polygon points="688,455 726,455 707,440"></polygon>
+    
+    <rect x="460" y="465" width="36" height="34"></rect>
+    <polygon points="458,465 498,465 478,448"></polygon>
+    
+    <rect x="870" y="460" width="40" height="38"></rect>
+    <polygon points="868,460 912,460 890,442"></polygon>
+  </g>
+
+  
+  <g fill="#FFC9B5">
+    <rect x="640" y="458" width="6" height="10" opacity="0.85"></rect>
+    <rect x="700" y="465" width="6" height="9" opacity="0.8"></rect>
+    <rect x="470" y="478" width="6" height="9" opacity="0.75"></rect>
+    <rect x="882" y="472" width="6" height="11" opacity="0.85"></rect>
+  </g>
+
+  
+  <path d="M0,570 L1200,560 L1200,600 L0,600 Z" fill="#1A0F22"></path>
+</svg>

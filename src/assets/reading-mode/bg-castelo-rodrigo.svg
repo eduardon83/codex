@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="sky-rodrigo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#231708"></stop>
+      <stop offset="50%" stop-color="#402811"></stop>
+      <stop offset="82%" stop-color="#D19C45"></stop>
+      <stop offset="100%" stop-color="#F5D789"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#sky-rodrigo)"></rect>
+
+  
+  <circle cx="320" cy="430" r="58" fill="#F5D789" opacity="0.4"></circle>
+  <circle cx="320" cy="430" r="38" fill="#F5D789"></circle>
+
+  
+  <g fill="#402811" opacity="0.55">
+    <rect x="0" y="370" width="500" height="6" rx="3"></rect>
+    <rect x="600" y="385" width="600" height="5" rx="2.5"></rect>
+    <rect x="200" y="405" width="900" height="4" rx="2"></rect>
+  </g>
+
+  
+  <path d="M0,455 Q200,440 400,450 Q600,432 800,448 Q1000,432 1200,448 L1200,500 L0,500 Z" fill="#231708" opacity="0.8"></path>
+
+  
+  <path d="M250,490 Q400,400 600,395 Q800,400 950,490 Z" fill="#231708"></path>
+
+  
+  <g fill="#231708">
+    
+    <rect x="580" y="335" width="42" height="65"></rect>
+    <rect x="580" y="325" width="10" height="12"></rect>
+    <rect x="595" y="325" width="10" height="12"></rect>
+    <rect x="610" y="325" width="10" height="12"></rect>
+    
+    <rect x="460" y="430" width="36" height="35"></rect>
+    <polygon points="458,430 498,430 478,415"></polygon>
+    <rect x="500" y="420" width="34" height="35"></rect>
+    <polygon points="498,420 536,420 517,405"></polygon>
+    <rect x="540" y="412" width="36" height="38"></rect>
+    <polygon points="538,412 578,412 558,397"></polygon>
+    <rect x="628" y="410" width="36" height="38"></rect>
+    <polygon points="626,410 666,410 646,395"></polygon>
+    <rect x="670" y="420" width="36" height="36"></rect>
+    <polygon points="668,420 708,420 688,405"></polygon>
+    <rect x="710" y="432" width="36" height="36"></rect>
+    <polygon points="708,432 748,432 728,417"></polygon>
+  </g>
+
+  
+  <g fill="#F5D789">
+    <rect x="590" y="358" width="6" height="10" opacity="0.85"></rect>
+    <rect x="606" y="370" width="6" height="10" opacity="0.7"></rect>
+    <rect x="470" y="445" width="5" height="8" opacity="0.7"></rect>
+    <rect x="552" y="425" width="5" height="8" opacity="0.7"></rect>
+    <rect x="640" y="425" width="5" height="8" opacity="0.7"></rect>
+    <rect x="720" y="445" width="5" height="8" opacity="0.6"></rect>
+  </g>
+
+  
+  <g fill="#231708">
+    <circle cx="100" cy="510" r="10"></circle>
+    <circle cx="140" cy="520" r="9"></circle>
+    <circle cx="180" cy="514" r="11"></circle>
+    <circle cx="220" cy="525" r="9"></circle>
+    <circle cx="1000" cy="515" r="11"></circle>
+    <circle cx="1040" cy="525" r="10"></circle>
+    <circle cx="1080" cy="518" r="12"></circle>
+    <circle cx="1130" cy="528" r="9"></circle>
+  </g>
+
+  
+  <rect x="0" y="552" width="1200" height="48" fill="#100A04"></rect>
+</svg>

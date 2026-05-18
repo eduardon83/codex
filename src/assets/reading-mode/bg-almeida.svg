@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="sky-almeida" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E1A2E"></stop>
+      <stop offset="55%" stop-color="#2D2445"></stop>
+      <stop offset="90%" stop-color="#7A5B9A"></stop>
+      <stop offset="100%" stop-color="#F0B27A"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#sky-almeida)"></rect>
+
+  
+  <circle cx="940" cy="450" r="50" fill="#F0B27A" opacity="0.45"></circle>
+  <circle cx="940" cy="450" r="34" fill="#F0B27A"></circle>
+
+  
+  <path d="M0,460 Q200,448 400,455 Q600,440 800,452 Q1000,442 1200,455 L1200,490 L0,490 Z" fill="#1E1A2E" opacity="0.85"></path>
+  <path d="M0,478 Q300,470 600,475 Q900,468 1200,478 L1200,510 L0,510 Z" fill="#1E1A2E"></path>
+
+  
+
+  
+  <path d="M100,490&#xA;           L260,455&#xA;           L340,475&#xA;           L420,438&#xA;           L500,470&#xA;           L580,432&#xA;           L620,432&#xA;           L700,470&#xA;           L780,438&#xA;           L860,475&#xA;           L940,455&#xA;           L1100,490 Z" fill="#2D2445"></path>
+
+  
+  <path d="M180,488&#xA;           L300,463&#xA;           L380,478&#xA;           L460,448&#xA;           L540,468&#xA;           L600,442&#xA;           L660,468&#xA;           L740,448&#xA;           L820,478&#xA;           L900,463&#xA;           L1020,488 Z" fill="#1E1A2E"></path>
+
+  
+  <g fill="#1E1A2E">
+    <rect x="440" y="425" width="22" height="32"></rect>
+    <polygon points="438,425 464,425 451,413"></polygon>
+    <rect x="468" y="420" width="22" height="36"></rect>
+    <polygon points="466,420 492,420 479,408"></polygon>
+    <rect x="496" y="418" width="24" height="38"></rect>
+    <polygon points="494,418 522,418 508,406"></polygon>
+    <rect x="528" y="422" width="22" height="34"></rect>
+    <polygon points="526,422 552,422 539,410"></polygon>
+    <rect x="556" y="420" width="24" height="36"></rect>
+    <polygon points="554,420 582,420 568,408"></polygon>
+    
+    <rect x="590" y="380" width="20" height="76"></rect>
+    <polygon points="588,380 612,380 600,365"></polygon>
+    <rect x="620" y="420" width="22" height="36"></rect>
+    <polygon points="618,420 644,420 631,408"></polygon>
+    <rect x="650" y="418" width="22" height="38"></rect>
+    <polygon points="648,418 674,418 661,406"></polygon>
+    <rect x="680" y="422" width="22" height="34"></rect>
+    <polygon points="678,422 704,422 691,410"></polygon>
+    <rect x="710" y="420" width="24" height="36"></rect>
+    <polygon points="708,420 736,420 722,408"></polygon>
+    <rect x="740" y="425" width="22" height="32"></rect>
+    <polygon points="738,425 764,425 751,413"></polygon>
+  </g>
+
+  
+  <g fill="#F0B27A">
+    <rect x="446" y="437" width="4" height="7" opacity="0.85"></rect>
+    <rect x="476" y="434" width="4" height="7" opacity="0.8"></rect>
+    <rect x="504" y="432" width="4" height="7" opacity="0.9"></rect>
+    <rect x="538" y="436" width="4" height="7" opacity="0.75"></rect>
+    <rect x="596" y="408" width="5" height="9" opacity="0.95"></rect>
+    <rect x="628" y="436" width="4" height="7" opacity="0.8"></rect>
+    <rect x="658" y="430" width="4" height="7" opacity="0.85"></rect>
+    <rect x="688" y="436" width="4" height="7" opacity="0.7"></rect>
+    <rect x="718" y="434" width="4" height="7" opacity="0.8"></rect>
+  </g>
+
+  
+  <g fill="#F0B27A" opacity="0.65">
+    <circle cx="160" cy="80" r="1.1"></circle>
+    <circle cx="300" cy="60" r="0.9"></circle>
+    <circle cx="450" cy="100" r="1.2"></circle>
+    <circle cx="600" cy="50" r="0.8"></circle>
+    <circle cx="760" cy="90" r="1"></circle>
+    <circle cx="880" cy="70" r="1.2"></circle>
+    <circle cx="1100" cy="120" r="0.9"></circle>
+  </g>
+
+  
+  <rect x="0" y="510" width="1200" height="90" fill="#15101F"></rect>
+
+  
+  <g stroke="#1E1A2E" stroke-width="1" opacity="0.6">
+    <line x1="0" y1="535" x2="1200" y2="528"></line>
+    <line x1="0" y1="555" x2="1200" y2="552"></line>
+    <line x1="0" y1="575" x2="1200" y2="573"></line>
+  </g>
+</svg>
