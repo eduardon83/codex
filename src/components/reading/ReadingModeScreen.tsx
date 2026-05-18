@@ -229,7 +229,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
         onClick={() => setConfirmAbandon(true)}
         aria-label={t('reading_mode.abandon', 'Abandonar sessão?')}
         style={{
-          position: 'absolute', top: 16, right: 16, zIndex: 2,
+          position: 'absolute', top: 16, right: 16, zIndex: 11,
           background: 'transparent', border: 'none', color: text, opacity: controlsHidden ? 0 : 0.6,
           transition: 'opacity 0.4s', cursor: 'pointer', padding: 8,
         }}
