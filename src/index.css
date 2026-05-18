@@ -101,3 +101,43 @@
     font-weight: 600;
   }
 }
+
+/* Profile setup / profile edit: force legible field colours on dark theme */
+.profile-setup input,
+.profile-setup textarea,
+.profile-setup select,
+.profile-setup [role="combobox"],
+.profile-screen input,
+.profile-screen textarea,
+.profile-screen select,
+.profile-screen [role="combobox"] {
+  color: #F0E8D8 !important;
+  background-color: #2F3E33 !important;
+  border: 1px solid rgba(139, 161, 139, 0.3) !important;
+}
+
+.profile-setup input::placeholder,
+.profile-setup textarea::placeholder,
+.profile-screen input::placeholder,
+.profile-screen textarea::placeholder {
+  color: rgba(240, 232, 216, 0.5);
+}
+
+.profile-setup input:-webkit-autofill,
+.profile-setup input:-webkit-autofill:hover,
+.profile-setup input:-webkit-autofill:focus,
+.profile-setup select:-webkit-autofill,
+.profile-screen input:-webkit-autofill,
+.profile-screen input:-webkit-autofill:hover,
+.profile-screen input:-webkit-autofill:focus,
+.profile-screen select:-webkit-autofill {
+  -webkit-text-fill-color: #F0E8D8 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #2F3E33 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.profile-setup select option,
+.profile-screen select option {
+  background-color: #2F3E33;
+  color: #F0E8D8;
+}
