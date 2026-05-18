@@ -867,5 +867,10 @@
     "pause": "Pausar",
     "resume": "Reanudar",
     "finish": "Terminar"
+  },
+  "celebration": {
+    "library": "Nueva biblioteca creada.",
+    "book": "Añadido a tu biblioteca.",
+    "loan": "Prestado con cuidado."
   }
 }

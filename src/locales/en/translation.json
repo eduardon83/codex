@@ -867,5 +867,10 @@
     "pause": "Pause",
     "resume": "Resume",
     "finish": "Finish"
+  },
+  "celebration": {
+    "library": "New library created.",
+    "book": "Added to your library.",
+    "loan": "Loaned with care."
   }
 }
