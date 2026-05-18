@@ -329,7 +329,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
       {!completed && (
         <div
           style={{
-            position: 'absolute', bottom: 36, left: 0, right: 0, zIndex: 2,
+            position: 'absolute', bottom: 36, left: 0, right: 0, zIndex: 11,
             display: 'flex', justifyContent: 'center', gap: 14,
             opacity: controlsHidden ? 0 : 1, transition: 'opacity 0.4s',
           }}
