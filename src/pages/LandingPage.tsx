@@ -98,6 +98,8 @@ const LANDING_COPY = {
     feat5_desc: "Don't distract yourself from the joy of reading. Use the timer and immerse yourself.",
     feat6_title: 'Wishlist',
     feat6_desc: "Want a book, eventually? Track it, don't forget it. Use the wishlist.",
+    feat7_title: 'Reading mode',
+    feat7_desc: "Enter a full-screen mode with the book cover, a stopwatch or timer, and an animated scene from your theme's historic village — leaves in the wind, fireflies, birds in the distance. Your sessions are saved so you can track your reading time.",
     audience_label: 'For you',
     readers_title: 'For readers',
     readers_sub: 'Anyone who loves books',
