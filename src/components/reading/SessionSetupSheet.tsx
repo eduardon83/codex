@@ -27,6 +27,7 @@ interface Props {
     mode: SessionMode;
     targetSeconds?: number;
     keepScreenOn: boolean;
+    sceneId: string;
   }) => void;
 }
 
