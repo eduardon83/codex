@@ -132,6 +132,11 @@ export default function ProfileStats() {
   if (stats.onTimePercent !== null) {
     metrics.push({ label: t('profileStats.onTimeReturns', 'Devoluções a tempo'), value: `${stats.onTimePercent}%` });
   }
+  if (stats.readingSessionsCount > 0) {
+    metrics.push({ label: t('profileStats.totalReadingTime'), value: formatHumanDuration(stats.totalReadingSeconds, i18n.language) });
+    metrics.push({ label: t('profileStats.longestSession'), value: formatHumanDuration(stats.longestSessionSeconds, i18n.language) });
+    metrics.push({ label: t('profileStats.readingSessions'), value: stats.readingSessionsCount });
+  }
 
   return (
     <div className="mt-8">
