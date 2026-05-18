@@ -208,6 +208,8 @@ const LANDING_COPY = {
     feat5_desc: 'Ne te laisse pas distraire de la joie de lire. Utilise le minuteur et plonge dans le livre.',
     feat6_title: 'Wishlist',
     feat6_desc: "Tu veux un livre, un jour ? Suis-le, ne l'oublie pas. Utilise la wishlist.",
+    feat7_title: 'Mode lecture',
+    feat7_desc: 'Entrez dans un mode plein écran avec la couverture du livre, un chronomètre ou minuterie, et une scène animée du village historique de votre thème — feuilles dans le vent, lucioles, oiseaux au loin. Vos sessions sont enregistrées pour suivre votre temps de lecture.',
     audience_label: 'Pour qui',
     readers_title: 'Pour les lecteurs',
     readers_sub: 'Pour ceux qui aiment les livres',
