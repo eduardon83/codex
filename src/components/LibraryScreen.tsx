@@ -25,6 +25,9 @@ import { GENRE_OPTIONS, parseGenres } from '@/components/GenreMultiSelect';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
 import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
 import HelpButton from '@/components/tutorial/HelpButton';
+import SessionSetupSheet from '@/components/reading/SessionSetupSheet';
+import ReadingModeScreen from '@/components/reading/ReadingModeScreen';
+import { formatHumanDuration, type SelectedBookForSession, type SessionMode } from '@/lib/readingSessions';
 
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -83,6 +86,8 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [showCalendar, setShowCalendar] = useState(false);
   const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
   const [showPlanSheet, setShowPlanSheet] = useState(false);
+  const [showSessionSheet, setShowSessionSheet] = useState(false);
+  const [activeSession, setActiveSession] = useState<{ book: SelectedBookForSession; mode: SessionMode; targetSeconds?: number; keepScreenOn: boolean } | null>(null);
 
   // Multi-select state
   const [selectMode, setSelectMode] = useState(false);
@@ -700,6 +705,18 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                onClick={() => setShowSessionSheet(true)}
+                aria-label="Nova leitura"
+                className="w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity"
+              >
+                <BookOpen size={18} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="left">Nova leitura</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
                 onClick={() => setShowCalendar(true)}
                 className="w-12 h-12 rounded-full bg-secondary text-foreground border border-border flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity"
               >
@@ -802,6 +819,27 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <SessionSetupSheet
+        open={showSessionSheet}
+        onOpenChange={setShowSessionSheet}
+        onStart={(cfg) => { setShowSessionSheet(false); setActiveSession(cfg); }}
+      />
+
+      {activeSession && (
+        <ReadingModeScreen
+          book={activeSession.book}
+          mode={activeSession.mode}
+          targetSeconds={activeSession.targetSeconds}
+          keepScreenOn={activeSession.keepScreenOn}
+          onClose={(saved) => {
+            setActiveSession(null);
+            if (saved && saved.durationSeconds >= 5) {
+              toast.success(`Sessão de ${formatHumanDuration(saved.durationSeconds)} guardada.`);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
