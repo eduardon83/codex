@@ -93,6 +93,7 @@ const SVG_MAP: Record<CelebrationType, () => JSX.Element> = {
 };
 
 export function CelebrationProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const [active, setActive] = useState<CelebrationType | null>(null);
 
   const celebrate = useCallback((type: CelebrationType) => {
