@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BookOpen, Plus, Search, Hourglass, Timer as TimerIcon, ChevronLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme, THEMES } from '@/hooks/useTheme';
 import { supabase } from '@/integrations/supabase/client';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { getReadingBackground } from '@/lib/readingBackgrounds';
 import type { SelectedBookForSession, SessionMode } from '@/lib/readingSessions';
 
 interface BookRow {
@@ -25,6 +27,7 @@ interface Props {
     mode: SessionMode;
     targetSeconds?: number;
     keepScreenOn: boolean;
+    sceneId: string;
   }) => void;
 }
 
@@ -40,9 +43,12 @@ const PRESETS: { label: string; minutes: number }[] = [
   { label: '2h', minutes: 120 },
 ];
 
+const SCENES = THEMES.filter(t => t.id !== 'claro');
+
 export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [step, setStep] = useState<Step>('choose');
   const [books, setBooks] = useState<BookRow[]>([]);
   const [query, setQuery] = useState('');
@@ -55,6 +61,13 @@ export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props
   const [keepScreenOn, setKeepScreenOn] = useState(true);
   const [loadingBooks, setLoadingBooks] = useState(false);
   const [showLibrarySearch, setShowLibrarySearch] = useState(false);
+  const [useThemeScene, setUseThemeScene] = useState(true);
+  const fallbackScene = theme && theme !== 'claro' ? theme : SCENES[0].id;
+  const [sceneId, setSceneId] = useState<string>(fallbackScene);
+
+  useEffect(() => {
+    if (useThemeScene) setSceneId(fallbackScene);
+  }, [useThemeScene, fallbackScene]);
 
   useEffect(() => {
     if (!open) {
@@ -117,7 +130,7 @@ export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props
       mode === 'timer'
         ? Math.max(60, Math.min(480, Number(customMinutes) || timerMinutes)) * 60
         : undefined;
-    onStart({ book: selected, mode, targetSeconds, keepScreenOn });
+    onStart({ book: selected, mode, targetSeconds, keepScreenOn, sceneId });
   };
 
   const headerLabel =
@@ -305,6 +318,57 @@ export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props
                 </div>
               </div>
             )}
+
+            {/* Scene selector */}
+            <div className="border-t border-border pt-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {t('reading_mode.scene', 'Cenário')}
+                </span>
+                <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                  {t('reading_mode.scene_follow_theme', 'Seguir tema')}
+                  <Switch checked={useThemeScene} onCheckedChange={setUseThemeScene} />
+                </label>
+              </div>
+              <div className="flex gap-2 overflow-x-auto -mx-1 px-1 pb-1">
+                {SCENES.map(s => {
+                  const isSelected = sceneId === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => { setUseThemeScene(false); setSceneId(s.id); }}
+                      className="flex-shrink-0 flex flex-col items-center gap-1"
+                      style={{ width: 60 }}
+                    >
+                      <div
+                        style={{
+                          width: 60,
+                          height: 34,
+                          borderRadius: 4,
+                          overflow: 'hidden',
+                          border: `1.5px solid ${isSelected ? 'hsl(var(--accent))' : 'transparent'}`,
+                          opacity: isSelected ? 1 : 0.75,
+                          transition: 'all 0.15s',
+                        }}
+                      >
+                        <img
+                          src={getReadingBackground(s.id)}
+                          alt=""
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
+                      </div>
+                      <span
+                        className="text-muted-foreground truncate w-full text-center"
+                        style={{ fontSize: 9, lineHeight: 1.1 }}
+                      >
+                        {s.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             <div className="flex items-center justify-between border-t border-border pt-4">
               <span className="text-sm text-foreground">{t('reading_mode.keep_screen', 'Manter ecrã activo')}</span>

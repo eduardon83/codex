@@ -28,10 +28,11 @@ interface Props {
   mode: SessionMode;
   targetSeconds?: number;
   keepScreenOn: boolean;
+  sceneId?: string;
   onClose: (saved: { durationSeconds: number } | null) => void;
 }
 
-export default function ReadingModeScreen({ book, mode, targetSeconds, keepScreenOn, onClose }: Props) {
+export default function ReadingModeScreen({ book, mode, targetSeconds, keepScreenOn, sceneId, onClose }: Props) {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { theme } = useTheme();
@@ -39,8 +40,9 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
   const accent = themeDef?.colors[2] || '#C9A84C';
   const bg = themeDef?.colors[0] || '#1E2A22';
   const text = themeDef?.colors[3] || '#F0E8D8';
-  const bgSrc = getReadingBackground(themeDef?.id ?? 'claro');
-  const particles = getParticleColors(themeDef?.id ?? 'claro');
+  const activeSceneId = sceneId ?? themeDef?.id ?? 'claro';
+  const bgSrc = getReadingBackground(activeSceneId);
+  const particles = getParticleColors(activeSceneId);
 
 
   const [elapsed, setElapsed] = useState(0);
@@ -181,11 +183,11 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
         }
       `}</style>
 
-      {/* Background layer: village landscape */}
+      {/* Layer 1 — Background SVG */}
       <div
         aria-hidden
         style={{
-          position: 'absolute', inset: 0,
+          position: 'absolute', inset: 0, zIndex: 0,
           backgroundImage: `url(${bgSrc})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -198,22 +200,28 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
         }}
       />
 
-      {/* Legibility overlay */}
+      {/* Layer 2 — Legibility overlay */}
       <div
         aria-hidden
         style={{
-          position: 'absolute', inset: 0,
-          background: 'rgba(0,0,0,0.15)',
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'rgba(0,0,0,0.12)',
           pointerEvents: 'none',
         }}
       />
 
-
+      {/* Layers 3–5 — particles & bird */}
       {!completed && (
         <>
-          <WindParticles leafColor={particles.leaf} />
-          <ReadingBird color={particles.glow} />
-          <AmbientParticles themeId={themeDef?.id ?? 'claro'} glowColor={particles.glow} />
+          <div style={{ position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none' }}>
+            <AmbientParticles themeId={activeSceneId} glowColor={particles.glow} />
+          </div>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none' }}>
+            <WindParticles leafColor={particles.leaf} />
+          </div>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 4, pointerEvents: 'none' }}>
+            <ReadingBird color={particles.glow} />
+          </div>
         </>
       )}
 
@@ -221,7 +229,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
         onClick={() => setConfirmAbandon(true)}
         aria-label={t('reading_mode.abandon', 'Abandonar sessão?')}
         style={{
-          position: 'absolute', top: 16, right: 16, zIndex: 2,
+          position: 'absolute', top: 16, right: 16, zIndex: 11,
           background: 'transparent', border: 'none', color: text, opacity: controlsHidden ? 0 : 0.6,
           transition: 'opacity 0.4s', cursor: 'pointer', padding: 8,
         }}
@@ -231,7 +239,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
 
       <div
         style={{
-          position: 'relative', zIndex: 1,
+          position: 'relative', zIndex: 10,
           height: '100%',
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
@@ -321,7 +329,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
       {!completed && (
         <div
           style={{
-            position: 'absolute', bottom: 36, left: 0, right: 0, zIndex: 2,
+            position: 'absolute', bottom: 36, left: 0, right: 0, zIndex: 11,
             display: 'flex', justifyContent: 'center', gap: 14,
             opacity: controlsHidden ? 0 : 1, transition: 'opacity 0.4s',
           }}
