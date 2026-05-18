@@ -28,10 +28,11 @@ interface Props {
   mode: SessionMode;
   targetSeconds?: number;
   keepScreenOn: boolean;
+  sceneId?: string;
   onClose: (saved: { durationSeconds: number } | null) => void;
 }
 
-export default function ReadingModeScreen({ book, mode, targetSeconds, keepScreenOn, onClose }: Props) {
+export default function ReadingModeScreen({ book, mode, targetSeconds, keepScreenOn, sceneId, onClose }: Props) {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { theme } = useTheme();
@@ -39,8 +40,9 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
   const accent = themeDef?.colors[2] || '#C9A84C';
   const bg = themeDef?.colors[0] || '#1E2A22';
   const text = themeDef?.colors[3] || '#F0E8D8';
-  const bgSrc = getReadingBackground(themeDef?.id ?? 'claro');
-  const particles = getParticleColors(themeDef?.id ?? 'claro');
+  const activeSceneId = sceneId ?? themeDef?.id ?? 'claro';
+  const bgSrc = getReadingBackground(activeSceneId);
+  const particles = getParticleColors(activeSceneId);
 
 
   const [elapsed, setElapsed] = useState(0);
