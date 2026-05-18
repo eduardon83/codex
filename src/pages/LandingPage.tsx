@@ -153,6 +153,8 @@ const LANDING_COPY = {
     feat5_desc: 'No te distraigas de la alegría de leer. Usa el cronómetro y sumérgete.',
     feat6_title: 'Wishlist',
     feat6_desc: '¿Quieres un libro, eventualmente? Síguelo, no lo olvides. Usa la wishlist.',
+    feat7_title: 'Modo de lectura',
+    feat7_desc: 'Entra en un modo de pantalla completa con la portada del libro, un cronómetro o temporizador, y un escenario animado de la aldea histórica de tu tema — hojas en el viento, luciérnagas, pájaros a lo lejos. Tus sesiones se guardan para seguir tu tiempo de lectura.',
     audience_label: 'Para quién',
     readers_title: 'Para lectores',
     readers_sub: 'Para quienes aman los libros',
