@@ -130,7 +130,7 @@ export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props
       mode === 'timer'
         ? Math.max(60, Math.min(480, Number(customMinutes) || timerMinutes)) * 60
         : undefined;
-    onStart({ book: selected, mode, targetSeconds, keepScreenOn });
+    onStart({ book: selected, mode, targetSeconds, keepScreenOn, sceneId });
   };
 
   const headerLabel =
