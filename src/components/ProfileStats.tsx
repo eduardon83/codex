@@ -26,7 +26,7 @@ interface Stats {
 }
 
 export default function ProfileStats() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
 
