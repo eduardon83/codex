@@ -56,6 +56,14 @@ export default function ProfileStats() {
       supabase.from('loan_requests' as any).select('due_date, returned_at').eq('requester_user_id', uid).eq('status', 'returned'),
     ]);
 
+    const sessionsRes: any = await supabase.from('reading_sessions' as any).select('duration_seconds').eq('user_id', uid);
+    const sessionRows = (sessionsRes.data as any[]) || [];
+    const durations = sessionRows.map(s => Number(s.duration_seconds) || 0);
+    const totalReadingSeconds = durations.reduce((a, b) => a + b, 0);
+    const longestSessionSeconds = durations.length ? Math.max(...durations) : 0;
+    const readingSessionsCount = sessionRows.length;
+
+
     const returnedRows = ((borrowerReturnedRes as any).data as any[]) || [];
     const completed = returnedRows.length;
     const onTime = returnedRows.filter(r =>
