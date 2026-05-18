@@ -87,7 +87,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
   const [planBook, setPlanBook] = useState<PlanBookPayload | null>(null);
   const [showPlanSheet, setShowPlanSheet] = useState(false);
   const [showSessionSheet, setShowSessionSheet] = useState(false);
-  const [activeSession, setActiveSession] = useState<{ book: SelectedBookForSession; mode: SessionMode; targetSeconds?: number; keepScreenOn: boolean } | null>(null);
+  const [activeSession, setActiveSession] = useState<{ book: SelectedBookForSession; mode: SessionMode; targetSeconds?: number; keepScreenOn: boolean; sceneId: string } | null>(null);
 
   // Multi-select state
   const [selectMode, setSelectMode] = useState(false);
