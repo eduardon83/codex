@@ -20,6 +20,9 @@ interface Stats {
   loansAsLender: number;
   loansAsBorrower: number;
   onTimePercent: number | null;
+  totalReadingSeconds: number;
+  longestSessionSeconds: number;
+  readingSessionsCount: number;
 }
 
 export default function ProfileStats() {
