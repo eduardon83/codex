@@ -319,6 +319,57 @@ export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props
               </div>
             )}
 
+            {/* Scene selector */}
+            <div className="border-t border-border pt-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {t('reading_mode.scene', 'Cenário')}
+                </span>
+                <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                  {t('reading_mode.scene_follow_theme', 'Seguir tema')}
+                  <Switch checked={useThemeScene} onCheckedChange={setUseThemeScene} />
+                </label>
+              </div>
+              <div className="flex gap-2 overflow-x-auto -mx-1 px-1 pb-1">
+                {SCENES.map(s => {
+                  const isSelected = sceneId === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => { setUseThemeScene(false); setSceneId(s.id); }}
+                      className="flex-shrink-0 flex flex-col items-center gap-1"
+                      style={{ width: 60 }}
+                    >
+                      <div
+                        style={{
+                          width: 60,
+                          height: 34,
+                          borderRadius: 4,
+                          overflow: 'hidden',
+                          border: `1.5px solid ${isSelected ? 'hsl(var(--accent))' : 'transparent'}`,
+                          opacity: isSelected ? 1 : 0.75,
+                          transition: 'all 0.15s',
+                        }}
+                      >
+                        <img
+                          src={getReadingBackground(s.id)}
+                          alt=""
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
+                      </div>
+                      <span
+                        className="text-muted-foreground truncate w-full text-center"
+                        style={{ fontSize: 9, lineHeight: 1.1 }}
+                      >
+                        {s.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="flex items-center justify-between border-t border-border pt-4">
               <span className="text-sm text-foreground">{t('reading_mode.keep_screen', 'Manter ecrã activo')}</span>
               <Switch checked={keepScreenOn} onCheckedChange={setKeepScreenOn} />
