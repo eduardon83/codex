@@ -25,6 +25,9 @@ import { GENRE_OPTIONS, parseGenres } from '@/components/GenreMultiSelect';
 import MoveToLibrarySheet from '@/components/MoveToLibrarySheet';
 import AddToPlanSheet, { PlanBookPayload } from '@/components/AddToPlanSheet';
 import HelpButton from '@/components/tutorial/HelpButton';
+import SessionSetupSheet from '@/components/reading/SessionSetupSheet';
+import ReadingModeScreen from '@/components/reading/ReadingModeScreen';
+import { formatHumanDuration, type SelectedBookForSession, type SessionMode } from '@/lib/readingSessions';
 
 import { tFormat, tGenre, tStatus } from '@/lib/displayMappings';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
