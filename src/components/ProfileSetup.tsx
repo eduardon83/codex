@@ -100,6 +100,7 @@ export default function ProfileSetup() {
   // Theme
   const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
+  const originalThemeRef = useRef<string>(currentTheme.id);
 
   // Wilderness Hearth palette overrides — matches the landing page across
   // the pre-completion onboarding flow (before the user picks their app theme).
@@ -271,6 +272,19 @@ export default function ProfileSetup() {
     applyTheme(theme);
   };
 
+  const enterThemeStep = () => {
+    originalThemeRef.current = currentTheme.id;
+    const theme = THEMES.find(th => th.id === themeId);
+    if (theme) applyTheme(theme);
+    setStep('theme');
+  };
+
+  const backFromTheme = () => {
+    const theme = THEMES.find(th => th.id === originalThemeRef.current);
+    if (theme) applyTheme(theme);
+    setStep('photo');
+  };
+
   const finalize = async () => {
     if (!user) return;
     setSaving(true);
@@ -414,7 +428,7 @@ export default function ProfileSetup() {
                 </Button>
               )}
             </div>
-            <Button onClick={() => setStep('theme')} className="w-full h-11">
+            <Button onClick={enterThemeStep} className="w-full h-11">
               {t('profileSetup.continue')}
             </Button>
           </div>
@@ -425,9 +439,9 @@ export default function ProfileSetup() {
 
   if (step === 'theme') {
     return (
-      <div className="profile-setup min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
+      <div className="profile-setup min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md">
-          <Header onBack={() => setStep('photo')} />
+          <Header onBack={backFromTheme} />
           <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
           <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
             {THEMES.map(th => {
