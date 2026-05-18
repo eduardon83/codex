@@ -100,6 +100,7 @@ export default function ProfileSetup() {
   // Theme
   const [themeId, setThemeId] = useState(persisted.themeId ?? currentTheme.id);
   const selectedTheme = THEMES.find(th => th.id === themeId) || THEMES[0];
+  const originalThemeRef = useRef<string>(currentTheme.id);
 
   // Wilderness Hearth palette overrides — matches the landing page across
   // the pre-completion onboarding flow (before the user picks their app theme).
