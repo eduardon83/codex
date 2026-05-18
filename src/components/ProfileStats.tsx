@@ -4,6 +4,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { tGenre } from '@/lib/displayMappings';
+import { formatHumanDuration } from '@/lib/readingSessions';
+import { useTranslation as useT } from 'react-i18next';
 
 interface Stats {
   totalBooks: number;
