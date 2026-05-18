@@ -10,10 +10,10 @@ interface CelebrationContextType {
 
 const CelebrationContext = createContext<CelebrationContextType | undefined>(undefined);
 
-const LABELS: Record<CelebrationType, string> = {
-  library: 'New library created.',
-  book: 'Added to your library.',
-  loan: 'Loaned with care.',
+const LABEL_KEYS: Record<CelebrationType, string> = {
+  library: 'celebration.library',
+  book: 'celebration.book',
+  loan: 'celebration.loan',
 };
 
 function OwlSVG() {
