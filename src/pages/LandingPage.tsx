@@ -43,6 +43,8 @@ const LANDING_COPY = {
     feat5_desc: 'Não te distraias da alegria de ler. Liga o cronómetro e mergulha no livro.',
     feat6_title: 'Wishlist',
     feat6_desc: 'Queres um livro, eventualmente? Acompanha-o, não te esqueças. Usa a wishlist.',
+    feat7_title: 'Modo de leitura',
+    feat7_desc: 'Entra num modo de ecrã inteiro com a capa do livro, cronómetro ou temporizador, e um cenário animado da aldeia histórica do teu tema — folhas ao vento, vagalumes, pássaros ao longe. As tuas sessões ficam guardadas para acompanhar o teu tempo de leitura.',
     audience_label: 'Para quem',
     readers_title: 'Para leitores',
     readers_sub: 'Para quem ama livros',
@@ -54,7 +56,7 @@ const LANDING_COPY = {
     creators_sub: 'Escritores e criadores de conteúdo literário',
     creators_features: ['Selo verificado no perfil público','Publicar listas de leitura ("Livros que me inspiraram")','Publicar planos de leitura ("Lê os meus livros por esta ordem")','Os leitores subscrevem as tuas listas e planos com um toque','Link da plataforma no perfil (Instagram, TikTok, etc.)','Descobrível no separador Procurar por todos os leitores Codex','Tudo o que os leitores têm, mais o acima'],
     pro_title: 'Como obter uma conta profissional',
-    pro_body: 'Cria uma conta de leitor, depois vai a Perfil → Pedir conta profissional. Diz-nos quem és — respondemos em poucos dias. Sem subscrição, sem pagamento. Contas de Livraria, Autor e Influencer são gratuitas durante o período piloto.',
+    pro_body: 'Cria uma conta de leitor, depois vai a Perfil → Pedir conta profissional. Diz-nos quem és — respondemos em poucos dias. Sem subscrição, sem pagamento. Contas de Livraria, Autor e Influencer são gratuitas durante o período piloto.\n\nO Codex tem um projeto-irmão: o Folium, uma plataforma de leitura gratuita para estudantes alinhada com o Plano Nacional de Leitura 2027. O Codex foi criado precisamente para ser o suporte sustentável que mantém o Folium disponível para sempre — cada livraria, autor e influencer que usa o Codex contribui directamente para que o Folium continue gratuito para todos os alunos.',
     loan_eyebrow: 'Empréstimos',
     loan_title: 'Os livros que amas merecem ter uma nova vida.',
     loan_desc: 'Quando um livro fica preso numa estante, só uma pessoa teve a oportunidade de o ler. Através do Codex, podes ajudar-nos a criar uma rede de livros que circulam, controlando quem, quando e quando vai ser devolvido. Cada empréstimo pode ser classificado, para garantir que quem maltrata livros não pode pedir empréstimos novamente.',
@@ -96,6 +98,8 @@ const LANDING_COPY = {
     feat5_desc: "Don't distract yourself from the joy of reading. Use the timer and immerse yourself.",
     feat6_title: 'Wishlist',
     feat6_desc: "Want a book, eventually? Track it, don't forget it. Use the wishlist.",
+    feat7_title: 'Reading mode',
+    feat7_desc: "Enter a full-screen mode with the book cover, a stopwatch or timer, and an animated scene from your theme's historic village — leaves in the wind, fireflies, birds in the distance. Your sessions are saved so you can track your reading time.",
     audience_label: 'For you',
     readers_title: 'For readers',
     readers_sub: 'Anyone who loves books',
@@ -107,7 +111,7 @@ const LANDING_COPY = {
     creators_sub: 'Writers and book content creators',
     creators_features: ['Verified badge on your public profile','Publish reading lists ("Books that inspired me")','Publish reading plans ("Read my books in this order")','Readers can subscribe to your lists and plans in one tap','Platform link on your profile (Instagram, TikTok, etc.)','Discoverable in the Search tab by all Codex readers','Everything readers have, plus the above'],
     pro_title: 'How to get a professional account',
-    pro_body: 'Create a reader account, then go to Profile → Request a professional account. Tell us who you are — we review and approve within a few days. No subscription, no payment. Bookstore, Author and Influencer accounts are free during the pilot.',
+    pro_body: "Create a reader account, then go to Profile → Request a professional account. Tell us who you are — we review and approve within a few days. No subscription, no payment. Bookstore, Author and Influencer accounts are free during the pilot.\n\nCodex has a twin project: Folium, a free reading platform for students aligned with Portugal's National Reading Plan 2027. Codex was built precisely to be the sustainable foundation that keeps Folium free forever — every bookstore, author and influencer on Codex directly contributes to keeping Folium available for every student.",
     loan_eyebrow: 'Loans feature',
     loan_title: 'The books you love deserve to have a new life.',
     loan_desc: 'When a book is stuck on a shelf, only one person had the chance to read it. Through Codex, you can help us create a network of books that circulate, while controlling who, when and when it will be returned. Each loan can be classified, to assure those that mistreat books are not allowed to request loans again.',
@@ -149,6 +153,8 @@ const LANDING_COPY = {
     feat5_desc: 'No te distraigas de la alegría de leer. Usa el cronómetro y sumérgete.',
     feat6_title: 'Wishlist',
     feat6_desc: '¿Quieres un libro, eventualmente? Síguelo, no lo olvides. Usa la wishlist.',
+    feat7_title: 'Modo de lectura',
+    feat7_desc: 'Entra en un modo de pantalla completa con la portada del libro, un cronómetro o temporizador, y un escenario animado de la aldea histórica de tu tema — hojas en el viento, luciérnagas, pájaros a lo lejos. Tus sesiones se guardan para seguir tu tiempo de lectura.',
     audience_label: 'Para quién',
     readers_title: 'Para lectores',
     readers_sub: 'Para quienes aman los libros',
@@ -160,7 +166,7 @@ const LANDING_COPY = {
     creators_sub: 'Escritores y creadores de contenido literario',
     creators_features: ['Sello verificado en el perfil público','Publicar listas de lectura ("Libros que me inspiraron")','Publicar planes de lectura ("Lee mis libros en este orden")','Los lectores pueden suscribirse a tus listas y planes con un toque','Enlace de plataforma en tu perfil (Instagram, TikTok, etc.)','Visible en la pestaña Buscar para todos los lectores de Codex','Todo lo que tienen los lectores, más lo anterior'],
     pro_title: 'Cómo obtener una cuenta profesional',
-    pro_body: 'Crea una cuenta de lector, luego ve a Perfil → Solicitar cuenta profesional. Cuéntanos quién eres — revisamos y respondemos en pocos días. Sin suscripción, sin pago. Las cuentas de Librería, Autor e Influencer son gratuitas durante el piloto.',
+    pro_body: 'Crea una cuenta de lector, luego ve a Perfil → Solicitar cuenta profesional. Cuéntanos quién eres — revisamos y respondemos en pocos días. Sin suscripción, sin pago. Las cuentas de Librería, Autor e Influencer son gratuitas durante el piloto.\n\nCodex tiene un proyecto hermano: Folium, una plataforma de lectura gratuita para estudiantes alineada con el Plan Nacional de Lectura 2027 de Portugal. Codex fue creado precisamente para ser el soporte sostenible que mantiene Folium gratuito para siempre — cada librería, autor e influencer que usa Codex contribuye directamente a que Folium siga disponible para todos los alumnos.',
     loan_eyebrow: 'Préstamos',
     loan_title: 'Los libros que amas merecen una nueva vida.',
     loan_desc: 'Cuando un libro se queda en una estantería, solo una persona pudo leerlo. Con Codex, puedes ayudarnos a crear una red de libros que circulan, controlando quién, cuándo y cuándo se devolverá. Cada préstamo se puede clasificar, para asegurar que quienes maltratan los libros no puedan pedirlos prestados de nuevo.',
@@ -202,6 +208,8 @@ const LANDING_COPY = {
     feat5_desc: 'Ne te laisse pas distraire de la joie de lire. Utilise le minuteur et plonge dans le livre.',
     feat6_title: 'Wishlist',
     feat6_desc: "Tu veux un livre, un jour ? Suis-le, ne l'oublie pas. Utilise la wishlist.",
+    feat7_title: 'Mode lecture',
+    feat7_desc: 'Entrez dans un mode plein écran avec la couverture du livre, un chronomètre ou minuterie, et une scène animée du village historique de votre thème — feuilles dans le vent, lucioles, oiseaux au loin. Vos sessions sont enregistrées pour suivre votre temps de lecture.',
     audience_label: 'Pour qui',
     readers_title: 'Pour les lecteurs',
     readers_sub: 'Pour ceux qui aiment les livres',
@@ -213,7 +221,7 @@ const LANDING_COPY = {
     creators_sub: 'Écrivains et créateurs de contenu littéraire',
     creators_features: ['Badge vérifié sur votre profil public','Publier des listes de lecture ("Livres qui m\'ont inspiré")','Publier des plans de lecture ("Lisez mes livres dans cet ordre")',"Les lecteurs s'abonnent à vos listes et plans en un geste",'Lien de plateforme sur votre profil (Instagram, TikTok, etc.)','Visible dans l\'onglet Recherche pour tous les lecteurs Codex','Tout ce qu\'ont les lecteurs, plus ce qui précède'],
     pro_title: 'Comment obtenir un compte professionnel',
-    pro_body: 'Créez un compte lecteur, puis allez dans Profil → Demander un compte professionnel. Dites-nous qui vous êtes — nous répondons sous quelques jours. Sans abonnement, sans paiement. Les comptes Librairie, Auteur et Influenceur sont gratuits pendant la phase pilote.',
+    pro_body: 'Créez un compte lecteur, puis allez dans Profil → Demander un compte professionnel. Dites-nous qui vous êtes — nous répondons sous quelques jours. Sans abonnement, sans paiement. Les comptes Librairie, Auteur et Influenceur sont gratuits pendant la phase pilote.\n\nCodex a un projet jumeau : Folium, une plateforme de lecture gratuite pour les élèves, alignée sur le Plan National de Lecture 2027 du Portugal. Codex a été conçu précisément pour être le soutien durable qui maintient Folium gratuit pour toujours — chaque librairie, auteur et influenceur sur Codex contribue directement à ce que Folium reste accessible à tous les élèves.',
     loan_eyebrow: 'Prêts',
     loan_title: 'Les livres que tu aimes méritent une nouvelle vie.',
     loan_desc: "Quand un livre reste sur une étagère, une seule personne a eu la chance de le lire. Avec Codex, tu peux nous aider à créer un réseau de livres qui circulent, en contrôlant qui, quand et quand il sera rendu. Chaque prêt peut être classifié, pour s'assurer que ceux qui maltraitent les livres ne puissent pas en emprunter à nouveau.",
@@ -546,6 +554,9 @@ export default function LandingPage() {
             <Feat title={t.feat6_title} desc={t.feat6_desc} icon={
               <svg viewBox="0 0 24 24" width={40} height={40} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             } />
+            <Feat title={t.feat7_title} desc={t.feat7_desc} icon={
+              <svg viewBox="0 0 24 24" width={40} height={40} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            } />
           </div>
         </section>
 
@@ -617,9 +628,18 @@ export default function LandingPage() {
             <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: GOLD, marginBottom: '0.6rem' }}>
               {t.pro_title}
             </p>
-            <p style={{ fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7 }}>
-              {t.pro_body}
-            </p>
+            {t.pro_body.split('\n\n').map((para, i) => (
+              <p
+                key={i}
+                style={
+                  i === 0
+                    ? { fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7 }
+                    : { fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7, marginTop: '0.75rem', borderLeft: '2px solid rgba(201,168,76,0.4)', paddingLeft: '0.75rem' }
+                }
+              >
+                {para}
+              </p>
+            ))}
           </div>
         </section>
 
