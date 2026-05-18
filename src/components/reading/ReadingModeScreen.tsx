@@ -52,10 +52,6 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
   const wakeLockRef = useRef<any>(null);
   const inactivityRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (!treeKey) { setSvgContent(null); return; }
-    TREE_LOADERS[treeKey]().then(setSvgContent);
-  }, [treeKey]);
 
   useEffect(() => {
     if (!keepScreenOn) return;
