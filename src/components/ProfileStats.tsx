@@ -105,6 +105,9 @@ export default function ProfileStats() {
       loansAsLender: (lenderLoansRes as any).count || 0,
       loansAsBorrower: (borrowerLoansRes as any).count || 0,
       onTimePercent,
+      totalReadingSeconds,
+      longestSessionSeconds,
+      readingSessionsCount,
     });
   };
 
