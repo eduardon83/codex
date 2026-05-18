@@ -20,6 +20,7 @@ import {
   type SelectedBookForSession,
   type SessionMode,
 } from '@/lib/readingSessions';
+import { getReadingBackground, getParticleColors } from '@/lib/readingBackgrounds';
 
 interface Props {
   book: SelectedBookForSession;
@@ -29,24 +30,18 @@ interface Props {
   onClose: (saved: { durationSeconds: number } | null) => void;
 }
 
-const TREE_LOADERS: Record<string, () => Promise<string>> = {
-  olmo: () => import('@/assets/tree-olmo.svg?raw').then(m => m.default),
-  carvalho: () => import('@/assets/tree-carvalho.svg?raw').then(m => m.default),
-  betula: () => import('@/assets/tree-betula.svg?raw').then(m => m.default),
-  oliveira: () => import('@/assets/tree-oliveira.svg?raw').then(m => m.default),
-};
-
 export default function ReadingModeScreen({ book, mode, targetSeconds, keepScreenOn, onClose }: Props) {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { theme } = useTheme();
   const themeDef = THEMES.find(th => th.id === theme);
-  const treeKey = themeDef?.tree && themeDef.tree !== 'claro' ? themeDef.tree : null;
   const accent = themeDef?.colors[2] || '#C9A84C';
   const bg = themeDef?.colors[0] || '#1E2A22';
   const text = themeDef?.colors[3] || '#F0E8D8';
+  const bgSrc = getReadingBackground(themeDef?.id ?? 'claro');
+  const particles = getParticleColors(themeDef?.id ?? 'claro');
 
-  const [svgContent, setSvgContent] = useState<string | null>(null);
+
   const [elapsed, setElapsed] = useState(0);
   const [paused, setPaused] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -57,10 +52,6 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
   const wakeLockRef = useRef<any>(null);
   const inactivityRef = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (!treeKey) { setSvgContent(null); return; }
-    TREE_LOADERS[treeKey]().then(setSvgContent);
-  }, [treeKey]);
 
   useEffect(() => {
     if (!keepScreenOn) return;
@@ -184,34 +175,46 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
       }}
     >
       <style>{`
-        @keyframes reading-breath { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+        @keyframes sceneBreathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
         @keyframes reading-leaf-float {
           0% { transform: translateY(20px) translateX(0); opacity: 0; }
           15% { opacity: .7; }
           100% { transform: translateY(-110vh) translateX(40px); opacity: 0; }
         }
-        @keyframes reading-bg-pulse { 0% { opacity: .15; } 50% { opacity: .6; } 100% { opacity: .15; } }
+        @keyframes reading-bg-pulse { 0% { filter: brightness(1); } 50% { filter: brightness(1.25); } 100% { filter: brightness(1); } }
         @keyframes reading-burst {
           0% { transform: translate(0,0) scale(1); opacity: 1; }
           100% { transform: translate(var(--dx), var(--dy)) scale(.4); opacity: 0; }
         }
       `}</style>
 
-      {svgContent && (
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute', inset: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            opacity: completed ? undefined : 0.15,
-            animation: completed
-              ? 'reading-bg-pulse 0.8s ease-out forwards'
-              : 'reading-breath 8s ease-in-out infinite',
-            pointerEvents: 'none',
-          }}
-          dangerouslySetInnerHTML={{ __html: svgContent }}
-        />
-      )}
+      {/* Background layer: village landscape */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: `url(${bgSrc})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          transformOrigin: 'center center',
+          animation: completed
+            ? 'reading-bg-pulse 0.8s ease-out forwards'
+            : 'sceneBreathe 18s ease-in-out infinite',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Legibility overlay */}
+      <div
+        aria-hidden
+        style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(0,0,0,0.15)',
+          pointerEvents: 'none',
+        }}
+      />
+
 
       <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
         {leaves.map((l, i) => (

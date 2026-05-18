@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <linearGradient id="sky-belmonte" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2B1D24"></stop>
+      <stop offset="55%" stop-color="#C98A82"></stop>
+      <stop offset="100%" stop-color="#F4DFC5"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="600" fill="url(#sky-belmonte)"></rect>
+
+  
+  <circle cx="880" cy="395" r="52" fill="#F4DFC5" opacity="0.5"></circle>
+  <circle cx="880" cy="395" r="36" fill="#F4DFC5"></circle>
+
+  
+  <ellipse cx="880" cy="420" rx="380" ry="12" fill="#F4DFC5" opacity="0.35"></ellipse>
+
+  
+  <path d="M0,430 L150,395 L280,420 L420,385 L560,410 L700,390 L840,415 L1000,395 L1200,420 L1200,600 L0,600 Z" fill="#4A2F38" opacity="0.5"></path>
+
+  
+  <path d="M0,500 Q150,440 320,455 Q480,420 640,440 Q780,460 900,455 Q1050,475 1200,470 L1200,600 L0,600 Z" fill="#4A2F38"></path>
+
+  
+  <g fill="#2B1D24">
+    
+    <rect x="380" y="340" width="90" height="120"></rect>
+    
+    <rect x="380" y="328" width="14" height="14"></rect>
+    <rect x="402" y="328" width="14" height="14"></rect>
+    <rect x="424" y="328" width="14" height="14"></rect>
+    <rect x="446" y="328" width="14" height="14"></rect>
+    
+    <rect x="335" y="370" width="40" height="90"></rect>
+    <rect x="335" y="362" width="10" height="10"></rect>
+    <rect x="350" y="362" width="10" height="10"></rect>
+    <rect x="365" y="362" width="10" height="10"></rect>
+    <rect x="475" y="380" width="50" height="80"></rect>
+    <rect x="475" y="372" width="10" height="10"></rect>
+    <rect x="490" y="372" width="10" height="10"></rect>
+    <rect x="505" y="372" width="10" height="10"></rect>
+    
+    <rect x="525" y="410" width="80" height="50"></rect>
+  </g>
+
+  
+  <rect x="420" y="385" width="8" height="14" fill="#F4DFC5" opacity="0.7"></rect>
+  <rect x="350" y="400" width="6" height="10" fill="#F4DFC5" opacity="0.5"></rect>
+
+  
+  <g fill="#2B1D24">
+    <ellipse cx="640" cy="478" rx="8" ry="32"></ellipse>
+    <ellipse cx="670" cy="475" rx="9" ry="35"></ellipse>
+    <ellipse cx="700" cy="480" rx="7" ry="30"></ellipse>
+    <ellipse cx="728" cy="476" rx="8" ry="33"></ellipse>
+    <ellipse cx="756" cy="480" rx="7" ry="30"></ellipse>
+  </g>
+
+  
+  <g fill="#2B1D24" opacity="0.8">
+    <circle cx="120" cy="525" r="14"></circle>
+    <circle cx="170" cy="540" r="11"></circle>
+    <circle cx="1020" cy="540" r="13"></circle>
+    <circle cx="1080" cy="555" r="16"></circle>
+  </g>
+
+  
+  <path d="M0,560 Q300,550 600,558 Q900,548 1200,558 L1200,600 L0,600 Z" fill="#2B1D24"></path>
+</svg>
