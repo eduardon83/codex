@@ -30,24 +30,18 @@ interface Props {
   onClose: (saved: { durationSeconds: number } | null) => void;
 }
 
-const TREE_LOADERS: Record<string, () => Promise<string>> = {
-  olmo: () => import('@/assets/tree-olmo.svg?raw').then(m => m.default),
-  carvalho: () => import('@/assets/tree-carvalho.svg?raw').then(m => m.default),
-  betula: () => import('@/assets/tree-betula.svg?raw').then(m => m.default),
-  oliveira: () => import('@/assets/tree-oliveira.svg?raw').then(m => m.default),
-};
-
 export default function ReadingModeScreen({ book, mode, targetSeconds, keepScreenOn, onClose }: Props) {
   const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const { theme } = useTheme();
   const themeDef = THEMES.find(th => th.id === theme);
-  const treeKey = themeDef?.tree && themeDef.tree !== 'claro' ? themeDef.tree : null;
   const accent = themeDef?.colors[2] || '#C9A84C';
   const bg = themeDef?.colors[0] || '#1E2A22';
   const text = themeDef?.colors[3] || '#F0E8D8';
+  const bgSrc = getReadingBackground(themeDef?.id ?? 'claro');
+  const particles = getParticleColors(themeDef?.id ?? 'claro');
 
-  const [svgContent, setSvgContent] = useState<string | null>(null);
+
   const [elapsed, setElapsed] = useState(0);
   const [paused, setPaused] = useState(false);
   const [completed, setCompleted] = useState(false);
