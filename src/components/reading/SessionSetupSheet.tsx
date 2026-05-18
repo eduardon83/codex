@@ -43,9 +43,12 @@ const PRESETS: { label: string; minutes: number }[] = [
   { label: '2h', minutes: 120 },
 ];
 
+const SCENES = THEMES.filter(t => t.id !== 'claro');
+
 export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [step, setStep] = useState<Step>('choose');
   const [books, setBooks] = useState<BookRow[]>([]);
   const [query, setQuery] = useState('');
@@ -58,6 +61,13 @@ export default function SessionSetupSheet({ open, onOpenChange, onStart }: Props
   const [keepScreenOn, setKeepScreenOn] = useState(true);
   const [loadingBooks, setLoadingBooks] = useState(false);
   const [showLibrarySearch, setShowLibrarySearch] = useState(false);
+  const [useThemeScene, setUseThemeScene] = useState(true);
+  const fallbackScene = theme && theme !== 'claro' ? theme : SCENES[0].id;
+  const [sceneId, setSceneId] = useState<string>(fallbackScene);
+
+  useEffect(() => {
+    if (useThemeScene) setSceneId(fallbackScene);
+  }, [useThemeScene, fallbackScene]);
 
   useEffect(() => {
     if (!open) {
