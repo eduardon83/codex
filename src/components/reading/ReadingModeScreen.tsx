@@ -239,7 +239,7 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
 
       <div
         style={{
-          position: 'relative', zIndex: 1,
+          position: 'relative', zIndex: 10,
           height: '100%',
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
