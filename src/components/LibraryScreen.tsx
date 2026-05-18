@@ -705,6 +705,18 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           <Tooltip>
             <TooltipTrigger asChild>
               <button
+                onClick={() => setShowSessionSheet(true)}
+                aria-label="Nova leitura"
+                className="w-12 h-12 rounded-full bg-accent text-accent-foreground flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity"
+              >
+                <BookOpen size={18} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="left">Nova leitura</TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
                 onClick={() => setShowCalendar(true)}
                 className="w-12 h-12 rounded-full bg-secondary text-foreground border border-border flex items-center justify-center shadow-sm hover:opacity-90 transition-opacity"
               >
