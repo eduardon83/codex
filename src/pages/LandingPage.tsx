@@ -549,6 +549,80 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* AUDIENCE */}
+        <section style={{ padding: '6rem 2rem', maxWidth: '1100px', margin: '0 auto' }}>
+          <p style={{ textAlign: 'center', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.65rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, marginBottom: '3.5rem' }}>
+            {t.audience_label}
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1px', background: 'rgba(139,161,139,0.12)', border: '1px solid rgba(139,161,139,0.12)', borderRadius: '4px', overflow: 'hidden' }}>
+            {/* Readers */}
+            <div style={{ background: BG, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '0.5px solid rgba(139,161,139,0.2)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(59,126,161,0.2)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#85B7EB" strokeWidth={1.5} strokeLinecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '14px', fontWeight: 500, color: TEXT }}>{t.readers_title}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(240,232,216,0.5)', marginTop: '1px' }}>{t.readers_sub}</div>
+                </div>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {t.readers_features.map((feat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'rgba(240,232,216,0.7)', lineHeight: 1.4 }}>
+                    <span style={{ color: '#5EA89A', flexShrink: 0 }}>✓</span>{feat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Bookstores */}
+            <div style={{ background: BG, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '0.5px solid rgba(139,161,139,0.2)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(201,168,76,0.15)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth={1.5} strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '14px', fontWeight: 500, color: TEXT }}>{t.bookstores_title}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(240,232,216,0.5)', marginTop: '1px' }}>{t.bookstores_sub}</div>
+                </div>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {t.bookstores_features.map((feat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'rgba(240,232,216,0.7)', lineHeight: 1.4 }}>
+                    <span style={{ color: GOLD, flexShrink: 0 }}>✓</span>{feat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Creators */}
+            <div style={{ background: BG, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '0.5px solid rgba(139,161,139,0.2)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(83,74,183,0.2)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#AFA9EC" strokeWidth={1.5} strokeLinecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '14px', fontWeight: 500, color: TEXT }}>{t.creators_title}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(240,232,216,0.5)', marginTop: '1px' }}>{t.creators_sub}</div>
+                </div>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {t.creators_features.map((feat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'rgba(240,232,216,0.7)', lineHeight: 1.4 }}>
+                    <span style={{ color: '#AFA9EC', flexShrink: 0 }}>✓</span>{feat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div style={{ marginTop: '1.5rem', border: '0.5px solid rgba(201,168,76,0.25)', borderRadius: '4px', padding: '1.25rem 1.5rem', background: 'rgba(201,168,76,0.05)' }}>
+            <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: GOLD, marginBottom: '0.6rem' }}>
+              {t.pro_title}
+            </p>
+            <p style={{ fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7 }}>
+              {t.pro_body}
+            </p>
+          </div>
+        </section>
+
         {/* LOAN */}
         <section style={{ background: BG2, padding: '0 0 2px' }}>
           <div className="folium-loan-grid">
