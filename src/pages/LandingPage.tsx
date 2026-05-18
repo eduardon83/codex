@@ -628,9 +628,18 @@ export default function LandingPage() {
             <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: GOLD, marginBottom: '0.6rem' }}>
               {t.pro_title}
             </p>
-            <p style={{ fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7 }}>
-              {t.pro_body}
-            </p>
+            {t.pro_body.split('\n\n').map((para, i) => (
+              <p
+                key={i}
+                style={
+                  i === 0
+                    ? { fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7 }
+                    : { fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7, marginTop: '0.75rem', borderLeft: '2px solid rgba(201,168,76,0.4)', paddingLeft: '0.75rem' }
+                }
+              >
+                {para}
+              </p>
+            ))}
           </div>
         </section>
 
