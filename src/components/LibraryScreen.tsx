@@ -832,6 +832,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           mode={activeSession.mode}
           targetSeconds={activeSession.targetSeconds}
           keepScreenOn={activeSession.keepScreenOn}
+          sceneId={activeSession.sceneId}
           onClose={(saved) => {
             setActiveSession(null);
             if (saved && saved.durationSeconds >= 5) {
