@@ -439,9 +439,9 @@ export default function ProfileSetup() {
 
   if (step === 'theme') {
     return (
-      <div className="profile-setup min-h-screen bg-background flex items-center justify-center px-6 py-10" style={wildernessVars}>
+      <div className="profile-setup min-h-screen bg-background flex items-center justify-center px-6 py-10">
         <div className="w-full max-w-md">
-          <Header onBack={() => setStep('photo')} />
+          <Header onBack={backFromTheme} />
           <p className="text-sm text-muted-foreground font-['Josefin_Sans'] mb-3 text-center">{t('profileSetup.chooseTheme')}</p>
           <div className="grid grid-cols-2 gap-2 mb-6 max-h-[50vh] overflow-y-auto">
             {THEMES.map(th => {
