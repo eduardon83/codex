@@ -819,6 +819,27 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <SessionSetupSheet
+        open={showSessionSheet}
+        onOpenChange={setShowSessionSheet}
+        onStart={(cfg) => { setShowSessionSheet(false); setActiveSession(cfg); }}
+      />
+
+      {activeSession && (
+        <ReadingModeScreen
+          book={activeSession.book}
+          mode={activeSession.mode}
+          targetSeconds={activeSession.targetSeconds}
+          keepScreenOn={activeSession.keepScreenOn}
+          onClose={(saved) => {
+            setActiveSession(null);
+            if (saved && saved.durationSeconds >= 5) {
+              toast.success(`Sessão de ${formatHumanDuration(saved.durationSeconds)} guardada.`);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
