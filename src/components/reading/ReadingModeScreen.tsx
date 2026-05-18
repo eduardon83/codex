@@ -209,24 +209,13 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
       />
 
 
-      <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-        {leaves.map((l, i) => (
-          <span
-            key={i}
-            style={{
-              position: 'absolute',
-              bottom: -20,
-              left: `${l.left}%`,
-              width: l.size,
-              height: l.size,
-              borderRadius: '50% 0 50% 50%',
-              background: accent,
-              opacity: 0.35,
-              animation: `reading-leaf-float ${l.duration}s linear ${l.delay}s infinite`,
-            }}
-          />
-        ))}
-      </div>
+      {!completed && (
+        <>
+          <WindParticles leafColor={particles.leaf} />
+          <ReadingBird color={particles.glow} />
+          <AmbientParticles themeId={themeDef?.id ?? 'claro'} glowColor={particles.glow} />
+        </>
+      )}
 
       <button
         onClick={() => setConfirmAbandon(true)}
