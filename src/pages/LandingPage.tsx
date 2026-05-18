@@ -43,6 +43,18 @@ const LANDING_COPY = {
     feat5_desc: 'Não te distraias da alegria de ler. Liga o cronómetro e mergulha no livro.',
     feat6_title: 'Wishlist',
     feat6_desc: 'Queres um livro, eventualmente? Acompanha-o, não te esqueças. Usa a wishlist.',
+    audience_label: 'Para quem',
+    readers_title: 'Para leitores',
+    readers_sub: 'Para quem ama livros',
+    readers_features: ['Biblioteca pessoal com múltiplas estantes','Pesquisa por ISBN, título ou autor','Registo de leituras e histórico','Notas, citações e avaliações pessoais','Wishlist com ISBN para visitar livrarias','Planos de leitura mês a mês','Emprestar e pedir livros emprestados','Subscrever listas de autores e livrarias','Descobrir eventos perto de ti','12 temas visuais de aldeias históricas','Exportar biblioteca, wishlist e planos','Biblioteca pública partilhável por link','100% sem publicidade. Grátis para sempre.'],
+    bookstores_title: 'Para livrarias',
+    bookstores_sub: 'Livrarias independentes e locais',
+    bookstores_features: ['Selo verificado no perfil público','Publicar listas de leitura curadas com subscritores','Publicar planos sazonais (ex: "Leituras de Verão 2026")','Criar e promover eventos — clubes, apresentações, lançamentos','Os teus eventos aparecem no separador Eventos de todos os leitores','Tudo o que os leitores têm, mais o acima'],
+    creators_title: 'Para autores e influencers',
+    creators_sub: 'Escritores e criadores de conteúdo literário',
+    creators_features: ['Selo verificado no perfil público','Publicar listas de leitura ("Livros que me inspiraram")','Publicar planos de leitura ("Lê os meus livros por esta ordem")','Os leitores subscrevem as tuas listas e planos com um toque','Link da plataforma no perfil (Instagram, TikTok, etc.)','Descobrível no separador Procurar por todos os leitores Codex','Tudo o que os leitores têm, mais o acima'],
+    pro_title: 'Como obter uma conta profissional',
+    pro_body: 'Cria uma conta de leitor, depois vai a Perfil → Pedir conta profissional. Diz-nos quem és — respondemos em poucos dias. Sem subscrição, sem pagamento. Contas de Livraria, Autor e Influencer são gratuitas durante o período piloto.',
     loan_eyebrow: 'Empréstimos',
     loan_title: 'Os livros que amas merecem ter uma nova vida.',
     loan_desc: 'Quando um livro fica preso numa estante, só uma pessoa teve a oportunidade de o ler. Através do Codex, podes ajudar-nos a criar uma rede de livros que circulam, controlando quem, quando e quando vai ser devolvido. Cada empréstimo pode ser classificado, para garantir que quem maltrata livros não pode pedir empréstimos novamente.',
@@ -84,6 +96,18 @@ const LANDING_COPY = {
     feat5_desc: "Don't distract yourself from the joy of reading. Use the timer and immerse yourself.",
     feat6_title: 'Wishlist',
     feat6_desc: "Want a book, eventually? Track it, don't forget it. Use the wishlist.",
+    audience_label: 'For you',
+    readers_title: 'For readers',
+    readers_sub: 'Anyone who loves books',
+    readers_features: ['Personal library across multiple shelves','ISBN, title or author search with auto-fill','Track reading status and history','Notes, citations and personal ratings','Wishlist with ISBN for bookshop visits','Reading plans, month by month','Lend and borrow books from other readers','Subscribe to curated lists from authors and stores','Discover events near you','12 visual themes from historic villages','Export your library, wishlist and reading plans','Shareable public library link','100% ad-free. Free forever.'],
+    bookstores_title: 'For bookstores',
+    bookstores_sub: 'Independent and local shops',
+    bookstores_features: ['Verified bookstore badge on your public profile','Publish curated reading lists your readers can subscribe to','Publish seasonal reading plans (e.g. "Summer reads 2026")','Create and promote reading events — clubs, author talks, launches',"Your events appear in every reader's Events tab",'Everything readers have, plus the above'],
+    creators_title: 'For authors & influencers',
+    creators_sub: 'Writers and book content creators',
+    creators_features: ['Verified badge on your public profile','Publish reading lists ("Books that inspired me")','Publish reading plans ("Read my books in this order")','Readers can subscribe to your lists and plans in one tap','Platform link on your profile (Instagram, TikTok, etc.)','Discoverable in the Search tab by all Codex readers','Everything readers have, plus the above'],
+    pro_title: 'How to get a professional account',
+    pro_body: 'Create a reader account, then go to Profile → Request a professional account. Tell us who you are — we review and approve within a few days. No subscription, no payment. Bookstore, Author and Influencer accounts are free during the pilot.',
     loan_eyebrow: 'Loans feature',
     loan_title: 'The books you love deserve to have a new life.',
     loan_desc: 'When a book is stuck on a shelf, only one person had the chance to read it. Through Codex, you can help us create a network of books that circulate, while controlling who, when and when it will be returned. Each loan can be classified, to assure those that mistreat books are not allowed to request loans again.',
@@ -125,6 +149,18 @@ const LANDING_COPY = {
     feat5_desc: 'No te distraigas de la alegría de leer. Usa el cronómetro y sumérgete.',
     feat6_title: 'Wishlist',
     feat6_desc: '¿Quieres un libro, eventualmente? Síguelo, no lo olvides. Usa la wishlist.',
+    audience_label: 'Para quién',
+    readers_title: 'Para lectores',
+    readers_sub: 'Para quienes aman los libros',
+    readers_features: ['Biblioteca personal con múltiples estantes','Búsqueda por ISBN, título o autor','Registro de lecturas e historial','Notas, citas y valoraciones personales','Lista de deseos con ISBN para librerías','Planes de lectura mes a mes','Prestar y pedir libros prestados','Suscribirse a listas de autores y librerías','Descubrir eventos cerca de ti','12 temas visuales de aldeas históricas','Exportar biblioteca, lista de deseos y planes','Biblioteca pública compartible por enlace','100% sin publicidad. Gratis para siempre.'],
+    bookstores_title: 'Para librerías',
+    bookstores_sub: 'Librerías independientes y locales',
+    bookstores_features: ['Sello verificado en el perfil público','Publicar listas de lectura curadas con suscriptores','Publicar planes estacionales (ej: "Lecturas de Verano 2026")','Crear y promover eventos — clubs, presentaciones, lanzamientos','Tus eventos aparecen en la pestaña Eventos de todos los lectores','Todo lo que tienen los lectores, más lo anterior'],
+    creators_title: 'Para autores e influencers',
+    creators_sub: 'Escritores y creadores de contenido literario',
+    creators_features: ['Sello verificado en el perfil público','Publicar listas de lectura ("Libros que me inspiraron")','Publicar planes de lectura ("Lee mis libros en este orden")','Los lectores pueden suscribirse a tus listas y planes con un toque','Enlace de plataforma en tu perfil (Instagram, TikTok, etc.)','Visible en la pestaña Buscar para todos los lectores de Codex','Todo lo que tienen los lectores, más lo anterior'],
+    pro_title: 'Cómo obtener una cuenta profesional',
+    pro_body: 'Crea una cuenta de lector, luego ve a Perfil → Solicitar cuenta profesional. Cuéntanos quién eres — revisamos y respondemos en pocos días. Sin suscripción, sin pago. Las cuentas de Librería, Autor e Influencer son gratuitas durante el piloto.',
     loan_eyebrow: 'Préstamos',
     loan_title: 'Los libros que amas merecen una nueva vida.',
     loan_desc: 'Cuando un libro se queda en una estantería, solo una persona pudo leerlo. Con Codex, puedes ayudarnos a crear una red de libros que circulan, controlando quién, cuándo y cuándo se devolverá. Cada préstamo se puede clasificar, para asegurar que quienes maltratan los libros no puedan pedirlos prestados de nuevo.',
@@ -166,6 +202,18 @@ const LANDING_COPY = {
     feat5_desc: 'Ne te laisse pas distraire de la joie de lire. Utilise le minuteur et plonge dans le livre.',
     feat6_title: 'Wishlist',
     feat6_desc: "Tu veux un livre, un jour ? Suis-le, ne l'oublie pas. Utilise la wishlist.",
+    audience_label: 'Pour qui',
+    readers_title: 'Pour les lecteurs',
+    readers_sub: 'Pour ceux qui aiment les livres',
+    readers_features: ['Bibliothèque personnelle avec plusieurs étagères','Recherche par ISBN, titre ou auteur','Suivi des lectures et historique','Notes, citations et évaluations personnelles','Liste de souhaits avec ISBN pour librairies','Plans de lecture mois par mois','Prêter et emprunter des livres',"S'abonner aux listes d'auteurs et librairies",'Découvrir des événements près de chez soi','12 thèmes visuels de villages historiques','Exporter bibliothèque, liste de souhaits et plans','Bibliothèque publique partageable par lien','100% sans publicité. Gratuit pour toujours.'],
+    bookstores_title: 'Pour les librairies',
+    bookstores_sub: 'Librairies indépendantes et locales',
+    bookstores_features: ['Badge librairie vérifiée sur votre profil public','Publier des listes de lecture que vos lecteurs peuvent rejoindre','Publier des plans saisonniers (ex: "Lectures d\'été 2026")','Créer et promouvoir des événements — clubs, présentations, lancements','Vos événements apparaissent dans l\'onglet Événements de chaque lecteur','Tout ce qu\'ont les lecteurs, plus ce qui précède'],
+    creators_title: 'Pour auteurs et influenceurs',
+    creators_sub: 'Écrivains et créateurs de contenu littéraire',
+    creators_features: ['Badge vérifié sur votre profil public','Publier des listes de lecture ("Livres qui m\'ont inspiré")','Publier des plans de lecture ("Lisez mes livres dans cet ordre")',"Les lecteurs s'abonnent à vos listes et plans en un geste",'Lien de plateforme sur votre profil (Instagram, TikTok, etc.)','Visible dans l\'onglet Recherche pour tous les lecteurs Codex','Tout ce qu\'ont les lecteurs, plus ce qui précède'],
+    pro_title: 'Comment obtenir un compte professionnel',
+    pro_body: 'Créez un compte lecteur, puis allez dans Profil → Demander un compte professionnel. Dites-nous qui vous êtes — nous répondons sous quelques jours. Sans abonnement, sans paiement. Les comptes Librairie, Auteur et Influenceur sont gratuits pendant la phase pilote.',
     loan_eyebrow: 'Prêts',
     loan_title: 'Les livres que tu aimes méritent une nouvelle vie.',
     loan_desc: "Quand un livre reste sur une étagère, une seule personne a eu la chance de le lire. Avec Codex, tu peux nous aider à créer un réseau de livres qui circulent, en contrôlant qui, quand et quand il sera rendu. Chaque prêt peut être classifié, pour s'assurer que ceux qui maltraitent les livres ne puissent pas en emprunter à nouveau.",
@@ -498,6 +546,80 @@ export default function LandingPage() {
             <Feat title={t.feat6_title} desc={t.feat6_desc} icon={
               <svg viewBox="0 0 24 24" width={40} height={40} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             } />
+          </div>
+        </section>
+
+        {/* AUDIENCE */}
+        <section style={{ padding: '6rem 2rem', maxWidth: '1100px', margin: '0 auto' }}>
+          <p style={{ textAlign: 'center', fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.65rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, marginBottom: '3.5rem' }}>
+            {t.audience_label}
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1px', background: 'rgba(139,161,139,0.12)', border: '1px solid rgba(139,161,139,0.12)', borderRadius: '4px', overflow: 'hidden' }}>
+            {/* Readers */}
+            <div style={{ background: BG, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '0.5px solid rgba(139,161,139,0.2)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(59,126,161,0.2)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#85B7EB" strokeWidth={1.5} strokeLinecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '14px', fontWeight: 500, color: TEXT }}>{t.readers_title}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(240,232,216,0.5)', marginTop: '1px' }}>{t.readers_sub}</div>
+                </div>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {t.readers_features.map((feat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'rgba(240,232,216,0.7)', lineHeight: 1.4 }}>
+                    <span style={{ color: '#5EA89A', flexShrink: 0 }}>✓</span>{feat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Bookstores */}
+            <div style={{ background: BG, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '0.5px solid rgba(139,161,139,0.2)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(201,168,76,0.15)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={GOLD} strokeWidth={1.5} strokeLinecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '14px', fontWeight: 500, color: TEXT }}>{t.bookstores_title}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(240,232,216,0.5)', marginTop: '1px' }}>{t.bookstores_sub}</div>
+                </div>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {t.bookstores_features.map((feat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'rgba(240,232,216,0.7)', lineHeight: 1.4 }}>
+                    <span style={{ color: GOLD, flexShrink: 0 }}>✓</span>{feat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {/* Creators */}
+            <div style={{ background: BG, padding: '2rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.25rem', paddingBottom: '1rem', borderBottom: '0.5px solid rgba(139,161,139,0.2)' }}>
+                <div style={{ width: '36px', height: '36px', background: 'rgba(83,74,183,0.2)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#AFA9EC" strokeWidth={1.5} strokeLinecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '14px', fontWeight: 500, color: TEXT }}>{t.creators_title}</div>
+                  <div style={{ fontSize: '11px', color: 'rgba(240,232,216,0.5)', marginTop: '1px' }}>{t.creators_sub}</div>
+                </div>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {t.creators_features.map((feat, i) => (
+                  <li key={i} style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'rgba(240,232,216,0.7)', lineHeight: 1.4 }}>
+                    <span style={{ color: '#AFA9EC', flexShrink: 0 }}>✓</span>{feat}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div style={{ marginTop: '1.5rem', border: '0.5px solid rgba(201,168,76,0.25)', borderRadius: '4px', padding: '1.25rem 1.5rem', background: 'rgba(201,168,76,0.05)' }}>
+            <p style={{ fontFamily: "'Josefin Sans', sans-serif", fontSize: '0.75rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: GOLD, marginBottom: '0.6rem' }}>
+              {t.pro_title}
+            </p>
+            <p style={{ fontSize: '0.82rem', color: 'rgba(240,232,216,0.65)', lineHeight: 1.7 }}>
+              {t.pro_body}
+            </p>
           </div>
         </section>
 
