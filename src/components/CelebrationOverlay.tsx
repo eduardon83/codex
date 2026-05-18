@@ -129,7 +129,7 @@ export function CelebrationProvider({ children }: { children: ReactNode }) {
                 color: 'hsl(var(--accent))',
               }}
             >
-              {LABELS[active]}
+              {t(LABEL_KEYS[active])}
             </motion.p>
           </motion.div>
         )}
