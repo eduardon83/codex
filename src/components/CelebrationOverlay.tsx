@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 type CelebrationType = 'library' | 'book' | 'loan';
 
@@ -9,10 +10,10 @@ interface CelebrationContextType {
 
 const CelebrationContext = createContext<CelebrationContextType | undefined>(undefined);
 
-const LABELS: Record<CelebrationType, string> = {
-  library: 'New library created.',
-  book: 'Added to your library.',
-  loan: 'Loaned with care.',
+const LABEL_KEYS: Record<CelebrationType, string> = {
+  library: 'celebration.library',
+  book: 'celebration.book',
+  loan: 'celebration.loan',
 };
 
 function OwlSVG() {
@@ -92,6 +93,7 @@ const SVG_MAP: Record<CelebrationType, () => JSX.Element> = {
 };
 
 export function CelebrationProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const [active, setActive] = useState<CelebrationType | null>(null);
 
   const celebrate = useCallback((type: CelebrationType) => {
@@ -127,7 +129,7 @@ export function CelebrationProvider({ children }: { children: ReactNode }) {
                 color: 'hsl(var(--accent))',
               }}
             >
-              {LABELS[active]}
+              {t(LABEL_KEYS[active])}
             </motion.p>
           </motion.div>
         )}
