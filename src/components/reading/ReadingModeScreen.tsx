@@ -21,6 +21,7 @@ import {
   type SessionMode,
 } from '@/lib/readingSessions';
 import { getReadingBackground, getParticleColors } from '@/lib/readingBackgrounds';
+import { WindParticles, ReadingBird, AmbientParticles } from './ReadingParticles';
 
 interface Props {
   book: SelectedBookForSession;
