@@ -1514,6 +1514,62 @@ export type Database = {
           },
         ]
       }
+      reading_sessions: {
+        Row: {
+          book_author: string | null
+          book_cover_url: string | null
+          book_id: string | null
+          book_title: string
+          completed: boolean
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          id: string
+          mode: string | null
+          started_at: string
+          timer_target_seconds: number | null
+          user_id: string
+        }
+        Insert: {
+          book_author?: string | null
+          book_cover_url?: string | null
+          book_id?: string | null
+          book_title: string
+          completed?: boolean
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          mode?: string | null
+          started_at?: string
+          timer_target_seconds?: number | null
+          user_id: string
+        }
+        Update: {
+          book_author?: string | null
+          book_cover_url?: string | null
+          book_id?: string | null
+          book_title?: string
+          completed?: boolean
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          mode?: string | null
+          started_at?: string
+          timer_target_seconds?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_sessions_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       role_requests: {
         Row: {
           created_at: string
