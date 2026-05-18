@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BookOpen, Plus, Search, Hourglass, Timer as TimerIcon, ChevronLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme, THEMES } from '@/hooks/useTheme';
 import { supabase } from '@/integrations/supabase/client';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { getReadingBackground } from '@/lib/readingBackgrounds';
 import type { SelectedBookForSession, SessionMode } from '@/lib/readingSessions';
 
 interface BookRow {
