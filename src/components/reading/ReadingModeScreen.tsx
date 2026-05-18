@@ -20,6 +20,7 @@ import {
   type SelectedBookForSession,
   type SessionMode,
 } from '@/lib/readingSessions';
+import { getReadingBackground, getParticleColors } from '@/lib/readingBackgrounds';
 
 interface Props {
   book: SelectedBookForSession;
