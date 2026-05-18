@@ -428,7 +428,7 @@ export default function ProfileSetup() {
                 </Button>
               )}
             </div>
-            <Button onClick={() => setStep('theme')} className="w-full h-11">
+            <Button onClick={enterThemeStep} className="w-full h-11">
               {t('profileSetup.continue')}
             </Button>
           </div>
