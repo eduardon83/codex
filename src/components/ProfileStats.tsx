@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Badge } from '@/components/ui/badge';
 import { tGenre } from '@/lib/displayMappings';
+import { formatHumanDuration } from '@/lib/readingSessions';
 
 interface Stats {
   totalBooks: number;
@@ -19,10 +20,13 @@ interface Stats {
   loansAsLender: number;
   loansAsBorrower: number;
   onTimePercent: number | null;
+  totalReadingSeconds: number;
+  longestSessionSeconds: number;
+  readingSessionsCount: number;
 }
 
 export default function ProfileStats() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
 
@@ -51,6 +55,14 @@ export default function ProfileStats() {
       supabase.from('loan_requests' as any).select('id', { count: 'exact', head: true }).eq('requester_user_id', uid).in('status', ['accepted', 'in_progress', 'overdue', 'returned']),
       supabase.from('loan_requests' as any).select('due_date, returned_at').eq('requester_user_id', uid).eq('status', 'returned'),
     ]);
+
+    const sessionsRes: any = await supabase.from('reading_sessions' as any).select('duration_seconds').eq('user_id', uid);
+    const sessionRows = (sessionsRes.data as any[]) || [];
+    const durations = sessionRows.map(s => Number(s.duration_seconds) || 0);
+    const totalReadingSeconds = durations.reduce((a, b) => a + b, 0);
+    const longestSessionSeconds = durations.length ? Math.max(...durations) : 0;
+    const readingSessionsCount = sessionRows.length;
+
 
     const returnedRows = ((borrowerReturnedRes as any).data as any[]) || [];
     const completed = returnedRows.length;
@@ -93,6 +105,9 @@ export default function ProfileStats() {
       loansAsLender: (lenderLoansRes as any).count || 0,
       loansAsBorrower: (borrowerLoansRes as any).count || 0,
       onTimePercent,
+      totalReadingSeconds,
+      longestSessionSeconds,
+      readingSessionsCount,
     });
   };
 
@@ -116,6 +131,11 @@ export default function ProfileStats() {
   ];
   if (stats.onTimePercent !== null) {
     metrics.push({ label: t('profileStats.onTimeReturns', 'Devoluções a tempo'), value: `${stats.onTimePercent}%` });
+  }
+  if (stats.readingSessionsCount > 0) {
+    metrics.push({ label: t('profileStats.totalReadingTime'), value: formatHumanDuration(stats.totalReadingSeconds, i18n.language) });
+    metrics.push({ label: t('profileStats.longestSession'), value: formatHumanDuration(stats.longestSessionSeconds, i18n.language) });
+    metrics.push({ label: t('profileStats.readingSessions'), value: stats.readingSessionsCount });
   }
 
   return (
