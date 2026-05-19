@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Codex</string>
+    <string name="title_activity_main">Codex</string>
+    <string name="package_name">pt.kendirstudios.codex</string>
+    <string name="custom_url_scheme">pt.kendirstudios.codex</string>
+</resources>
