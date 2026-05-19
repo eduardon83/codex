@@ -184,19 +184,21 @@ export default function ReadingModeScreen({ book, mode, targetSeconds, keepScree
       `}</style>
 
       {/* Layer 1 — Background SVG */}
-      <div
+      <img
         aria-hidden
+        src={bgSrc}
+        alt=""
         style={{
           position: 'absolute', inset: 0, zIndex: 0,
-          backgroundImage: `url(${bgSrc})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
+          width: '100%', height: '100%',
+          objectFit: 'cover', objectPosition: 'center',
+          transform: 'scale(1)',
           transformOrigin: 'center center',
           animation: completed
             ? 'reading-bg-pulse 0.8s ease-out forwards'
             : 'sceneBreathe 18s ease-in-out infinite',
           pointerEvents: 'none',
+          userSelect: 'none',
         }}
       />
 
