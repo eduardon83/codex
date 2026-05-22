@@ -13,10 +13,9 @@ import TreeBackground from "@/components/TreeBackground";
 import Index from "./pages/Index.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
 import NativeWelcomeScreen from "./pages/NativeWelcomeScreen.tsx";
+import { isNative } from "@/lib/platform";
 
-export const isNative = () =>
-  typeof window !== 'undefined' &&
-  !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
+export { isNative };
 import Admin from "./pages/Admin.tsx";
 import PublicList from "./pages/PublicList.tsx";
 import PublicReadingList from "./pages/PublicReadingList.tsx";

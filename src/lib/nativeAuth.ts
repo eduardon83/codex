@@ -1,11 +1,11 @@
-import { Capacitor } from '@capacitor/core';
 import { createLovableAuth } from '@lovable.dev/cloud-auth-js';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
+import { isNative } from '@/lib/platform';
 
 const PUBLIC_APP_ORIGIN = 'https://codex.kendirstudios.pt';
 
-const isNativeApp = () => Capacitor.isNativePlatform();
+const isNativeApp = () => isNative();
 
 export const getAuthRedirectOrigin = () => {
   if (isNativeApp()) return PUBLIC_APP_ORIGIN;
