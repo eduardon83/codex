@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CalendarPlus, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -47,6 +48,7 @@ export function buildPlanMonths(start?: string | null, end?: string | null, lang
 
 export default function AddToPlanSheet({ book, open, onOpenChange, onNoActivePlan }: AddToPlanSheetProps) {
   const { user } = useAuth();
+  const { i18n } = useTranslation();
   const [plan, setPlan] = useState<ReadingPlan | null>(null);
   const [savingMonth, setSavingMonth] = useState<string | null>(null);
 
@@ -69,7 +71,7 @@ export default function AddToPlanSheet({ book, open, onOpenChange, onNoActivePla
       });
   }, [open, user, onOpenChange, onNoActivePlan]);
 
-  const months = useMemo(() => buildPlanMonths(plan?.started_at, plan?.ends_at), [plan]);
+  const months = useMemo(() => buildPlanMonths(plan?.started_at, plan?.ends_at, i18n.language), [plan, i18n.language]);
 
   const addToMonth = async (month: string, label: string) => {
     if (!user || !plan || !book) return;
