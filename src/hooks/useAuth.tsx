@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, useContext, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import i18n from '@/i18n';
+import { getAuthRedirectOrigin } from '@/lib/nativeAuth';
 
 interface Profile {
   id: string;
@@ -170,7 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       password,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: getAuthRedirectOrigin(),
         data: { language: currentLang() },
       },
     });
@@ -184,7 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${getAuthRedirectOrigin()}/#/reset-password`,
     });
     return { error: error as Error | null };
   };
