@@ -948,5 +948,11 @@
     "list_options_aria": "List options: {{name}}",
     "view_list_aria": "View list: {{name}}",
     "edit_name_soon": "Name editing coming soon."
+  },
+  "school": {
+    "selectDistrictAndSchool": "Select district and school",
+    "locationSaved": "Location saved",
+    "fillNameAndConcelho": "Fill in name and municipality",
+    "schoolSubmitted": "School submitted. It will be reviewed soon."
   }
 }
