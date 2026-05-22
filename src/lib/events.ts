@@ -53,7 +53,18 @@ export const eventTone = (type: EventType) => {
 };
 
 export const isRegistrationEvent = (event: Pick<CodexEvent, 'type' | 'registration_closes_at' | 'registration_limit'>) => !['news', 'pnl_update'].includes(event.type) && Boolean(event.registration_closes_at || event.registration_limit);
-export const formatDate = (value?: string | null) => value ? new Intl.DateTimeFormat('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(value)) : '';
-export const formatDateTime = (value?: string | null) => value ? new Intl.DateTimeFormat('pt-PT', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(value)) : '';
-export const creatorName = (event: CodexEvent) => event.entities?.name || [event.profiles?.first_name, event.profiles?.last_name].filter(Boolean).join(' ') || event.profiles?.username || 'Codex';
-export const scopeLabel = (event: CodexEvent) => event.scope === 'school' && event.schools?.name ? event.schools.name : event.scope !== 'national' && event.districts?.name ? `${EVENT_SCOPE_LABELS_PT[event.scope]} de ${event.districts.name}` : EVENT_SCOPE_LABELS_PT[event.scope];
+
+const LOCALE_MAP: Record<string, string> = { pt: 'pt-PT', en: 'en-US', es: 'es-ES', fr: 'fr-FR' };
+const resolveLocale = (lang?: string) => LOCALE_MAP[(lang || 'pt').split('-')[0]] || 'pt-PT';
+
+export const formatDate = (value?: string | null, lang?: string) => value ? new Intl.DateTimeFormat(resolveLocale(lang), { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(value)) : '';
+export const formatDateTime = (value?: string | null, lang?: string) => value ? new Intl.DateTimeFormat(resolveLocale(lang), { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(value)) : '';
+export const creatorName = (event: CodexEvent, fallback = 'Codex') => event.entities?.name || [event.profiles?.first_name, event.profiles?.last_name].filter(Boolean).join(' ') || event.profiles?.username || fallback;
+export const scopeLabel = (event: CodexEvent, t?: (k: string, opts?: any) => string) => {
+  if (event.scope === 'school' && event.schools?.name) return event.schools.name;
+  if (event.scope !== 'national' && event.districts?.name) {
+    const scope = t ? t(`eventsScreen.scopes.${event.scope}`) : EVENT_SCOPE_LABELS_PT[event.scope];
+    return t ? t('eventsScreen.scopes.scoped_of', { scope, name: event.districts.name }) : `${scope} de ${event.districts.name}`;
+  }
+  return t ? t(`eventsScreen.scopes.${event.scope}`) : EVENT_SCOPE_LABELS_PT[event.scope];
+};
