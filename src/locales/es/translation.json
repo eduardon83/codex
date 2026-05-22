@@ -506,7 +506,10 @@
     "topGenre": "Género favorito",
     "totalReadingTime": "Tiempo de lectura",
     "longestSession": "Sesión más larga",
-    "readingSessions": "Sesiones de lectura"
+    "readingSessions": "Sesiones de lectura",
+    "loansAsLender": "Libros prestados",
+    "loansAsBorrower": "Libros pedidos prestados",
+    "onTimeReturns": "Devoluciones a tiempo"
   },
   "tutorial": {
     "help": "Ayuda",
