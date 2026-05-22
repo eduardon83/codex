@@ -836,7 +836,7 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
           onClose={(saved) => {
             setActiveSession(null);
             if (saved && saved.durationSeconds >= 5) {
-              toast.success(`Sessão de ${formatHumanDuration(saved.durationSeconds)} guardada.`);
+              toast.success(t('reading_mode.session_saved', { duration: formatHumanDuration(saved.durationSeconds) }));
             }
           }}
         />

@@ -948,5 +948,11 @@
     "list_options_aria": "Opciones de la lista: {{name}}",
     "view_list_aria": "Ver lista: {{name}}",
     "edit_name_soon": "Edición de nombre disponible pronto."
+  },
+  "school": {
+    "selectDistrictAndSchool": "Selecciona distrito y escuela",
+    "locationSaved": "Ubicación guardada",
+    "fillNameAndConcelho": "Rellena nombre y municipio",
+    "schoolSubmitted": "Escuela enviada. Será revisada pronto."
   }
 }

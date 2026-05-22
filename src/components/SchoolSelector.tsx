@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select';
 import { Loader2, MapPin, Pencil, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { FALLBACK_SCHOOLS_BY_DISTRICT } from '@/config/fallbackSchools';
 
 interface District { id: string; name: string; }
@@ -49,6 +50,7 @@ interface Props {
 
 export default function SchoolSelector({ current, onSaved }: Props) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
   const [districts, setDistricts] = useState<District[]>([]);
   const [savedSchool, setSavedSchool] = useState<School | null>(null);
@@ -147,7 +149,7 @@ export default function SchoolSelector({ current, onSaved }: Props) {
 
   const save = async () => {
     if (!user || !districtId || !schoolId) {
-      toast.error('Selecciona distrito e escola');
+      toast.error(t('school.selectDistrictAndSchool', 'Select district and school'));
       return;
     }
 
@@ -186,7 +188,7 @@ export default function SchoolSelector({ current, onSaved }: Props) {
     } as any).eq('user_id', user.id);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success('Localização guardada');
+    toast.success(t('school.locationSaved', 'Location saved'));
     setEditing(false);
     onSaved();
   };
@@ -354,6 +356,7 @@ interface SubmitDialogProps {
 
 function SubmitSchoolDialog({ open, onOpenChange, districtId, districtName, onSubmitted }: SubmitDialogProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [concelho, setConcelho] = useState('');
   const [schoolType, setSchoolType] = useState<'public' | 'private'>('public');
@@ -373,7 +376,7 @@ function SubmitSchoolDialog({ open, onOpenChange, districtId, districtName, onSu
   const submit = async () => {
     if (!user || !districtId) return;
     if (!name.trim() || !concelho.trim()) {
-      toast.error('Preenche nome e concelho');
+      toast.error(t('school.fillNameAndConcelho', 'Fill in name and municipality'));
       return;
     }
     setSubmitting(true);
@@ -388,7 +391,7 @@ function SubmitSchoolDialog({ open, onOpenChange, districtId, districtName, onSu
     } as any).select('id, name, concelho, district_id').single();
     setSubmitting(false);
     if (error) return toast.error(error.message);
-    toast.success('Escola submetida. Vai ser revista em breve.');
+    toast.success(t('school.schoolSubmitted', 'School submitted. It will be reviewed soon.'));
     onSubmitted(data as School);
   };
 
