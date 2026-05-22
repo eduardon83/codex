@@ -29,7 +29,8 @@ type ParsedBook = { title: string; author: string | null; isbn: string | null; m
 type ReadingList = { id: string; name: string; creator_name: string | null; creator_role: string | null; is_official: boolean; created_at: string; updated_at: string; book_count?: number; subscribed?: boolean };
 
 const ptMonths: Record<string, string> = { janeiro: '01', fevereiro: '02', março: '03', marco: '03', abril: '04', maio: '05', junho: '06', julho: '07', agosto: '08', setembro: '09', outubro: '10', novembro: '11', dezembro: '12' };
-const monthLabel = (month: string | null) => month ? new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' }).format(new Date(`${month}-01T00:00:00`)) : '';
+const LOCALE_MAP: Record<string, string> = { pt: 'pt-PT', en: 'en-US', es: 'es-ES', fr: 'fr-FR' };
+const monthLabel = (month: string | null, lang: string = 'pt') => month ? new Intl.DateTimeFormat(LOCALE_MAP[lang] || lang || 'pt-PT', { month: 'long', year: 'numeric' }).format(new Date(`${month}-01T00:00:00`)) : '';
 const csvEscape = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
 
 function normalizeMonth(value: unknown) {
