@@ -108,13 +108,17 @@
     "country": "País",
     "birthYear": "Ano de nascimento",
     "selectYear": "Escolhe um ano",
-    "subtitle": "Conta-nos um pouco sobre ti"
+    "subtitle": "Conta-nos um pouco sobre ti",
+    "uploadPhoto": "Enviar foto",
+    "changePhoto": "Alterar foto"
   },
   "profile": {
     "title": "Perfil",
     "books": "Livros",
     "libraries": "Bibliotecas",
     "editProfile": "Editar perfil",
+    "uploadPhoto": "Enviar foto",
+    "changePhoto": "Alterar",
     "save": "Guardar",
     "cancel": "Cancelar",
     "firstName": "Nome",
