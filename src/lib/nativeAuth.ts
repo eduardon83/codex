@@ -1,6 +1,7 @@
 import { Capacitor } from '@capacitor/core';
 import { createLovableAuth } from '@lovable.dev/cloud-auth-js';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
 
 const PUBLIC_APP_ORIGIN = 'https://codex.kendirstudios.pt';
 
@@ -17,6 +18,12 @@ const getOAuthBrokerUrl = () => {
 };
 
 export const signInWithGoogle = async () => {
+  if (!isNativeApp()) {
+    return lovable.auth.signInWithOAuth('google', {
+      redirect_uri: getAuthRedirectOrigin(),
+    });
+  }
+
   const auth = createLovableAuth({ oauthBrokerUrl: getOAuthBrokerUrl() });
   const result = await auth.signInWithOAuth('google', {
     redirect_uri: getAuthRedirectOrigin(),
