@@ -432,12 +432,12 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                 {hasAnyProRole && (
                   <div className="flex items-center gap-2 ml-2 px-2 py-1 border border-border rounded">
                     <Globe size={13} className="text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Pública</span>
+                    <span className="text-xs text-muted-foreground">{t('library.public')}</span>
                     <Switch
                       checked={!!currentLib.is_public}
                       onCheckedChange={async (v) => {
                         await supabase.from('libraries').update({ is_public: v }).eq('id', currentLib.id);
-                        showToast(v ? 'Biblioteca tornada pública.' : 'Biblioteca tornada privada.');
+                        showToast(v ? t('library.madePublic') : t('library.madePrivate'));
                         loadLibraries();
                       }}
                     />
@@ -448,15 +448,15 @@ export default function LibraryScreen({ onBookSelect, onAddBook, onWishlist, onG
                             onClick={() => {
                               const url = `${window.location.origin}/lista/${currentLib.id}`;
                               navigator.clipboard.writeText(url);
-                              showToast('Link copiado.');
+                              showToast(t('library.linkCopiedList'));
                             }}
                             className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Copiar link"
+                            aria-label={t('library.copyLink')}
                           >
                             <Link2 size={14} />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent>Copiar link de partilha</TooltipContent>
+                        <TooltipContent>{t('library.copyShareLink')}</TooltipContent>
                       </Tooltip>
                     )}
                   </div>

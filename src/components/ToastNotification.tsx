@@ -20,7 +20,11 @@ export function AppToastProvider({ children }: { children: ReactNode }) {
   const showToast = useCallback((message: string, duration?: number) => {
     const id = ++toastId;
     setTimeout(() => {
-      setToasts(prev => [...prev, { id, message }]);
+      setToasts(prev => {
+        // Dedupe: ignore if same message was added within the last 500ms (still present)
+        if (prev.some(t => t.message === message)) return prev;
+        return [...prev, { id, message }];
+      });
       setTimeout(() => {
         setToasts(prev => prev.filter(t => t.id !== id));
       }, duration ?? 3000);
