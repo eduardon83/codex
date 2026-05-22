@@ -108,13 +108,17 @@
     "country": "Country",
     "birthYear": "Year of birth",
     "selectYear": "Choose a year",
-    "subtitle": "Tell us a bit about yourself"
+    "subtitle": "Tell us a bit about yourself",
+    "uploadPhoto": "Upload photo",
+    "changePhoto": "Change photo"
   },
   "profile": {
     "title": "Profile",
     "books": "Books",
     "libraries": "Libraries",
     "editProfile": "Edit profile",
+    "uploadPhoto": "Upload photo",
+    "changePhoto": "Change",
     "save": "Save",
     "cancel": "Cancel",
     "firstName": "First name",
