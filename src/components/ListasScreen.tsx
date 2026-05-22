@@ -119,7 +119,7 @@ export default function ListasScreen({ onGoToSearchReadingLists }: { onGoToSearc
 }
 
 function PlanosTab({ userId }: { userId: string | null }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const helpText = useContent('listas.planosHelp');
   const [plan, setPlan] = useState<Plan | null>(null);
   const [items, setItems] = useState<PlanItem[]>([]);
@@ -147,7 +147,7 @@ function PlanosTab({ userId }: { userId: string | null }) {
   };
 
   useEffect(() => { load(); }, [userId]);
-  const months = useMemo(() => buildPlanMonths(plan?.started_at || plan?.created_at?.slice(0, 10), plan?.ends_at), [plan]);
+  const months = useMemo(() => buildPlanMonths(plan?.started_at || plan?.created_at?.slice(0, 10), plan?.ends_at, i18n.language), [plan, i18n.language]);
   useEffect(() => { if (months.length && !selectedMonth) setSelectedMonth(months.find(m => m.value === new Date().toISOString().slice(0, 7))?.value || months[0].value); }, [months, selectedMonth]);
   const counts = useMemo(() => items.reduce<Record<string, number>>((acc, item) => { if (item.target_month) acc[item.target_month] = (acc[item.target_month] || 0) + 1; return acc; }, {}), [items]);
   const monthItems = items.filter(i => i.target_month === selectedMonth).sort((a, b) => a.priority - b.priority);
