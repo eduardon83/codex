@@ -12,7 +12,17 @@ export default function NativeWelcomeScreen() {
       style={{ backgroundColor: '#1E2A22' }}
     >
       <div className="flex-1 flex flex-col items-center justify-center gap-6">
-        <img src={owlIcon} alt="Codex" style={{ width: 80, height: 80 }} />
+        <img
+          src={owlIcon}
+          alt="Codex"
+          style={{
+            width: '35vw',
+            maxWidth: '160px',
+            height: 'auto',
+            display: 'block',
+            margin: '0 auto',
+          }}
+        />
         <h1
           className="italic"
           style={{
