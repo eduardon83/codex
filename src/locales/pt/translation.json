@@ -1,4 +1,9 @@
 {
+  "native": {
+    "tagline": "A tua biblioteca pessoal",
+    "sign_in": "Entrar",
+    "create_account": "Criar conta"
+  },
   "app": {
     "name": "Codex",
     "tagline": "O seu catálogo pessoal de livros",
