@@ -29,7 +29,8 @@ type ParsedBook = { title: string; author: string | null; isbn: string | null; m
 type ReadingList = { id: string; name: string; creator_name: string | null; creator_role: string | null; is_official: boolean; created_at: string; updated_at: string; book_count?: number; subscribed?: boolean };
 
 const ptMonths: Record<string, string> = { janeiro: '01', fevereiro: '02', março: '03', marco: '03', abril: '04', maio: '05', junho: '06', julho: '07', agosto: '08', setembro: '09', outubro: '10', novembro: '11', dezembro: '12' };
-const monthLabel = (month: string | null) => month ? new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' }).format(new Date(`${month}-01T00:00:00`)) : '';
+const LOCALE_MAP: Record<string, string> = { pt: 'pt-PT', en: 'en-US', es: 'es-ES', fr: 'fr-FR' };
+const monthLabel = (month: string | null, lang: string = 'pt') => month ? new Intl.DateTimeFormat(LOCALE_MAP[lang] || lang || 'pt-PT', { month: 'long', year: 'numeric' }).format(new Date(`${month}-01T00:00:00`)) : '';
 const csvEscape = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
 
 function normalizeMonth(value: unknown) {
@@ -118,7 +119,7 @@ export default function ListasScreen({ onGoToSearchReadingLists }: { onGoToSearc
 }
 
 function PlanosTab({ userId }: { userId: string | null }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const helpText = useContent('listas.planosHelp');
   const [plan, setPlan] = useState<Plan | null>(null);
   const [items, setItems] = useState<PlanItem[]>([]);
@@ -146,7 +147,7 @@ function PlanosTab({ userId }: { userId: string | null }) {
   };
 
   useEffect(() => { load(); }, [userId]);
-  const months = useMemo(() => buildPlanMonths(plan?.started_at || plan?.created_at?.slice(0, 10), plan?.ends_at), [plan]);
+  const months = useMemo(() => buildPlanMonths(plan?.started_at || plan?.created_at?.slice(0, 10), plan?.ends_at, i18n.language), [plan, i18n.language]);
   useEffect(() => { if (months.length && !selectedMonth) setSelectedMonth(months.find(m => m.value === new Date().toISOString().slice(0, 7))?.value || months[0].value); }, [months, selectedMonth]);
   const counts = useMemo(() => items.reduce<Record<string, number>>((acc, item) => { if (item.target_month) acc[item.target_month] = (acc[item.target_month] || 0) + 1; return acc; }, {}), [items]);
   const monthItems = items.filter(i => i.target_month === selectedMonth).sort((a, b) => a.priority - b.priority);
@@ -228,12 +229,12 @@ function PlanItemList({ items, onMove, onUpdate, onRemove, months }: any) {
 }
 
 function BookSearchDialog({ open, onOpenChange, planId, month, onAdded }: any) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   useEffect(() => { if (!open || !user) return; const run = async () => { const q = supabase.from('books').select('id,title,author,isbn,cover_url,reading_status,is_wishlist').eq('user_id', user.id).eq('is_wishlist', false).limit(25); const term = query.trim(); const { data } = term ? await q.or(`title.ilike.%${term}%,author.ilike.%${term}%,isbn.ilike.%${term}%`) : await q.eq('reading_status', 'Unread'); setResults(data || []); }; run(); }, [open, query, user]);
-  const add = async (book: any) => { const { data: maxRows } = await supabase.from('reading_plan_items' as any).select('priority').eq('plan_id', planId).eq('target_month', month).order('priority', { ascending: false }).limit(1); await supabase.from('reading_plan_items' as any).insert({ plan_id: planId, book_id: book.id, title: book.title, author: book.author, isbn: book.isbn, cover_url: book.cover_url, target_month: month, priority: (((maxRows?.[0] as any)?.priority ?? -1) + 1), status: book.reading_status === 'Read' ? 'done' : 'planned' }); toast.success(t('lists.added_to_plan_for', { month: monthLabel(month) })); onOpenChange(false); onAdded(); };
+  const add = async (book: any) => { const { data: maxRows } = await supabase.from('reading_plan_items' as any).select('priority').eq('plan_id', planId).eq('target_month', month).order('priority', { ascending: false }).limit(1); await supabase.from('reading_plan_items' as any).insert({ plan_id: planId, book_id: book.id, title: book.title, author: book.author, isbn: book.isbn, cover_url: book.cover_url, target_month: month, priority: (((maxRows?.[0] as any)?.priority ?? -1) + 1), status: book.reading_status === 'Read' ? 'done' : 'planned' }); toast.success(t('lists.added_to_plan_for', { month: monthLabel(month, i18n.language) })); onOpenChange(false); onAdded(); };
   return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><DialogHeader><DialogTitle>{t('lists.add_book_to_plan')}</DialogTitle></DialogHeader><div className="relative"><Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" /><Input aria-label={t('lists.search_book_aria')} className="pl-9" value={query} onChange={e => setQuery(e.target.value)} placeholder={t('lists.search_placeholder')} /></div><div className="max-h-80 overflow-y-auto">{results.map(b => <button key={b.id} aria-label={t('lists.add_to_plan_aria', { title: b.title })} onClick={() => add(b)} className="w-full flex items-center gap-3 py-3 border-b border-border text-left"><div className="flex-1 min-w-0"><p className="text-sm truncate">{b.title}</p><p className="text-xs text-muted-foreground truncate">{b.author}</p></div><Badge className="bg-emerald-600/20 text-emerald-700 border-emerald-600/30">{t('lists.in_your_library')}</Badge></button>)}</div></DialogContent></Dialog>;
 }
 
