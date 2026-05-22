@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -80,7 +80,7 @@ const App = () => {
               <Sonner />
               <TreeBackground />
               <div className="relative z-[1]">
-                <BrowserRouter>
+                <HashRouter>
                   <Routes>
                     <Route path="/" element={<RootRoute />} />
                     <Route path="/auth" element={<AuthRoute />} />
@@ -93,7 +93,7 @@ const App = () => {
                     <Route path="/consent" element={<ParentalConsent />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
-                </BrowserRouter>
+                </HashRouter>
               </div>
             </TooltipProvider>
             </FoliumTutorialProvider>
