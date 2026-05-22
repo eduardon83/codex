@@ -28,9 +28,10 @@ interface ReadingPlan {
   ends_at: string | null;
 }
 
-const monthFormatter = new Intl.DateTimeFormat('pt-PT', { month: 'long', year: 'numeric' });
+const PLAN_LOCALE_MAP: Record<string, string> = { pt: 'pt-PT', en: 'en-US', es: 'es-ES', fr: 'fr-FR' };
 
-export function buildPlanMonths(start?: string | null, end?: string | null) {
+export function buildPlanMonths(start?: string | null, end?: string | null, lang: string = 'pt') {
+  const monthFormatter = new Intl.DateTimeFormat(PLAN_LOCALE_MAP[lang] || lang || 'pt-PT', { month: 'long', year: 'numeric' });
   const base = start ? new Date(`${start}T00:00:00`) : new Date();
   const first = new Date(base.getFullYear(), base.getMonth(), 1);
   const last = end ? new Date(`${end}T00:00:00`) : new Date(first.getFullYear(), first.getMonth() + 11, 1);
