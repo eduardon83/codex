@@ -12,6 +12,11 @@ import { FoliumTutorialProvider } from "@/components/tutorial/FoliumTutorialProv
 import TreeBackground from "@/components/TreeBackground";
 import Index from "./pages/Index.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
+import NativeWelcomeScreen from "./pages/NativeWelcomeScreen.tsx";
+
+export const isNative = () =>
+  typeof window !== 'undefined' &&
+  !!(window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor?.isNativePlatform?.();
 import Admin from "./pages/Admin.tsx";
 import PublicList from "./pages/PublicList.tsx";
 import PublicReadingList from "./pages/PublicReadingList.tsx";
@@ -32,7 +37,7 @@ function RootRoute() {
       </div>
     );
   }
-  if (!user) return <LandingPage />;
+  if (!user) return isNative() ? <NativeWelcomeScreen /> : <LandingPage />;
   return <Index />;
 }
 
