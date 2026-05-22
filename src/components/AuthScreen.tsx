@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { useAppToast } from '@/components/ToastNotification';
-import { lovable } from '@/integrations/lovable/index';
+import { signInWithGoogle } from '@/lib/nativeAuth';
 import AboutScreen from '@/components/AboutScreen';
 import FoliumLeaf from '@/components/FoliumLeaf';
 
@@ -464,9 +464,7 @@ export default function AuthScreen() {
                       onClick={async () => {
                         setGoogleLoading(true);
                         setError('');
-                        const result = await lovable.auth.signInWithOAuth('google', {
-                          redirect_uri: window.location.origin,
-                        });
+                        const result = await signInWithGoogle();
                         if (result.error) {
                           setError(result.error.message);
                           setGoogleLoading(false);
