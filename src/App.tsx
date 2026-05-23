@@ -73,6 +73,31 @@ const App = () => {
     return () => { document.head.removeChild(link); };
   }, []);
 
+  // Native deep-link handling: when the OS reopens the app via
+  // pt.kendirstudios.codex://auth/callback#access_token=...&refresh_token=...
+  // (or ?code=...), establish the Supabase session inside the app so the
+  // user lands on the authenticated screens instead of being sent to the web.
+  useEffect(() => {
+    if (!isNative()) return;
+    let cleanup: (() => void) | undefined;
+    (async () => {
+      try {
+        const { App: CapApp } = await import('@capacitor/app');
+        const handle = await CapApp.addListener('appUrlOpen', (event: { url: string }) => {
+          if (!event?.url) return;
+          if (event.url.includes('access_token') || event.url.includes('code=')) {
+            void handleAuthCallbackUrl(event.url);
+          }
+        });
+        cleanup = () => { void handle.remove(); };
+      } catch {
+        // @capacitor/app not available — ignore
+      }
+    })();
+    return () => { cleanup?.(); };
+  }, []);
+
+
   return (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
