@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^8.3.4",
+    "@capacitor/app": "^8.1.0",
     "@capacitor/core": "^8.3.4",
     "@ericblade/quagga2": "^1.12.1",
     "@fontsource/inter": "^5.2.8",
