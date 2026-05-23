@@ -14,6 +14,7 @@ import Index from "./pages/Index.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
 import NativeWelcomeScreen from "./pages/NativeWelcomeScreen.tsx";
 import { isNative } from "@/lib/platform";
+import { handleAuthCallbackUrl } from "@/lib/nativeAuth";
 
 export { isNative };
 import Admin from "./pages/Admin.tsx";
