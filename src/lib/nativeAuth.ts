@@ -1,9 +1,7 @@
-import { createLovableAuth } from '@lovable.dev/cloud-auth-js';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable/index';
 import { isNative } from '@/lib/platform';
 
-const PUBLIC_APP_ORIGIN = 'https://codex.kendirstudios.pt';
 export const NATIVE_CALLBACK_URL = 'pt.kendirstudios.codex://auth/callback';
 
 const isNativeApp = () => isNative();
@@ -18,11 +16,6 @@ export const getAuthRedirectOrigin = () => {
   return window.location.origin;
 };
 
-const getOAuthBrokerUrl = () => {
-  if (isNativeApp()) return `${PUBLIC_APP_ORIGIN}/~oauth/initiate`;
-  return '/~oauth/initiate';
-};
-
 export const signInWithGoogle = async () => {
   if (!isNativeApp()) {
     return lovable.auth.signInWithOAuth('google', {
@@ -30,19 +23,30 @@ export const signInWithGoogle = async () => {
     });
   }
 
-  const auth = createLovableAuth({ oauthBrokerUrl: getOAuthBrokerUrl() });
-  const result = await auth.signInWithOAuth('google', {
-    redirect_uri: NATIVE_CALLBACK_URL,
+  // On native: go directly through Supabase OAuth (no Lovable broker),
+  // open the consent page in the system browser, and let the deep-link
+  // listener in App.tsx exchange the code/tokens for a session.
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: NATIVE_CALLBACK_URL,
+      skipBrowserRedirect: true,
+    },
   });
 
-  if (result.redirected || result.error) return result;
+  if (error) return { error };
 
-  try {
-    await supabase.auth.setSession(result.tokens);
-    return result;
-  } catch (error) {
-    return { error: error instanceof Error ? error : new Error(String(error)) };
+  if (data?.url) {
+    try {
+      const { Browser } = await import('@capacitor/browser');
+      await Browser.open({ url: data.url });
+      return { redirected: true };
+    } catch (e) {
+      return { error: e instanceof Error ? e : new Error(String(e)) };
+    }
   }
+
+  return { error: new Error('No OAuth URL returned by Supabase') };
 };
 
 /**
