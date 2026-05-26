@@ -16,11 +16,15 @@ export const getAuthRedirectOrigin = () => {
   return window.location.origin;
 };
 
-export const signInWithGoogle = async () => {
+export const signInWithGoogle = async (): Promise<{ error?: Error | null; redirected?: boolean }> => {
   if (!isNativeApp()) {
-    return lovable.auth.signInWithOAuth('google', {
+    const result = await lovable.auth.signInWithOAuth('google', {
       redirect_uri: window.location.origin,
     });
+    return {
+      error: 'error' in result ? (result.error ?? null) : null,
+      redirected: 'redirected' in result ? !!result.redirected : false,
+    };
   }
 
   // On native: go directly through Supabase OAuth (no Lovable broker),
