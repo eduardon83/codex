@@ -7,6 +7,12 @@ const config: CapacitorConfig = {
   server: {
     androidScheme: 'https',
   },
+  android: {
+    backgroundColor: '#1E2A22',
+    allowMixedContent: false,
+    captureInput: true,
+    webContentsDebuggingEnabled: false,
+  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,
