@@ -110,7 +110,10 @@ const App = () => {
               <Sonner />
               <TreeBackground />
               <div className="relative z-[1]">
-                <HashRouter>
+{(() => {
+                  const Router = isNative() ? HashRouter : BrowserRouter;
+                  return (
+                <Router>
                   <Routes>
                     <Route path="/" element={<RootRoute />} />
                     <Route path="/auth" element={<AuthRoute />} />
@@ -123,7 +126,9 @@ const App = () => {
                     <Route path="/consent" element={<ParentalConsent />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
-                </HashRouter>
+                </Router>
+                  );
+                })()}
               </div>
             </TooltipProvider>
             </FoliumTutorialProvider>
