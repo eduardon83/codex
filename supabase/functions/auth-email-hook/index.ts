@@ -136,7 +136,9 @@ async function handleWebhook(req: Request): Promise<Response> {
   const metadata =
     (payload.data as any)?.user?.user_metadata ||
     (payload.data as any)?.user_metadata || {}
-  const lang: Lang = normaliseLang(metadata.language || metadata.lang || metadata.locale)
+  const lang: Lang = normaliseLang(
+    metadata.preferred_language || metadata.language || metadata.lang || metadata.locale
+  )
 
   const templateProps = {
     siteName: SITE_NAME,
