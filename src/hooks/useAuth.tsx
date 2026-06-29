@@ -172,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: {
         emailRedirectTo: getAuthRedirectOrigin(),
-        data: { language: currentLang() },
+        data: { language: currentLang(), preferred_language: currentLang() },
       },
     });
     return { error: error as Error | null };
