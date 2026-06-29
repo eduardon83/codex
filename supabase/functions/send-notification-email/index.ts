@@ -113,10 +113,10 @@ Deno.serve(async (req) => {
       },
     }, 500);
   }
-  if (!RESEND_API_KEY.startsWith('re_')) {
-    console.error('[send-notification-email] RESEND_API_KEY does not start with re_');
-    return json({ error: 'RESEND_API_KEY format invalid (expected re_…)' }, 500);
-  }
+  // Note: when using Lovable's Resend connector, RESEND_API_KEY is a gateway
+  // connection key (not necessarily prefixed with re_). Do not validate format here.
+
+
 
   let input: NotificationBody;
   try { input = (await req.json()) as NotificationBody; } catch { return json({ error: 'Invalid JSON' }, 400); }
